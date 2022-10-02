@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/pages/global/colors.dart';
+import '../global/colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,7 +13,8 @@ class HomeScreen extends StatelessWidget {
         title: const Text('AppName'),
       ),
       body: Container(
-        color: Colors.pink,
+        width: MediaQuery.of(context).size.width,
+        child: Column(),
       ),
     ));
   }
