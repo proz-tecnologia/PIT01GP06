@@ -41,5 +41,4 @@ class MyColor{
   static const Color dtBackgroundColor = Color(0xFF2C3E47);
   static const Color dtAccentColor = Color(0xFF2B4E11);
   static const Color dtIconsandTextColor = Color (0xFF100F10);
-
 }
