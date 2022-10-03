@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const HomeScreen(),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       theme: ThemeData(
         fontFamily: 'Raleway',
         primaryColor: MyColor.ltPrimaryColor,
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: MyColor.ltAccentColor,
         ),
+        cardTheme: const CardTheme(color: MyColor.ltPrimaryColor),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.ltPrimaryColor,
           selectedItemColor: MyColor.ltIconsandTextColor,
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: MyColor.dtAccentColor,
         ),
+        cardTheme: const CardTheme(color: MyColor.dtPrimaryColor),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.dtPrimaryColor,
           selectedItemColor: MyColor.dtIconsandTextColor,
