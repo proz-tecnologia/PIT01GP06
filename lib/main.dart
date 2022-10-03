@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/pages/home/home_screen.dart';
-import 'package:projeto_final_flutter/pages/global/colors.dart';
+import 'package:projeto_final_flutter/theme/global/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,11 +29,10 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: MyColor.ltAccentColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: MyColor.ltAccentColor,
-            foregroundColor: Colors.white,
-          )
-        ),
+            style: ElevatedButton.styleFrom(
+          backgroundColor: MyColor.ltAccentColor,
+          foregroundColor: Colors.white,
+        )),
       ),
       darkTheme: ThemeData(
         fontFamily: 'Raleway',
@@ -50,11 +49,10 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: MyColor.dtAccentColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: MyColor.dtAccentColor,
-            foregroundColor: Colors.white,
-          )
-        ),
+            style: ElevatedButton.styleFrom(
+          backgroundColor: MyColor.dtAccentColor,
+          foregroundColor: Colors.white,
+        )),
       ),
       debugShowCheckedModeBanner: false,
     );
