@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/home_screen.dart';
 import 'package:projeto_final_flutter/pages/global/colors.dart';
+import 'pages/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
