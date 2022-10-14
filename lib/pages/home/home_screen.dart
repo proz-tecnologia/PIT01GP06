@@ -9,7 +9,7 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: const Text('AppName'),
+        title: const Text('AppName'), 
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
