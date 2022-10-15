@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/pages/global/colors.dart';
-import 'pages/home/home_screen.dart';
 import 'pages/home/home_trabalho.dart';
 
 void main() {
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomeScreen(),
+      home: const HomeInicial(),
       themeMode: ThemeMode.dark,
       theme: ThemeData(
         fontFamily: 'Raleway',

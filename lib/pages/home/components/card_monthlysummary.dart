@@ -31,51 +31,49 @@ class CardSummary extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children:[
-                      Icon(Icons.trending_up, color: Colors.green[500]),
-                    ]
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Receitas", style: TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold)),
-                      Text("R\$ $revenues",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.fade)),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.trending_down, color: Colors.red[500]),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Despesas", style: TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold)),
-                      Text("R\$ $expenses",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.fade,
-                        )),
-                    ],
-                  ),
-                ],
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:[
+                    Icon(Icons.trending_up, color: Colors.green[500]),
+                  ]
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Receitas", style: TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold)),
+                    Text("R\$ $revenues",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.fade)),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.trending_down, color: Colors.red[500]),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Despesas", style: TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.bold)),
+                    Text("R\$ $expenses",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.fade,
+                      )),
+                  ],
+                ),
+              ],
             ),
         ],
       ),
