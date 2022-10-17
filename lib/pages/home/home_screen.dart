@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/pages/home/components/glassmorfism_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,8 +13,15 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
-        child: Column(),
+        child: Column(
+          children: [
+            SizedBox(height: 10,),
+            GlassmorfismCard(),
+            //colocar o elipse aqui e depois passar pra dentro do glassmorfism 
+          ],
+        ),
       ),
     ));
   }
 }
+
