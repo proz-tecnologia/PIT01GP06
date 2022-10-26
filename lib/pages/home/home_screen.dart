@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/pages/home/components/animated_fab.dart';
 import 'package:projeto_final_flutter/pages/home/components/glassmorfism_card.dart';
+import 'package:projeto_final_flutter/theme/global/colors.dart';
+
+import 'components/action_button.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -15,11 +19,26 @@ class HomeScreen extends StatelessWidget {
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
-          children: [
+          children: const [
             SizedBox(height: 10,),
             GlassmorfismCard(),
           ],
         ),
+      ),
+      floatingActionButton: AnimatedFab(
+        children: [
+          ActionButton(
+            icon: const Icon(Icons.trending_down, color: MyColor.red),
+            onPressed: (){},
+            text: 'Despesas',
+          ),
+          ActionButton(
+            icon: const Icon(Icons.trending_up, color: MyColor.ltAccentColor,),
+            onPressed: (){},
+            text: 'Receitas',
+          ),
+        ],
+        distance: 80,
       ),
     ));
   }
