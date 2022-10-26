@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/pages/home/home_screen.dart';
+import 'package:projeto_final_flutter/theme/global/colors.dart';
 import 'package:projeto_final_flutter/pages/global/colors.dart';
-import 'pages/home/home_trabalho.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +14,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomeInicial(),
-      themeMode: ThemeMode.dark,
+      home: const HomeScreen(),
+      themeMode: ThemeMode.light,
       theme: ThemeData(
         fontFamily: 'Raleway',
         primaryColor: MyColor.ltPrimaryColor,
@@ -23,17 +25,17 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: MyColor.ltAccentColor,
         ),
+        cardTheme: const CardTheme(color: MyColor.ltPrimaryColor),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.ltPrimaryColor,
           selectedItemColor: MyColor.ltIconsandTextColor,
           unselectedItemColor: MyColor.ltAccentColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: MyColor.ltAccentColor,
-            foregroundColor: Colors.white,
-          )
-        ),
+            style: ElevatedButton.styleFrom(
+          backgroundColor: MyColor.ltAccentColor,
+          foregroundColor: Colors.white,
+        )),
       ),
       darkTheme: ThemeData(
         fontFamily: 'Raleway',
@@ -44,17 +46,17 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: MyColor.dtAccentColor,
         ),
+        cardTheme: const CardTheme(color: MyColor.dtPrimaryColor),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.dtPrimaryColor,
           selectedItemColor: MyColor.dtIconsandTextColor,
           unselectedItemColor: MyColor.dtAccentColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: MyColor.dtAccentColor,
-            foregroundColor: Colors.white,
-          )
-        ),
+            style: ElevatedButton.styleFrom(
+          backgroundColor: MyColor.dtAccentColor,
+          foregroundColor: Colors.white,
+        )),
       ),
       debugShowCheckedModeBanner: false,
     );
