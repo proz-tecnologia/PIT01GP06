@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
+import 'package:projeto_final_flutter/pages/home/components/glassmorfism_card.dart';
 
->>>>>>> origin/bottonbar
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,8 +14,14 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
-        child: Column(),
+        child: Column(
+          children: [
+            SizedBox(height: 10,),
+            GlassmorfismCard(),
+          ],
+        ),
       ),
     ));
   }
 }
+

@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       home: const HomeScreen(),
       themeMode: ThemeMode.light,
       theme: ThemeData(
+        brightness: Brightness.light,
         fontFamily: 'Raleway',
         primaryColor: MyColor.ltPrimaryColor,
         primarySwatch: MyColor.ltPrimaryColor,
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         )),
       ),
       darkTheme: ThemeData(
+        brightness: Brightness.dark,
         fontFamily: 'Raleway',
         primaryColor: MyColor.dtPrimaryColor,
         primarySwatch: MyColor.dtPrimaryColor,
