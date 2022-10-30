@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:projeto_final_flutter/pages/home/home_screen.dart';
-import 'package:projeto_final_flutter/theme/global/colors.dart';
-=======
-import 'package:projeto_final_flutter/pages/global/colors.dart';
+
 import 'pages/home/home_screen.dart';
->>>>>>> origin/bottonbar
+import 'theme/global/colors.dart';
 
 void main() {
   runApp(const MyApp());
