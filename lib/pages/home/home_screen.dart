@@ -5,7 +5,6 @@ import 'package:projeto_final_flutter/theme/global/colors.dart';
 
 import 'components/action_button.dart';
 
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -20,27 +19,31 @@ class HomeScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: const [
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             GlassmorfismCard(),
           ],
         ),
       ),
       floatingActionButton: AnimatedFab(
+        distance: 80,
         children: [
           ActionButton(
             icon: const Icon(Icons.trending_down, color: MyColor.red),
-            onPressed: (){},
+            onPressed: () {},
             text: 'Despesas',
           ),
           ActionButton(
-            icon: const Icon(Icons.trending_up, color: MyColor.ltAccentColor,),
-            onPressed: (){},
+            icon: const Icon(
+              Icons.trending_up,
+              color: MyColor.ltAccentColor,
+            ),
+            onPressed: () {},
             text: 'Receitas',
           ),
         ],
-        distance: 80,
       ),
     ));
   }
 }
-
