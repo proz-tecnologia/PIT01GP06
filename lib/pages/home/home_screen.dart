@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/components/animated_fab.dart';
-import 'package:projeto_final_flutter/pages/home/components/bottonbar.dart';
-import 'package:projeto_final_flutter/pages/home/components/card_monthlysummary.dart';
-import 'package:projeto_final_flutter/pages/home/components/divider_widget.dart';
-import 'package:projeto_final_flutter/pages/home/components/glassmorfism_card.dart';
-import 'package:projeto_final_flutter/pages/home/components/metas_card.dart';
-import 'package:projeto_final_flutter/pages/home/components/primary_button_widget.dart';
-import 'package:projeto_final_flutter/pages/home/components/title_widget.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/animated_fab.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/bottonbar.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/card_monthlysummary.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/divider_widget.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/glassmorfism_card.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/metas_card.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/primary_button_widget.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/title_widget.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/wallet.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 
-import 'components/action_button.dart';
-
+import 'widgets/action_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -74,6 +74,10 @@ class HomeScreen extends StatelessWidget {
                     onBackButtonPressed: () {},
                     onForwardButtonPressed: () {}),
               ),
+              const SizedBox(
+                height: 32,
+              ),
+              const Wallet(),
               const SizedBox(
                 height: 32,
               ),
