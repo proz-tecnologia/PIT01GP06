@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/home_screen.dart';
+import 'pages/home/home_screen.dart';
+import 'theme/global/colors.dart';
+mport 'package:projeto_final_flutter/pages/home/home_screen.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 
 void main() {
