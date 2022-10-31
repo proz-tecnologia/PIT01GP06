@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class DeleteButton extends StatelessWidget {
-  const DeleteButton({super.key});
+  final VoidCallback onPressed;
+  const DeleteButton({required this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: null,
-      child: Text(
+      onPressed: onPressed,
+      child: const Text(
         'Excluir',
         style: TextStyle(color: Color(0xff33272A)),
       ),
