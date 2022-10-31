@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/pages/home/components/editbutton.dart';
 
 class MetasCard extends StatelessWidget {
   const MetasCard({Key? key}) : super(key: key);
@@ -130,6 +131,16 @@ class MetasCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Text('Excluir'),
+                      EditButton(
+                        title: 'Editar',
+                        onPressed: () {},
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
