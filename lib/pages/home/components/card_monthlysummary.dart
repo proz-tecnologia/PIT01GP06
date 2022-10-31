@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/global/colors.dart';
-
 class CardSummary extends StatelessWidget {
   final String balance;
   final String revenues;
@@ -16,82 +14,84 @@ class CardSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 135,
-      width: MediaQuery.of(context).size.width - 40,
-      child: Card(
-        color: MyColor.dtBackgroundColor,
-        child: Column(
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add, color: Colors.green[500]),
-                  Text("R\$ $balance",
-                      style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.fade)),
-                ],
-              ),
+            Icon(Icons.add, color: Colors.green[500]),
+            Text("R\$ $balance",
+                style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.fade)),
+          ],
+        ),
+        const SizedBox(
+          height: 24,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Icon(Icons.trending_up, color: Colors.green[500]),
+            ]),
+            const SizedBox(
+              width: 8,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.trending_up, color: Colors.green[500]),
-                    ]),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Receitas",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold)),
-                    Text("R\$ $revenues",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.fade)),
-                  ],
+                const Text("Receitas",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                const SizedBox(
+                  height: 8,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.trending_down, color: Colors.red[500]),
-                  ],
+                Text("R\$ $revenues",
+                    style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.fade)),
+              ],
+            ),
+            const SizedBox(
+              width: 24,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.trending_down, color: Colors.red[500]),
+              ],
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("Despesas",
+                    style: TextStyle(
+                        fontSize: 16,
+                        // color: Colors.white70,
+                        fontWeight: FontWeight.w400)),
+                const SizedBox(
+                  height: 8,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text("Despesas",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold)),
-                    Text("R\$ $expenses",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.fade,
-                        )),
-                  ],
-                ),
+                Text("R\$ $expenses",
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.fade,
+                    )),
               ],
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
