@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:projeto_final_flutter/pages/home/components/delete_button.dart';
-import 'package:projeto_final_flutter/theme/global/colors.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/delete_button.dart';
+import 'package:projeto_final_flutter/pages/home/widgets/editbutton.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({super.key});
@@ -14,9 +12,8 @@ class Wallet extends StatefulWidget {
 class _WalletState extends State<Wallet> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -61,9 +58,11 @@ class _WalletState extends State<Wallet> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                DeleteButton(),
-                Text('botão'),
+              children: [
+                DeleteButton(
+                  onPressed: () {},
+                ),
+                EditButton(title: 'Editar', onPressed: () {}),
               ],
             ),
           ]),
