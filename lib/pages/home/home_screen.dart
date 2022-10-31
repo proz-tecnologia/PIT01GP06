@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/pages/home/components/animated_fab.dart';
 import 'package:projeto_final_flutter/pages/home/components/bottonbar.dart';
+import 'package:projeto_final_flutter/pages/home/components/card_monthlysummary.dart';
 import 'package:projeto_final_flutter/pages/home/components/divider_widget.dart';
 import 'package:projeto_final_flutter/pages/home/components/glassmorfism_card.dart';
 import 'package:projeto_final_flutter/pages/home/components/metas_card.dart';
@@ -45,6 +46,14 @@ class HomeScreen extends StatelessWidget {
                     title: 'Setembro',
                     onBackButtonPressed: () {},
                     onForwardButtonPressed: () {}),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              const CardSummary(
+                balance: '1.000,00',
+                revenues: '4.000,99',
+                expenses: '3.000,99',
               ),
               const SizedBox(
                 height: 32,
