@@ -10,6 +10,7 @@ import 'package:projeto_final_flutter/theme/global/colors.dart';
 
 import 'components/action_button.dart';
 
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
