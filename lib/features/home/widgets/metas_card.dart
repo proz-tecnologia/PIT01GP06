@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/delete_button.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/editbutton.dart';
+import 'package:projeto_final_flutter/features/home/widgets/delete_button.dart';
+import 'package:projeto_final_flutter/features/home/widgets/editbutton.dart';
 
 class MetasCard extends StatelessWidget {
-  const MetasCard({Key? key}) : super(key: key);
+  final VoidCallback deleteGoal;
+  final VoidCallback editGoal;
+
+  const MetasCard({Key? key, required this.deleteGoal, required this.editGoal}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

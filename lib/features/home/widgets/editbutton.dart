@@ -19,7 +19,7 @@ class EditButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: MyColor.ltButtonSecondary,
+          backgroundColor: MyColor.lightThemeButtonSecondary,
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
           textStyle: const TextStyle(fontWeight: FontWeight.bold),
           shape: RoundedRectangleBorder(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/home_screen.dart';
+import 'package:projeto_final_flutter/features/home/home_screen.dart';
 
 import 'theme/global/colors.dart';
 
@@ -18,44 +18,44 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         fontFamily: 'Raleway',
-        primaryColor: MyColor.ltPrimaryColor,
-        primarySwatch: MyColor.ltPrimaryColor,
-        scaffoldBackgroundColor: MyColor.ltBackgroundColor,
+        primaryColor: MyColor.lightThemePrimaryColor,
+        primarySwatch: MyColor.lightThemePrimaryColor,
+        scaffoldBackgroundColor: MyColor.lightThemeBackgroundColor,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           foregroundColor: Colors.white,
-          backgroundColor: MyColor.ltAccentColor,
+          backgroundColor: MyColor.lightThemeAccentColor,
         ),
-        cardTheme: const CardTheme(color: MyColor.ltPrimaryColor),
+        cardTheme: const CardTheme(color: MyColor.lightThemePrimaryColor),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: MyColor.ltPrimaryColor,
-          selectedItemColor: MyColor.ltIconsandTextColor,
-          unselectedItemColor: MyColor.ltAccentColor,
+          backgroundColor: MyColor.lightThemePrimaryColor,
+          selectedItemColor: MyColor.lightThemeIconsandTextColor,
+          unselectedItemColor: MyColor.lightThemeAccentColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-          backgroundColor: MyColor.ltAccentColor,
+          backgroundColor: MyColor.lightThemeAccentColor,
           foregroundColor: Colors.white,
         )),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: 'Raleway',
-        primaryColor: MyColor.dtPrimaryColor,
-        primarySwatch: MyColor.dtPrimaryColor,
-        scaffoldBackgroundColor: MyColor.dtBackgroundColor,
+        primaryColor: MyColor.darkThemePrimaryColor,
+        primarySwatch: MyColor.darkThemePrimaryColor,
+        scaffoldBackgroundColor: MyColor.darkThemeBackgroundColor,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           foregroundColor: Colors.white,
-          backgroundColor: MyColor.dtAccentColor,
+          backgroundColor: MyColor.darkThemeAccentColor,
         ),
-        cardTheme: const CardTheme(color: MyColor.dtPrimaryColor),
+        cardTheme: const CardTheme(color: MyColor.darkThemePrimaryColor),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: MyColor.dtPrimaryColor,
-          selectedItemColor: MyColor.dtIconsandTextColor,
-          unselectedItemColor: MyColor.dtAccentColor,
+          backgroundColor: MyColor.darkThemePrimaryColor,
+          selectedItemColor: MyColor.darkThemeIconsandTextColor,
+          unselectedItemColor: MyColor.darkThemeAccentColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-          backgroundColor: MyColor.dtAccentColor,
+          backgroundColor: MyColor.darkThemeAccentColor,
           foregroundColor: Colors.white,
         )),
       ),
