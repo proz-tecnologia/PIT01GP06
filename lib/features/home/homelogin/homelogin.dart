@@ -61,6 +61,7 @@ class _HomeLoginState extends State<HomeLogin> {
                         TextFormField(
                           controller: _email,
                           decoration: InputDecoration(
+                            hintText: 'Digite seu email',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
@@ -93,6 +94,7 @@ class _HomeLoginState extends State<HomeLogin> {
                           controller: _password,
                           obscureText: _obscureText,
                           decoration: InputDecoration(
+                            hintText: 'Digite sua senha',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
