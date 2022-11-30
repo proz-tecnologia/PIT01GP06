@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: MyColor.lightThemeAccentColor,
         ),
         cardTheme: const CardTheme(color: MyColor.lightThemePrimaryColor),
+        textButtonTheme: TextButtonThemeData(style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black))),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.lightThemePrimaryColor,
           selectedItemColor: MyColor.lightThemeIconsandTextColor,
