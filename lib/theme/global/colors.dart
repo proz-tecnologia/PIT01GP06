@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyColor {
   MyColor._();
 
-  static const Map<int, Color> ltColor = {
+  static const Map<int, Color> lightThemeColor = {
     50: Color.fromRGBO(100, 78, 78, .1),
     100: Color.fromRGBO(100, 78, 78, .2),
     200: Color.fromRGBO(100, 78, 78, .3),
@@ -16,7 +16,7 @@ class MyColor {
     900: Color.fromRGBO(100, 78, 78, 1),
   };
 
-  static const Map<int, Color> dtColor = {
+  static const Map<int, Color> darkThemeColor = {
     50: Color.fromRGBO(100, 60, 70, .1),
     100: Color.fromRGBO(100, 60, 70, .2),
     200: Color.fromRGBO(100, 60, 70, .3),
@@ -31,19 +31,19 @@ class MyColor {
 
   static const Color red = Color(0xFFD9373A);
 
-  static const MaterialColor ltPrimaryColor =
-      MaterialColor(0xFFFFC6C7, ltColor);
-  static const Color ltBackgroundColor = Color(0xFFFAEEE7);
-  static const Color ltAccentColor = Color(0xFF679D40);
-  static const Color ltIconsandTextColor = Color(0xFF33272A);
-  static const Color ltsecondaryTextColor = Color(0xFF594A4E);
-  static const Color ltButtonSecondary = Color(0xffff8ba7);
+  static const MaterialColor lightThemePrimaryColor =
+      MaterialColor(0xFFFFC6C7, lightThemeColor);
+  static const Color lightThemeBackgroundColor = Color(0xFFFAEEE7);
+  static const Color lightThemeAccentColor = Color(0xFF679D40);
+  static const Color lightThemeIconsandTextColor = Color(0xFF33272A);
+  static const Color lightThemesecondaryTextColor = Color(0xFF594A4E);
+  static const Color lightThemeButtonSecondary = Color(0xffff8ba7);
 
-  static const MaterialColor dtPrimaryColor =
-      MaterialColor(0xFFFF99B2, dtColor);
-  static const Color dtBackgroundColor = Color(0xFF2C3E47);
-  static const Color dtAccentColor = Color(0xFF2B4E11);
-  static const Color dtIconsandTextColor = Color(0xFF100F10);
-  static const Color dtCardColor = Color(0xFF49484B);
-  static const Color dtButtonSecondary = Color(0xffFFC6C7);
+  static const MaterialColor darkThemePrimaryColor =
+      MaterialColor(0xFFFF99B2, darkThemeColor);
+  static const Color darkThemeBackgroundColor = Color(0xFF2C3E47);
+  static const Color darkThemeAccentColor = Color(0xFF2B4E11);
+  static const Color darkThemeIconsandTextColor = Color(0xFF100F10);
+  static const Color darkThemeCardColor = Color(0xFF49484B);
+  static const Color darkThemeButtonSecondary = Color(0xffFFC6C7);
 }
