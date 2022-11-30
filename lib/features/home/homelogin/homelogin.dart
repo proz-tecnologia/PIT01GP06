@@ -11,7 +11,7 @@ class HomeLogin extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(8.0),
             alignment: Alignment.center,
-            child: Text("Eu sou a tela de Login do Aplicativo"),
+            child: const Text("Eu sou a tela de Login do Aplicativo"),
           ),
         ),
       ),
