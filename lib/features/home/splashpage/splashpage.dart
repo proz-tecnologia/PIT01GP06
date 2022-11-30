@@ -40,7 +40,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final logoHeight = size.height * 0.25;
+    //final logoHeight = size.height * 0.25;
     final innerHeight = size.height * 0.20;
 
     return Scaffold(

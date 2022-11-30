@@ -121,7 +121,7 @@ class HomeScreen extends StatelessWidget {
           ActionButton(
             icon: const Icon(
               Icons.trending_up,
-              color: MyColor.ltAccentColor,
+              color: MyColor.lightThemeAccentColor,
             ),
             onPressed: () {},
             text: 'Receitas',
