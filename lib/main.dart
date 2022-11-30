@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/features/home/home_screen.dart';
-
 import 'features/login/login_page.dart';
 import 'theme/global/colors.dart';
 
@@ -29,6 +27,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: MyColor.lightThemeAccentColor,
         ),
         cardTheme: const CardTheme(color: MyColor.lightThemePrimaryColor),
+        textButtonTheme: TextButtonThemeData(style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black))),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.lightThemePrimaryColor,
           selectedItemColor: MyColor.lightThemeIconsandTextColor,
