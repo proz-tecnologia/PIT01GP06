@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'features/login/login_page.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart';
+import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
+import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
+import 'features/home/homesignup/homesignup.dart';
 import 'theme/global/colors.dart';
 
 void main() {
@@ -12,9 +15,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //TODO deletar linha 18 e tirar comentário da 17
-      //home: const HomeScreen(),
-      home: const LoginPage(),
+      home: const SplashPage(),
+      routes: {
+        'signup': (context) => const HomeSignup(),
+        'login': (context) => const HomeLogin(),
+        'screen': (context) => const HomeScreen(),
+      },
       themeMode: ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
