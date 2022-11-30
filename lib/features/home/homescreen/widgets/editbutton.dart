@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/global/colors.dart';
+import '../../../../theme/global/colors.dart';
 
 class EditButton extends StatelessWidget {
   final String title;
