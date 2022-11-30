@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/animated_fab.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/bottonbar.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/card_monthlysummary.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/divider_widget.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/glassmorfism_card.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/metas_card.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/title_widget.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/wallet.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/animated_fab.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/bottonbar.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/card_monthlysummary.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/divider_widget.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/glassmorfism_card.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/metas_card.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/title_widget.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
-
 import 'widgets/action_button.dart';
 
 class HomeScreen extends StatelessWidget {

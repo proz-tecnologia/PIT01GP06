@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/delete_button.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/editbutton.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/delete_button.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/widgets/editbutton.dart';
 
 class Wallet extends StatefulWidget {
   const Wallet({super.key});
