@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/home_screen.dart';
 
+import 'features/login/login_page.dart';
 import 'theme/global/colors.dart';
 
 void main() {
@@ -13,7 +14,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomeScreen(),
+      //TODO deletar linha 18 e tirar comentário da 17
+      //home: const HomeScreen(),
+      home: const LoginPage(),
       themeMode: ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
