@@ -1,0 +1,4 @@
+class SignUpController{
+  void registerUser(){}
+
+}

@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/animated_fab.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/bottonbar.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/card_monthlysummary.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/divider_widget.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/glassmorfism_card.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/metas_card.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/title_widget.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.dart';
+import 'package:projeto_final_flutter/features/home/home_controller.dart';
+import 'package:projeto_final_flutter/features/home/widgets/animated_fab.dart';
+import 'package:projeto_final_flutter/features/home/widgets/bottonbar.dart';
+import 'package:projeto_final_flutter/features/home/widgets/card_monthlysummary.dart';
+import 'package:projeto_final_flutter/features/home/widgets/divider_widget.dart';
+import 'package:projeto_final_flutter/features/home/widgets/glassmorfism_card.dart';
+import 'package:projeto_final_flutter/features/home/widgets/metas_card.dart';
+import 'package:projeto_final_flutter/features/home/widgets/primary_button_widget.dart';
+import 'package:projeto_final_flutter/features/home/widgets/title_widget.dart';
+import 'package:projeto_final_flutter/features/home/widgets/wallet.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+
 import 'widgets/action_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final HomeController controller = HomeController();
+  late var actualMonth = controller.getCurrentMonth();
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +54,18 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: HomeTitle(
-                    title: 'Setembro',
-                    onBackButtonPressed: () {},
-                    onForwardButtonPressed: () {}),
+                    title: actualMonth,
+                    onBackButtonPressed: (){
+                      setState(() {
+                        actualMonth = controller.getPreviousMonth();
+                      });
+                    },
+                    onForwardButtonPressed: (){
+                      setState(() {
+                        actualMonth = controller.getNextMonth();
+                      });
+                    }
+                    ),
               ),
               const SizedBox(
                 height: 24,
@@ -70,13 +90,16 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: HomeTitle(
                     title: 'Carteira',
-                    onBackButtonPressed: () {},
-                    onForwardButtonPressed: () {}),
+                    onBackButtonPressed: () => controller.showPreviousWallet(),
+                    onForwardButtonPressed: () => controller.showNextWallet()),
               ),
               const SizedBox(
                 height: 32,
               ),
-              const Wallet(),
+              Wallet(
+                deleteWallet: () => controller.deleteWallet(),
+                editWallet: () => controller.editWallet(),
+              ),
               const SizedBox(
                 height: 32,
               ),
@@ -92,13 +115,16 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: HomeTitle(
                     title: 'Metas',
-                    onBackButtonPressed: () {},
-                    onForwardButtonPressed: () {}),
+                    onBackButtonPressed: () => controller.showPreviousGoal(),
+                    onForwardButtonPressed: () => controller.showNextGoal()),
               ),
               const SizedBox(
                 height: 32,
               ),
-              const MetasCard(),
+              MetasCard(
+                deleteGoal: () => controller.deleteGoal(),
+                editGoal: () => controller.editGoal(),
+              ),
               const SizedBox(
                 height: 32,
               ),
@@ -115,7 +141,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           ActionButton(
             icon: const Icon(Icons.trending_down, color: MyColor.red),
-            onPressed: () {},
+            onPressed: () => controller.addExpense(),
             text: 'Despesas',
           ),
           ActionButton(
@@ -123,7 +149,7 @@ class HomeScreen extends StatelessWidget {
               Icons.trending_up,
               color: MyColor.lightThemeAccentColor,
             ),
-            onPressed: () {},
+            onPressed: () => controller.addRevenue(),
             text: 'Receitas',
           ),
         ],
