@@ -34,7 +34,7 @@ class _HomeLoginState extends State<HomeLogin> {
                 const SizedBox(
                   height: 40,
                 ),
-                Center(child: Image.asset('./assets/logo.png')),
+                Center(child: Image.asset('./assets/images/logo.png')),
                 const SizedBox(
                   height: 20,
                 ),
@@ -160,15 +160,15 @@ class _HomeLoginState extends State<HomeLogin> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.asset('./assets/facebook.png'),
+                                  Image.asset('./assets/images/facebook.png'),
                                   const SizedBox(
                                     width: 24,
                                   ),
-                                  Image.asset('./assets/instagram.png'),
+                                  Image.asset('./assets/images/instagram.png'),
                                   const SizedBox(
                                     width: 24,
                                   ),
-                                  Image.asset('./assets/google.png'),
+                                  Image.asset('./assets/images/google.png'),
                                 ]),
                             const SizedBox(
                               height: 20,

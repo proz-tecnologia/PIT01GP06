@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
           Navigator.of(context).pushReplacementNamed('HomeScreen');
         }
       });
-      Navigator.of(context).pushReplacementNamed('signup');
+      Navigator.of(context).pushReplacementNamed('login');
     });
   }
 
@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('images/logo.png', width: 200, height: 200),
+                Image.asset('assets/images/logo.png', width: 200, height: 200),
               ],
             ),
             Padding(
