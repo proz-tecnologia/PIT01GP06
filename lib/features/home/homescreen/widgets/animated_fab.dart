@@ -129,8 +129,7 @@ class _AnimatedFabState extends State<AnimatedFab>
 
 class _ExpandableFab extends StatelessWidget {
   const _ExpandableFab(
-      {super.key,
-      required this.directionDegrees,
+      {required this.directionDegrees,
       required this.maxDistance,
       required this.progress,
       required this.child});
