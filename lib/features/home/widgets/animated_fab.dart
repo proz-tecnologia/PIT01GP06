@@ -76,8 +76,8 @@ class _AnimatedFabState extends State<AnimatedFab> with SingleTickerProviderStat
           elevation: 4,
           child: InkWell(
             onTap: () => _toggle,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Icon(
                 Icons.close,
                 color: Colors.black,
@@ -132,7 +132,7 @@ class _AnimatedFabState extends State<AnimatedFab> with SingleTickerProviderStat
 }
 
 class _ExpandableFab extends StatelessWidget {
-  const _ExpandableFab({super.key, required this.directionDegrees, required this.maxDistance, required this.progress, required this.child});
+  const _ExpandableFab({required this.directionDegrees, required this.maxDistance, required this.progress, required this.child});
 
   final double directionDegrees;
   final double maxDistance;

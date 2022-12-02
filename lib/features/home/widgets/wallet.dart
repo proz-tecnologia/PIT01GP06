@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/delete_button.dart';
-import 'package:projeto_final_flutter/pages/home/widgets/editbutton.dart';
+import 'package:projeto_final_flutter/features/home/widgets/delete_button.dart';
+import 'package:projeto_final_flutter/features/home/widgets/editbutton.dart';
 
 class Wallet extends StatefulWidget {
-  const Wallet({super.key});
+  final VoidCallback deleteWallet;
+  final VoidCallback editWallet;
+
+  const Wallet({super.key, required this.deleteWallet, required this.editWallet});
 
   @override
   State<Wallet> createState() => _WalletState();

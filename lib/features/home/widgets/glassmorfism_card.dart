@@ -79,21 +79,21 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                             const Text(
                               'Olá,',
                               style: TextStyle(
-                                  color: MyColor.ltsecondaryTextColor,
+                                  color: MyColor.lightThemesecondaryTextColor,
                                   fontSize: 16),
                             ),
                             const SizedBox(height: 8),
                             const Text(
                               'Kaio Fonseca',
                               style: TextStyle(
-                                  color: MyColor.ltsecondaryTextColor,
+                                  color: MyColor.lightThemesecondaryTextColor,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24),
                             ),
                             const SizedBox(height: 20),
                             const Text('Seu saldo atual é de:',
                                 style: TextStyle(
-                                    color: MyColor.ltsecondaryTextColor,
+                                    color: MyColor.lightThemesecondaryTextColor,
                                     fontSize: 16)),
                             const SizedBox(height: 20),
                             Row(
@@ -101,7 +101,7 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                               children: [
                                 Text(isVisible ? 'R\$ 1.000,00' : 'R\$ ....',
                                     style: const TextStyle(
-                                        color: MyColor.ltsecondaryTextColor,
+                                        color: MyColor.lightThemesecondaryTextColor,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 24)),
                                 IconButton(
