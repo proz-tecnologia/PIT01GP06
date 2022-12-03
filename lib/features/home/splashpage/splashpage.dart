@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
           Navigator.of(context).pushReplacementNamed('HomeScreen');
         }
       });
-      Navigator.of(context).pushReplacementNamed('login');
+      Navigator.of(context).pushReplacementNamed('initial');
     });
   }
 

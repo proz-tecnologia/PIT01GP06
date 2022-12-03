@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart';
+import 'package:projeto_final_flutter/features/home/homeInitial/homeInitial.dart';
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
+
 import 'features/home/homesignup/homesignup.dart';
 import 'theme/global/colors.dart';
 
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
         'signup': (context) => const HomeSignup(),
         'login': (context) => const HomeLogin(),
         'screen': (context) => const HomeScreen(),
+        'initial': (context) => const HomeInitial()
       },
       themeMode: ThemeMode.light,
       theme: ThemeData(
@@ -33,7 +36,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: MyColor.lightThemeAccentColor,
         ),
         cardTheme: const CardTheme(color: MyColor.lightThemePrimaryColor),
-        textButtonTheme: TextButtonThemeData(style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black))),
+        textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.black))),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.lightThemePrimaryColor,
           selectedItemColor: MyColor.lightThemeIconsandTextColor,
