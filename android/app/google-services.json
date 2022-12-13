@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "212159176816",
+    "firebase_url": "https://apfinancas-6556f-default-rtdb.firebaseio.com",
+    "project_id": "apfinancas-6556f",
+    "storage_bucket": "apfinancas-6556f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212159176816:android:7bd7fbcf831ce594b3d4b5",
+        "android_client_info": {
+          "package_name": "com.example.projeto_final_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212159176816-m1dn0r3fcccul417cdkjram7kntsggja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3VVKEmtN23kjpW6GQyDDoAFswSb4IVjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212159176816-m1dn0r3fcccul417cdkjram7kntsggja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

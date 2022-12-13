@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart';
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
+import 'package:projeto_final_flutter/theme/global/colors.dart';
 import 'features/home/homesignup/homesignup.dart';
-import 'theme/global/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'fire_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -15,7 +23,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const SplashPage(),
+      // home: const SplashPage(),
+      home: const FirePage(),
       routes: {
         'signup': (context) => const HomeSignup(),
         'login': (context) => const HomeLogin(),
@@ -33,7 +42,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: MyColor.lightThemeAccentColor,
         ),
         cardTheme: const CardTheme(color: MyColor.lightThemePrimaryColor),
-        textButtonTheme: TextButtonThemeData(style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black))),
+        textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.black))),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: MyColor.lightThemePrimaryColor,
           selectedItemColor: MyColor.lightThemeIconsandTextColor,
