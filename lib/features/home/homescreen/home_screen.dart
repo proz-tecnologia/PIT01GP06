@@ -102,7 +102,15 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32,
               ),
-              PrimaryButton(navigateTo: () {}, title: 'Adicionar meta'),
+              PrimaryButton(
+                  navigateTo: () {
+                    //TODO: navegação provisória que roteia para a splash
+                    // e verifica se o usuário está logado. Caso positivo volta para a Screen.
+                    // Obs.Apagar depois.
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/splash', (route) => false);
+                  },
+                  title: 'Adicionar meta'),
               const SizedBox(
                 height: 80,
               ),

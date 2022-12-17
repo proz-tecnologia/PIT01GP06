@@ -3,10 +3,9 @@ import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart'
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
-import 'features/home/homesignup/homesignup.dart';
+import 'features/home/homesignup/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'fire_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +23,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // home: const SplashPage(),
-      home: const FirePage(),
+      home: const SplashPage(),
       routes: {
-        'signup': (context) => const HomeSignup(),
-        'login': (context) => const HomeLogin(),
-        'screen': (context) => const HomeScreen(),
+        '/signup': (context) => const HomeSignup(),
+        '/login': (context) => const HomeLogin(),
+        '/screen': (context) => const HomeScreen(),
+        '/splash': (context) => const SplashPage(),
       },
       themeMode: ThemeMode.light,
       theme: ThemeData(

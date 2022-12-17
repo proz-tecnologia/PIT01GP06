@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/features/home/homesignup/signup_controller.dart';
 
 import '../../../theme/global/colors.dart';
+import 'signup_repository.dart';
+import 'signup_state.dart';
 
 class HomeSignup extends StatefulWidget {
   const HomeSignup({super.key});
@@ -10,6 +13,7 @@ class HomeSignup extends StatefulWidget {
 }
 
 class _HomeSignupState extends State<HomeSignup> {
+  final controller = SignInController(HomeSignupRepository());
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nome = TextEditingController();
   final TextEditingController _email = TextEditingController();
@@ -17,6 +21,21 @@ class _HomeSignupState extends State<HomeSignup> {
   final TextEditingController _confirmPassword = TextEditingController();
   bool _obscureTextPassword = true;
   bool _obscureTextConfirmPassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.notifier.addListener(() {
+      if (controller.state is SignupStateError) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Erro no cadastro. Tente novamente!')));
+      }
+      if (controller.state is SignupStateSuccess) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -191,7 +210,7 @@ class _HomeSignupState extends State<HomeSignup> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                  Navigator.pop(context);
+                                Navigator.pop(context);
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor:
@@ -204,12 +223,15 @@ class _HomeSignupState extends State<HomeSignup> {
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),
-                            const SizedBox(width: 20,),
+                            const SizedBox(
+                              width: 20,
+                            ),
                             ElevatedButton(
                               onPressed: () {
-                                if (_formKey.currentState?.validate() ?? false) {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context, 'screen', (Route<dynamic> route)=> false);
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  controller.register(
+                                      _nome.text, _email.text, _password.text);
                                 }
                               },
                               style: ElevatedButton.styleFrom(
