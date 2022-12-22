@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16))),
-        title: const Text('AppName'),
+        title: const Text('Monetiza Action'),
       ),
       bottomNavigationBar: const BottomBar(),
       body: SizedBox(

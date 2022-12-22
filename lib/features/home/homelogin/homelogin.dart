@@ -228,7 +228,8 @@ class _HomeLoginState extends State<HomeLogin> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               onPressed: () {
-                                Navigator.pushNamed(context, ('signup'));
+                                        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/signup', (route) => false);
                               },
                             ),
                           ]),

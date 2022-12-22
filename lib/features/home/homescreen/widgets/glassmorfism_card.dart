@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/features/home/homesignup/signup_controller.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 
 class GlassmorfismCard extends StatefulWidget {
@@ -83,9 +84,9 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                                   fontSize: 16),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Kaio Fonseca',
-                              style: TextStyle(
+                            Text(
+                              SignUpController.getUserName(),
+                              style: const TextStyle(
                                   color: MyColor.lightThemesecondaryTextColor,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24),

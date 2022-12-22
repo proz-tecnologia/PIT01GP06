@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'signup_repository.dart';
 import 'signup_state.dart';
 
-class SignInController {
+class SignUpController {
   final SignupRepository _repository;
-  SignInController(this._repository);
+  SignUpController(this._repository);
   final notifier = ValueNotifier<SignupState>(SignupStateInitial());
   SignupState get state => notifier.value;
 
@@ -17,5 +18,10 @@ class SignInController {
     } catch (e) {
       notifier.value = SignupStateError();
     }
+  }
+
+  static String getUserName() {
+    final auth = FirebaseAuth.instance;
+    return auth.currentUser!.displayName!;
   }
 }

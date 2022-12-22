@@ -80,7 +80,34 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32,
               ),
-              PrimaryButton(navigateTo: () {}, title: 'Adicionar carteira'),
+              PrimaryButton(
+                title: 'Adicionar carteira',
+                navigateTo: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return Wrap(
+                          children: [
+                            ListTile(
+                              leading:
+                                  const Icon(Icons.account_balance_rounded),
+                              title: const Text('Conta'),
+                              onTap: () => {
+                                Navigator.of(context).pushNamed('/addBankAccount')
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.credit_card),
+                              title: const Text('Cartão'),
+                              onTap: () => {
+                                Navigator.of(context).pushNamed('/addCard')
+                              },
+                            ),
+                          ],
+                        );
+                      });
+                },
+              ),
               const SizedBox(
                 height: 32,
               ),
@@ -138,4 +165,27 @@ class HomeScreen extends StatelessWidget {
       ),
     ));
   }
+
+//   void _showModalBottomSheet(BuildContext context) {
+//     showModalBottomSheet(
+//                   context: context,
+//                   builder: (BuildContext bc){
+//                     return Container(
+//                       child: Wrap(
+//                         children: [
+//                           ListTile(
+//                             leading: const Icon(Icons.account_balance_rounded),
+//                             title: const Text('Conta'),
+//                             onTap: () => {},
+//                           ),
+//                           ListTile(
+//                             leading: const Icon(Icons.credit_card),
+//                             title: const Text('Cartão'),
+//                             onTap: () => {},
+//                           ),
+//                         ],
+//                       ),
+//                     );
+//                   });
+//   }
 }
