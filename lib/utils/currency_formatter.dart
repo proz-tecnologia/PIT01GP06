@@ -48,7 +48,7 @@ class CurrencyFormatter extends TextInputFormatter{
 
     // retorna apenas o valor decimal, após o 0
     if (textValue.length == casasDecimais) {
-      valorFinal = "0," + centsValue;
+      valorFinal ='0,$centsValue';
       if (moeda) {
         valorFinal = simbolo + valorFinal;
       }
@@ -63,15 +63,15 @@ class CurrencyFormatter extends TextInputFormatter{
     // formata o número com 0, + centavos
     if (numero > 0 && numero <= 9) {
       if (casasDecimais == 3) {
-        centsValue = "00" + numero.toString();
+        centsValue = '00${numero.toString()}';
       } else {
-        centsValue = "0" + numero.toString();
+        centsValue = '0${numero.toString()}';
       }
 
       numero = 0;
     } else if (numero >= 10 && numero < 100) {
       if (casasDecimais == 3) {
-        centsValue = "0" + numero.toString();
+        centsValue = '0${numero.toString()}';
       } else {
         centsValue = numero.toString();
       }
@@ -84,9 +84,9 @@ class CurrencyFormatter extends TextInputFormatter{
     // adiciona
 
     if (numero > 999) {
-      valorFinal = adicionarSeparador(numero.toString()) + "," + centsValue;
+      valorFinal = '${adicionarSeparador(numero.toString())},$centsValue';
     } else {
-      valorFinal = numero.toString() + "," + centsValue;
+      valorFinal = '${numero.toString()},$centsValue';
     }
 
     if (moeda) {
@@ -106,7 +106,7 @@ class CurrencyFormatter extends TextInputFormatter{
   var pointCount = 0;
   for (var i = texto.length - 1; i > -1; i--) {
     if (pointCount == 3) {
-      valorFinal = "." + valorFinal;
+      valorFinal = '.$valorFinal';
       pointCount = 0;
     }
     pointCount = pointCount + 1;

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:projeto_final_flutter/features/wallets/bank_account/bank_account_model.dart';
 
@@ -19,7 +17,8 @@ class _AddBankAccountState extends State<AddBankAccount> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _instituicaoController = TextEditingController();
   String _tipoConta = 'Corrente';
-  final TextEditingController _saldoController = TextEditingController(text: 'R\$ 0,00');
+  final TextEditingController _saldoController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -101,8 +100,14 @@ class _AddBankAccountState extends State<AddBankAccount> {
                     ),
                     DropdownButtonFormField(
                       value: _tipoConta,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Campo obrigatório.';
+                        }
+                        return null;
+                      },
                       onChanged: (value) {
-                        if(value != null){
+                        if (value != null) {
                           setState(() {
                             _tipoConta = value;
                           });
@@ -126,14 +131,15 @@ class _AddBankAccountState extends State<AddBankAccount> {
                     const SizedBox(
                       height: 30,
                     ),
-                      const Text('Saldo Inicial',
+                    const Text('Saldo Inicial',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(
                       height: 8,
                     ),
                     TextFormField(
                       controller: _saldoController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),                   
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         CurrencyFormatter(),
@@ -156,16 +162,19 @@ class _AddBankAccountState extends State<AddBankAccount> {
                     ),
                     Center(
                       child: PrimaryButton(
-                        navigateTo: (){
-                          BankAccountModel account = BankAccountModel(
-                            nomeConta: _nomeController.text,
-                            nomeInstituicao: _instituicaoController.text,
-                            tipoConta: _tipoConta,
-                            saldoConta: _saldoController.text);
-                          
-                          Navigator.of(context).pushNamedAndRemoveUntil(('/screen'), (route) => false);
-                        },
-                        title: 'Adicionar Conta'),
+                          navigateTo: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              BankAccountModel account = BankAccountModel(
+                                  nomeConta: _nomeController.text,
+                                  nomeInstituicao: _instituicaoController.text,
+                                  tipoConta: _tipoConta,
+                                  saldoConta: _saldoController.text);
+
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  ('/screen'), (route) => false);
+                            }
+                          },
+                          title: 'Adicionar Conta'),
                     )
                   ],
                 ),

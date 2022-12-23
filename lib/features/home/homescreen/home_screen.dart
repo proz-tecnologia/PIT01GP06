@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16))),
-        title: const Text('AppName'),
+        title: const Text('Monetiza Action'),
       ),
       bottomNavigationBar: const BottomBar(),
       body: SizedBox(
@@ -165,27 +165,4 @@ class HomeScreen extends StatelessWidget {
       ),
     ));
   }
-
-//   void _showModalBottomSheet(BuildContext context) {
-//     showModalBottomSheet(
-//                   context: context,
-//                   builder: (BuildContext bc){
-//                     return Container(
-//                       child: Wrap(
-//                         children: [
-//                           ListTile(
-//                             leading: const Icon(Icons.account_balance_rounded),
-//                             title: const Text('Conta'),
-//                             onTap: () => {},
-//                           ),
-//                           ListTile(
-//                             leading: const Icon(Icons.credit_card),
-//                             title: const Text('Cartão'),
-//                             onTap: () => {},
-//                           ),
-//                         ],
-//                       ),
-//                     );
-//                   });
-//   }
 }
