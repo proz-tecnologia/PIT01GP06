@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/animated_fab.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/bottonbar.dart';
@@ -150,7 +151,9 @@ class HomeScreen extends StatelessWidget {
         children: [
           ActionButton(
             icon: const Icon(Icons.trending_down, color: MyColor.red),
-            onPressed: () {},
+            onPressed: () async {
+                   await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushNamedAndRemoveUntil('/signup', (route) => false));
+            },
             text: 'Despesas',
           ),
           ActionButton(

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/features/home/home_controller.dart';
-import 'package:projeto_final_flutter/features/home/widgets/animated_fab.dart';
-import 'package:projeto_final_flutter/features/home/widgets/bottonbar.dart';
-import 'package:projeto_final_flutter/features/home/widgets/card_monthlysummary.dart';
-import 'package:projeto_final_flutter/features/home/widgets/divider_widget.dart';
-import 'package:projeto_final_flutter/features/home/widgets/glassmorfism_card.dart';
-import 'package:projeto_final_flutter/features/home/widgets/metas_card.dart';
-import 'package:projeto_final_flutter/features/home/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/home/widgets/title_widget.dart';
-import 'package:projeto_final_flutter/features/home/widgets/wallet.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/home_controller.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 
-import 'widgets/action_button.dart';
+import 'homescreen/widgets/action_button.dart';
+import 'homescreen/widgets/animated_fab.dart';
+import 'homescreen/widgets/bottonbar.dart';
+import 'homescreen/widgets/card_monthlysummary.dart';
+import 'homescreen/widgets/divider_widget.dart';
+import 'homescreen/widgets/glassmorfism_card.dart';
+import 'homescreen/widgets/metas_card.dart';
+import 'homescreen/widgets/primary_button_widget.dart';
+import 'homescreen/widgets/title_widget.dart';
+import 'homescreen/widgets/wallet.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -96,10 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 32,
               ),
-              Wallet(
-                deleteWallet: () => controller.deleteWallet(),
-                editWallet: () => controller.editWallet(),
-              ),
+              const Wallet(),
               const SizedBox(
                 height: 32,
               ),
@@ -121,10 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 32,
               ),
-              MetasCard(
-                deleteGoal: () => controller.deleteGoal(),
-                editGoal: () => controller.editGoal(),
-              ),
+              const MetasCard(),
               const SizedBox(
                 height: 32,
               ),

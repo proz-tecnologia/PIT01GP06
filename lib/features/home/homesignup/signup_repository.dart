@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'signup_model.dart';
 
 abstract class SignupRepository {
@@ -8,33 +8,39 @@ abstract class SignupRepository {
 
 class HomeSignupRepository implements SignupRepository {
   FirebaseAuth get _signupFirebase => FirebaseAuth.instance;
-
-  Future updateDisplayName(user, text) async {
-    await user.updateDisplayName(text);
-  }
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   @override
   Future<SignupModel> register(
-      String? name, String email, String password) async {
+      String name, String email, String password) async {
     try {
-      final result = await _signupFirebase.createUserWithEmailAndPassword(
+      await _signupFirebase.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      );
-      User? user = result.user;
-      await user?.updateDisplayName(name);
-      await user?.reload();
+      ).then((value) async {
+       registerOnDatabase(value.user!.uid, name, email);
+      });
 
-      user = FirebaseAuth.instance.currentUser;
-      updateDisplayName(user, name);
+      User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
+        await user.updateDisplayName(name);
+        await user.reload();
+        user = _signupFirebase.currentUser;
         return SignupModel(
-            name: user.displayName ?? '', email: email, password: password);
+            name: user!.displayName ?? '', email: email, password: password);
       }
       throw Exception();
     } catch (e) {
       rethrow;
     }
+  }
+  
+  Future<void> registerOnDatabase(String uid, String nome, String email) async {
+    await _db.collection('users').doc(uid).set({
+      'uid': uid,
+      'nome':nome,
+      'email':email,
+    });
   }
 }
