@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto_final_flutter/features/wallets/card/card_repository.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homescreen/widgets/primary_button_widget.dart';
 import 'card_model.dart';
@@ -173,6 +174,8 @@ class _AddCardState extends State<AddCard> {
                                 limiteCartao: _limiteCartaoController.text,
                                 contaDoCartao: _contaVinculada,
                                 );
+
+                              CardRepository().addCard(cardModel);
 
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                   ('/screen'), (route) => false);

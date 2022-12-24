@@ -4,6 +4,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_b
 import 'package:projeto_final_flutter/features/wallets/bank_account/bank_account_model.dart';
 
 import '../../../utils/currency_formatter.dart';
+import 'bank_account_repository.dart';
 
 class AddBankAccount extends StatefulWidget {
   const AddBankAccount({super.key});
@@ -169,6 +170,8 @@ class _AddBankAccountState extends State<AddBankAccount> {
                                   nomeInstituicao: _instituicaoController.text,
                                   tipoConta: _tipoConta,
                                   saldoConta: _saldoController.text);
+
+                                BankAccountRepository().addBankAccount(account);
 
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                   ('/screen'), (route) => false);
