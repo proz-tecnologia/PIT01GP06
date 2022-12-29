@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class DespesasController {
-  //static List<String> listaCategorias = [];
 
   List<Map<String, dynamic>> listaCategorias = [
     {'id': 0, 'categoria': 'Outros'},

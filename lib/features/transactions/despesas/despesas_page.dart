@@ -5,6 +5,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_b
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_model.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import '../../../utils/currency_formatter.dart';
 import 'despesas_controller.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +26,7 @@ class _DespesasPageState extends State<DespesasPage> {
   String _subcategoria = '';
   DespesasController despesasController = DespesasController();
   DespesasRepository despesasRepository = DespesasRepository();
+  TransactionsRepository transactionsRepository = TransactionsRepository(); 
   String _contaVinculada = '';
   String _contaOuCartao = "Conta";
   String _dataDespesa = DateFormat("dd-MM-yyyy").format(DateTime.now());
@@ -205,8 +207,8 @@ class _DespesasPageState extends State<DespesasPage> {
                       ),
                       StreamBuilder<QuerySnapshot>(
                           stream: _contaOuCartao == 'Conta'
-                              ? despesasRepository.getBankAccountsSnapshot()
-                              : despesasRepository.getCardsSnapshot(),
+                              ? transactionsRepository.getBankAccountsSnapshot()
+                              : transactionsRepository.getCardsSnapshot(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData ||
                                 snapshot.data!.docs.isEmpty) {

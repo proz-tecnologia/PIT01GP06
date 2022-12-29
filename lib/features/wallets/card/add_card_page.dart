@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
+import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import 'package:projeto_final_flutter/features/wallets/card/card_repository.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homescreen/widgets/primary_button_widget.dart';
@@ -20,7 +20,7 @@ class _AddCardState extends State<AddCard> {
   String _bandeiraCartao = '';
   String? _contaVinculada;
   final TextEditingController _limiteCartaoController = TextEditingController();
-  DespesasRepository despesasRepository = DespesasRepository();
+  TransactionsRepository transactionsRepository = TransactionsRepository(); 
 
   @override
   void dispose() {
@@ -147,7 +147,7 @@ class _AddCardState extends State<AddCard> {
                         height: 8,
                       ),
                       StreamBuilder<QuerySnapshot>(
-                        stream: despesasRepository.getBankAccountsSnapshot(),
+                        stream: transactionsRepository.getBankAccountsSnapshot(),
                         builder: (context, snapshot) {
                            if (!snapshot.hasData ||
                                 snapshot.data!.docs.isEmpty) {

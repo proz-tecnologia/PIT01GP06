@@ -3,6 +3,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart'
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_page.dart';
+import 'package:projeto_final_flutter/features/transactions/receitas/receitas_page.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 import 'features/wallets/bank_account/add_bank_account_page.dart';
 import 'features/home/homesignup/signup.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/addBankAccount': (context) => const AddBankAccount(),
         '/addCard': (context) => const AddCard(),
         '/addDespesa': (context) => const DespesasPage(),
+        '/addReceita': (context) => const ReceitasPage(),
       },
       supportedLocales: const [
         Locale('pt', 'BR')
