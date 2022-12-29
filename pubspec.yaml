@@ -42,7 +42,7 @@ dependencies:
   firebase_database: ^10.0.7
   cloud_firestore: ^4.2.0
   date_time_picker: ^2.1.0
-  intl: ^0.18.0
+  intl: ^0.17.0
 
   flutter_localizations:
     sdk: flutter
