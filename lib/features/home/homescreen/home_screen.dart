@@ -166,7 +166,9 @@ class HomeScreen extends StatelessWidget {
               Icons.trending_up,
               color: MyColor.lightThemeAccentColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+               Navigator.of(context).pushNamed('/addReceita');
+            },
             text: 'Receitas',
           ),
         ],
