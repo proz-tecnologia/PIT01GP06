@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:projeto_final_flutter/features/wallets/card/card_repository.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homescreen/widgets/primary_button_widget.dart';
@@ -18,6 +20,7 @@ class _AddCardState extends State<AddCard> {
   String _bandeiraCartao = '';
   String? _contaVinculada;
   final TextEditingController _limiteCartaoController = TextEditingController();
+  DespesasRepository despesasRepository = DespesasRepository();
 
   @override
   void dispose() {
@@ -74,12 +77,8 @@ class _AddCardState extends State<AddCard> {
                         height: 8,
                       ),
                       DropdownButtonFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Campo obrigatório.';
-                          }
-                          return null;
-                        },
+                        hint: const Text('Escolha a bandeira do cartão'),
+                        validator: (value) => value == null ? 'Campo obrigatório' : null,
                         onChanged: (value) {
                           if (value != null) {
                             setState(() {
@@ -147,8 +146,15 @@ class _AddCardState extends State<AddCard> {
                       const SizedBox(
                         height: 8,
                       ),
-                      DropdownButtonFormField(
-                        value: _contaVinculada,
+                      StreamBuilder<QuerySnapshot>(
+                        stream: despesasRepository.getBankAccountsSnapshot(),
+                        builder: (context, snapshot) {
+                           if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return const Text('Nenhuma conta adicionada.') ;
+                        }
+                      return DropdownButtonFormField(
+                        // value: _contaVinculada,
                         onChanged: (value) {
                           if (value != null) {
                             setState(() {
@@ -156,33 +162,38 @@ class _AddCardState extends State<AddCard> {
                             });
                           }
                         },
-                        items: const [
-                          DropdownMenuItem(value: null, child: Text('Nenhuma')),
-                          //TODO Add nas opções lista de contas puxando do Firebase
-                        ],
-                      ),
+                        items: 
+                          snapshot.data!.docs.map((e){
+                            return DropdownMenuItem<String>(
+                              value: e.data().toString().contains('nomeConta') ? e['nomeConta'] : '',  
+                              child: e.data().toString().contains('nomeConta') ? Text(e['nomeConta']): const Text(''),
+                            );
+                          }).toList()
+ 
+                      );
+                      }),
                       const SizedBox(
                         height: 30,
                       ),
-                       Center(
-                      child: PrimaryButton(
-                          navigateTo: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              CardModel cardModel = CardModel(
-                                nomeCartao: _nomeController.text,
-                                bandeiraCartao: _bandeiraCartao,
-                                limiteCartao: _limiteCartaoController.text,
-                                contaDoCartao: _contaVinculada,
+                      Center(
+                        child: PrimaryButton(
+                            navigateTo: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                CardModel cardModel = CardModel(
+                                  nomeCartao: _nomeController.text,
+                                  bandeiraCartao: _bandeiraCartao,
+                                  limiteCartao: _limiteCartaoController.text,
+                                  contaDoCartao: _contaVinculada,
                                 );
 
-                              CardRepository().addCard(cardModel);
+                                CardRepository().addCard(cardModel);
 
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  ('/screen'), (route) => false);
-                            }
-                          },
-                          title: 'Adicionar Conta'),
-                    )
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    ('/screen'), (route) => false);
+                              } 
+                            },
+                            title: 'Adicionar Conta'),
+                      )
                     ],
                   ))
             ],

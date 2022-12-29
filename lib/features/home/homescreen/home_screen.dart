@@ -27,6 +27,11 @@ class HomeScreen extends StatelessWidget {
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16))),
         title: const Text('Monetiza Action'),
+        leading: IconButton(
+            icon: const Icon(Icons.logout_sharp),
+            onPressed: () async => await FirebaseAuth.instance.signOut().then(
+                (value) => Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/signup', (route) => false))),
       ),
       bottomNavigationBar: const BottomBar(),
       body: SizedBox(
@@ -94,15 +99,15 @@ class HomeScreen extends StatelessWidget {
                                   const Icon(Icons.account_balance_rounded),
                               title: const Text('Conta'),
                               onTap: () => {
-                                Navigator.of(context).pushNamed('/addBankAccount')
+                                Navigator.of(context)
+                                    .pushNamed('/addBankAccount')
                               },
                             ),
                             ListTile(
                               leading: const Icon(Icons.credit_card),
                               title: const Text('Cartão'),
-                              onTap: () => {
-                                Navigator.of(context).pushNamed('/addCard')
-                              },
+                              onTap: () =>
+                                  {Navigator.of(context).pushNamed('/addCard')},
                             ),
                           ],
                         );
@@ -151,8 +156,8 @@ class HomeScreen extends StatelessWidget {
         children: [
           ActionButton(
             icon: const Icon(Icons.trending_down, color: MyColor.red),
-            onPressed: () async {
-                   await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushNamedAndRemoveUntil('/signup', (route) => false));
+            onPressed: () {
+              Navigator.of(context).pushNamed('/addDespesa');
             },
             text: 'Despesas',
           ),
