@@ -13,7 +13,7 @@ class HomeSignup extends StatefulWidget {
 }
 
 class _HomeSignupState extends State<HomeSignup> {
-  final controller = SignInController(HomeSignupRepository());
+  final controller = SignUpController(HomeSignupRepository());
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nome = TextEditingController();
   final TextEditingController _email = TextEditingController();

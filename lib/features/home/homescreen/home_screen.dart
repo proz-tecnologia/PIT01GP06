@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/animated_fab.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/bottonbar.dart';
@@ -25,7 +26,12 @@ class HomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16))),
-        title: const Text('AppName'),
+        title: const Text('Monetiza Action'),
+        leading: IconButton(
+            icon: const Icon(Icons.logout_sharp),
+            onPressed: () async => await FirebaseAuth.instance.signOut().then(
+                (value) => Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/signup', (route) => false))),
       ),
       bottomNavigationBar: const BottomBar(),
       body: SizedBox(
@@ -80,7 +86,34 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32,
               ),
-              PrimaryButton(navigateTo: () {}, title: 'Adicionar carteira'),
+              PrimaryButton(
+                title: 'Adicionar carteira',
+                navigateTo: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return Wrap(
+                          children: [
+                            ListTile(
+                              leading:
+                                  const Icon(Icons.account_balance_rounded),
+                              title: const Text('Conta'),
+                              onTap: () => {
+                                Navigator.of(context)
+                                    .pushNamed('/addBankAccount')
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.credit_card),
+                              title: const Text('Cartão'),
+                              onTap: () =>
+                                  {Navigator.of(context).pushNamed('/addCard')},
+                            ),
+                          ],
+                        );
+                      });
+                },
+              ),
               const SizedBox(
                 height: 32,
               ),
@@ -123,7 +156,9 @@ class HomeScreen extends StatelessWidget {
         children: [
           ActionButton(
             icon: const Icon(Icons.trending_down, color: MyColor.red),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/addDespesa');
+            },
             text: 'Despesas',
           ),
           ActionButton(
@@ -131,7 +166,9 @@ class HomeScreen extends StatelessWidget {
               Icons.trending_up,
               color: MyColor.lightThemeAccentColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+               Navigator.of(context).pushNamed('/addReceita');
+            },
             text: 'Receitas',
           ),
         ],

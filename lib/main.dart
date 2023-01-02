@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart';
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_page.dart';
+import 'package:projeto_final_flutter/features/transactions/receitas/receitas_page.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+import 'features/wallets/bank_account/add_bank_account_page.dart';
 import 'features/home/homesignup/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'features/wallets/card/add_card_page.dart';
 import 'firebase_options.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,14 +27,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // home: const SplashPage(),
       home: const SplashPage(),
       routes: {
         '/signup': (context) => const HomeSignup(),
         '/login': (context) => const HomeLogin(),
         '/screen': (context) => const HomeScreen(),
         '/splash': (context) => const SplashPage(),
+        '/addBankAccount': (context) => const AddBankAccount(),
+        '/addCard': (context) => const AddCard(),
+        '/addDespesa': (context) => const DespesasPage(),
+        '/addReceita': (context) => const ReceitasPage(),
       },
+      supportedLocales: const [
+        Locale('pt', 'BR')
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       themeMode: ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
