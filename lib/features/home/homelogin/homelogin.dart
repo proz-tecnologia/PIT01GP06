@@ -20,10 +20,10 @@ class _HomeLoginState extends State<HomeLogin> {
   final TextEditingController _password = TextEditingController();
   bool _obscureText = true;
 
-  void _saveAutenticated() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(SharedPreferencesKeys.userLogged, true);
-  }
+  // void _saveAutenticated() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool(SharedPreferencesKeys.userLogged, true);
+  // }
 
   @override
   void initState() {
@@ -34,8 +34,6 @@ class _HomeLoginState extends State<HomeLogin> {
             const SnackBar(content: Text('Erro no login! Tente outra vez!')));
       }
       if (controller.state is HomeLoginStateSuccess) {
-        //Altera o estado  da aplicação na Splash para logado
-        _saveAutenticated();
         //Navega para a pagina de acesso principal da aplicação
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/screen', (route) => false);
@@ -228,8 +226,7 @@ class _HomeLoginState extends State<HomeLogin> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               onPressed: () {
-                                        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/signup', (route) => false);
+                                Navigator.pushNamed(context, ('/signup'));                                        
                               },
                             ),
                           ]),

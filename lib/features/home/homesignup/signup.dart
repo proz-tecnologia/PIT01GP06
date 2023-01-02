@@ -203,47 +203,63 @@ class _HomeSignupState extends State<HomeSignup> {
                       const SizedBox(
                         height: 20,
                       ),
-                      SizedBox(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      MyColor.lightThemeBackgroundColor,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)))),
-                              child: const Text(
-                                'VOLTAR',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  controller.register(
-                                      _nome.text, _email.text, _password.text);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: MyColor.darkThemeAccentColor,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)))),
-                              child: const Text('CONTINUAR'),
-                            ),
-                          ],
-                        ),
-                      )
+                      ValueListenableBuilder(
+                          valueListenable: controller.notifier,
+                          builder: (_, state, __) {
+                            return (state is SignupStateLoading)
+                                ? const CircularProgressIndicator()
+                                : SizedBox(
+                                    height: 50,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: MyColor
+                                                  .lightThemeBackgroundColor,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0)))),
+                                          child: const Text(
+                                            'VOLTAR',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState
+                                                    ?.validate() ??
+                                                false) {
+                                              controller.register(_nome.text,
+                                                  _email.text, _password.text);
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  MyColor.darkThemeAccentColor,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0)))),
+                                          child: const Text('CONTINUAR'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                          })
                     ],
                   ))
             ],
