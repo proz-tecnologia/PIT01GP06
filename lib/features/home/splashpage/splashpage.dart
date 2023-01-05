@@ -1,7 +1,9 @@
 //import 'package:first_app/shared/widgets/logo.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/features/home/splashpage/splash_states.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashcontroller.dart';
+import 'package:projeto_final_flutter/shared/injection.dart';
+
+import '../homelogin/homelogin_repository.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -11,13 +13,13 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final SplashController controller = SplashController();
+  final controller = SplashController(getIt.get<HomeLoginRepository>());
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3)).then((value) {
       controller.isAuthenticated().then((value) {
-        if (value is SplashStateAuthenticated) {
+        if (controller.state == SplashState.authenticated) {
           Navigator.of(context).pushReplacementNamed('/screen');
         }
       });

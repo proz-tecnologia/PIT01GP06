@@ -5,6 +5,7 @@ import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_page.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_page.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+import 'features/transactions/metas/metas_page.dart';
 import 'features/wallets/bank_account/add_bank_account_page.dart';
 import 'features/home/homesignup/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,10 +38,9 @@ class MyApp extends StatelessWidget {
         '/addCard': (context) => const AddCard(),
         '/addDespesa': (context) => const DespesasPage(),
         '/addReceita': (context) => const ReceitasPage(),
+        '/metas': (context) => const MetasPage(),
       },
-      supportedLocales: const [
-        Locale('pt', 'BR')
-      ],
+      supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

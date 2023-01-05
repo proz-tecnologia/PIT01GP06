@@ -137,11 +137,8 @@ class HomeScreen extends StatelessWidget {
               ),
               PrimaryButton(
                   navigateTo: () {
-                    //TODO: navegação provisória que roteia para a splash
-                    // e verifica se o usuário está logado. Caso positivo volta para a Screen.
-                    // Obs.Apagar depois.
                     Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/splash', (route) => false);
+                        .pushNamedAndRemoveUntil('/metas', (route) => false);
                   },
                   title: 'Adicionar meta'),
               const SizedBox(
@@ -167,7 +164,7 @@ class HomeScreen extends StatelessWidget {
               color: MyColor.lightThemeAccentColor,
             ),
             onPressed: () {
-               Navigator.of(context).pushNamed('/addReceita');
+              Navigator.of(context).pushNamed('/addReceita');
             },
             text: 'Receitas',
           ),

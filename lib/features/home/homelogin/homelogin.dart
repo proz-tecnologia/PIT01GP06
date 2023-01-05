@@ -20,11 +20,6 @@ class _HomeLoginState extends State<HomeLogin> {
   final TextEditingController _password = TextEditingController();
   bool _obscureText = true;
 
-  // void _saveAutenticated() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool(SharedPreferencesKeys.userLogged, true);
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -226,7 +221,7 @@ class _HomeLoginState extends State<HomeLogin> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               onPressed: () {
-                                Navigator.pushNamed(context, ('/signup'));                                        
+                                Navigator.pushNamed(context, ('/signup'));
                               },
                             ),
                           ]),
