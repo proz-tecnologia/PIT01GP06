@@ -17,13 +17,15 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3)).then((value) {
-      controller.isAuthenticated().then((value) {
-        if (controller.state == SplashState.authenticated) {
-          Navigator.of(context).pushReplacementNamed('/screen');
-        }
-      });
-      Navigator.of(context).pushReplacementNamed('/login');
+    controller.isAuthenticated();
+    controller.notifier.addListener(() {
+      if (controller.state == SplashState.authenticated) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/screen', (route) => false);
+      } else {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+      }
     });
   }
 

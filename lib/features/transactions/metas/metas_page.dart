@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:date_time_picker/date_time_picker.dart';
+//import 'package:date_time_picker/date_time_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
@@ -18,6 +18,8 @@ class MetasPage extends StatefulWidget {
 }
 
 class _MetasPageState extends State<MetasPage> {
+  final decimalController =
+      MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.');
   final controller = MetasController(
     getIt.get<HomeLoginRepository>(),
     FirebaseMetasRepository(),
@@ -27,11 +29,42 @@ class _MetasPageState extends State<MetasPage> {
   final TextEditingController _objectiveController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _perfomanceController = TextEditingController();
-  //final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
   final TextEditingController _iconController = TextEditingController();
 
   int _indexSelecionado = 0;
-  DateTime _datePreview = DateTime.now();
+
+  void _createGoals() {
+    final double? valueGoals = double.tryParse(_valueController.text);
+    decimalController.updateValue(valueGoals!);
+    final double? valuePerfomance = double.tryParse(_perfomanceController.text);
+    decimalController.updateValue(valuePerfomance!);
+    var dateMeta = DateFormat("dd-MM-yyyy").parse(_dateController.text);
+
+    log("passei do createGoals");
+    log("o valor de valuegoasl é: $valueGoals");
+    controller.addMetas(
+      _objectiveController.text,
+      valueGoals,
+      valuePerfomance,
+      dateMeta,
+      _iconController.text,
+    );
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+
+    // if (valueGoals != null && valuePerfomance != null) {
+    //   controller.addMetas(
+    //     _objectiveController.text,
+    //     valueGoals,
+    //     valuePerfomance,
+    //     _datePreview,
+    //     _iconController.text,
+    //   );
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+    // }
+  }
 
   @override
   void dispose() {
@@ -118,12 +151,24 @@ class _MetasPageState extends State<MetasPage> {
                       ),
                       TextFormField(
                         controller: _perfomanceController,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          CurrencyFormatter(),
+                        ],
                         decoration: InputDecoration(
-                          hintText: 'Tipo de investimento',
+                          hintText: 'R\$ 00,00',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Campo obrigatório.';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 30,
@@ -138,19 +183,31 @@ class _MetasPageState extends State<MetasPage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      DateTimePicker(
-                        locale: const Locale('pt', 'BR'),
-                        type: DateTimePickerType.date,
-                        dateMask: 'dd/MM/yyyy',
-                        initialValue: DateTime.now().toString(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                        icon: const Icon(Icons.event),
-                        dateLabelText: 'Data',
-                        onChanged: (val) => setState(() {
-                          _datePreview = DateTime.parse(val);
-                        }),
+                      TextFormField(
+                        controller: _dateController,
+                        decoration: InputDecoration(
+                          hintText: 'Formato 12/05/2022',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
                       ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      // DateTimePicker(
+                      //   locale: const Locale('pt', 'BR'),
+                      //   type: DateTimePickerType.date,
+                      //   dateMask: 'dd/MM/yyyy',
+                      //   initialValue: DateTime.now().toString(),
+                      //   firstDate: DateTime(2020),
+                      //   lastDate: DateTime(2030),
+                      //   icon: const Icon(Icons.event),
+                      //   dateLabelText: 'Data',
+                      //   onChanged: (val) => setState(() {
+                      //     _datePreview = DateTime.parse(val);
+                      //   }),
+                      // ),
                       const SizedBox(
                         height: 30,
                       ),
@@ -176,23 +233,14 @@ class _MetasPageState extends State<MetasPage> {
                 height: 30,
               ),
               Center(
-                child: PrimaryButton(
-                  title: ('Adicionar meta'),
-                  navigateTo: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      controller.addMetas(
-                        '',
-                        _objectiveController.text,
-                        int.parse(_valueController.text),
-                        int.parse(_perfomanceController.text),
-                        _datePreview,
-                        _iconController.text.toString(),
-                      );
-
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
+                child: ElevatedButton(
+                  onPressed: () {
+                    _createGoals;
+                    // if (_formKey.currentState?.validate() ?? false) {
+                    //   _createGoals;
+                    // }
                   },
+                  child: const Text('Adicionar meta'),
                 ),
               ),
               const SizedBox(

@@ -8,14 +8,14 @@ abstract class MetasRepository {
 
 class FirebaseMetasRepository implements MetasRepository {
   final _firestore = FirebaseFirestore.instance;
-
+  final _uid = FirebaseAuth.instance.currentUser!.uid;
   @override
   Future<bool> addMetas(MetasModel metasModel) async {
     try {
       final result = await _firestore
-          .collection('iduser')
-          .doc('xW0eG9pJNbAGEmQPHm1b')
-          .collection('accounts')
+          .collection('IdUser')
+          .doc(_uid)
+          .collection("contas")
           .add(metasModel.toMap());
       return result.id.isNotEmpty;
     } catch (e) {

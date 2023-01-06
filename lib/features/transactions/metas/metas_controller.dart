@@ -17,7 +17,7 @@ class MetasController {
 
   MetasController(this._loginRepository, this._metasRepository);
 
-  Future<void> addMetas(String id, String objective, int value, int perfomance,
+  Future<void> addMetas(String objective, double value, double perfomance,
       DateTime date, String icon) async {
     notifier.value = MetasInitialState();
     try {

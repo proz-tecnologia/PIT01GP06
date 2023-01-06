@@ -1,14 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class MetasModel {
   final String? id;
   final String objective;
-  final int value;
+  final double value;
   final DateTime date;
   final String idUser;
   final String icon;
-  final int perfomance;
-
+  final double perfomance;
   MetasModel({
     this.id,
     required this.objective,
@@ -22,11 +22,11 @@ class MetasModel {
   MetasModel copyWith({
     String? id,
     String? objective,
-    int? value,
+    double? value,
     DateTime? date,
     String? idUser,
     String? icon,
-    int? perfomance,
+    double? perfomance,
   }) {
     return MetasModel(
       id: id ?? this.id,
@@ -41,6 +41,7 @@ class MetasModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'objective': objective,
       'value': value,
       'date': date.millisecondsSinceEpoch,
@@ -50,19 +51,22 @@ class MetasModel {
     };
   }
 
-  factory MetasModel.fromMap(String id, Map<String, dynamic> map) {
+  factory MetasModel.fromMap(Map<String, dynamic> map) {
     return MetasModel(
-      id: id, //map['id'] != null ? map['id'] as String : null,
+      id: map['id'] != null ? map['id'] as String : null,
       objective: map['objective'] as String,
-      value: map['value'] as int,
+      value: map['value'] as double,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
       idUser: map['idUser'] as String,
       icon: map['icon'] as String,
-      perfomance: map['perfomance'] as int,
+      perfomance: map['perfomance'] as double,
     );
   }
 
   String toJson() => json.encode(toMap());
+
+  factory MetasModel.fromJson(String source) =>
+      MetasModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

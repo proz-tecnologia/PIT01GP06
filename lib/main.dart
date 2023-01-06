@@ -12,13 +12,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'features/wallets/card/add_card_page.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'shared/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  setup();
   runApp(const MyApp());
 }
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/addReceita': (context) => const ReceitasPage(),
         '/metas': (context) => const MetasPage(),
       },
-      supportedLocales: const [Locale('pt', 'BR')],
+      supportedLocales: const [Locale('en', 'US')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
