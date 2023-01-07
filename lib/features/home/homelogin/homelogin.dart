@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../shared/shared_preferences_keys.dart';
 import '../../../theme/global/colors.dart';
 import 'homelogin_controller.dart';
 import 'homelogin_repository.dart';

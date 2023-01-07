@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,18 +27,16 @@ class _MetasPageState extends State<MetasPage> {
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
-  // final TextEditingController _valueController = TextEditingController();
   final _valueController =
       MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-  // final TextEditingController _perfomanceController = TextEditingController();
   final _perfomanceController =
       MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-  final TextEditingController _dateController = TextEditingController();
   final TextEditingController _iconController = TextEditingController();
+
+  get dataPrevista => _dateGoal;
 
   final DateTime _dateGoal =
       DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
-  get dataPrevista => _dateGoal;
 
   @override
   void dispose() {
@@ -155,18 +152,6 @@ class _MetasPageState extends State<MetasPage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      // TextFormField(
-                      //   controller: _dateController,
-                      //   decoration: InputDecoration(
-                      //     hintText: 'Formato 12/05/2022',
-                      //     border: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(16),
-                      //     ),
-                      //   ),
-                      // ),
-                      // const SizedBox(
-                      //   height: 30,
-                      // ),
                       DateTimePicker(
                         locale: const Locale('pt', 'BR'),
                         type: DateTimePickerType.date,
@@ -180,7 +165,6 @@ class _MetasPageState extends State<MetasPage> {
                           var _datePreview = DateTime.parse(val);
                           DateTime _dateGoal = DateTime.parse(
                               DateFormat("yyyy-MM-dd").format(_datePreview));
-                          print(" datePreview $_dateGoal");
                         }),
                       ),
                       const SizedBox(
@@ -209,20 +193,12 @@ class _MetasPageState extends State<MetasPage> {
               ),
               Center(
                 child: PrimaryButton(
-                    title: ('Adicionar receita'),
+                    title: ('Adicionar meta'),
                     navigateTo: () {
                       var valueGols = _valueController.numberValue;
                       var valuePerfomance = _perfomanceController.numberValue;
-
-                      // var dateMeta = DateTime.parse(DateFormat('yyyy-MM-dd')
-                      //     .format(DateFormat('dd/MM/yyyy')
-                      //     .parse(_dateController.text)));
-                      // var dateMeta = DateTime.parse(DateFormat('yyyy-MM-dd')
-                      //     .format(DateFormat('dd/MM/yyyy')
-                      //         .parse(_dateController.text)));
-                      // print(dateMeta);
-
                       controller.addMetas(
+                        'meta',
                         _objectiveController.text,
                         valueGols,
                         valuePerfomance,

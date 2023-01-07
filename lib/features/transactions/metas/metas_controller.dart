@@ -16,12 +16,13 @@ class MetasController {
 
   MetasController(this._loginRepository, this._metasRepository);
 
-  Future<void> addMetas(String objective, double value, double perfomance,
+  Future<void> addMetas(String goal, String objective, double value, double perfomance,
       DateTime date, String icon) async {
     notifier.value = MetasInitialState();
     try {
       final userId = _loginRepository.currentUser?.uid ?? '';
       final metasModel = MetasModel(
+          goal: goal,
           objective: objective,
           value: value,
           date: date,
