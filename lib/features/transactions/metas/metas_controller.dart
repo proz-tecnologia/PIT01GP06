@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../home/homelogin/homelogin_repository.dart';
@@ -33,7 +32,6 @@ class MetasController {
       if (await _metasRepository.addMetas(metasModel)) {
         notifier.value = MetasSuccessState();
       }
-      throw Exception();
     } catch (e) {
       notifier.value = MetasErrorState();
     }

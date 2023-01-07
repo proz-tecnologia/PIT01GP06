@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../shared/constant.dart';
 import 'metas_model.dart';
 
 abstract class MetasRepository {
@@ -13,9 +14,9 @@ class FirebaseMetasRepository implements MetasRepository {
   Future<bool> addMetas(MetasModel metasModel) async {
     try {
       final result = await _firestore
-          .collection('IdUser')
+          .collection(db)
           .doc(_uid)
-          .collection("contas")
+          .collection(accounts)
           .add(metasModel.toMap());
       return result.id.isNotEmpty;
     } catch (e) {
@@ -23,16 +24,3 @@ class FirebaseMetasRepository implements MetasRepository {
     }
   }
 }
-
-
- // Map<String, dynamic> toMap() {
-  //   return <String, dynamic>{
-  //     'id': id,
-  //     'objective': objective,
-  //     'value': value,
-  //     'date': date.millisecondsSinceEpoch,
-  //     'idUser': idUser,
-  //     'icon': icon,
-  //     'perfomance': perfomance.map((x) => x.toMap()).toList(),
-  //   };
-  // }

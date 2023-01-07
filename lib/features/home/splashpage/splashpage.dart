@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashcontroller.dart';
 import 'package:projeto_final_flutter/shared/injection.dart';
-
 import '../homelogin/homelogin_repository.dart';
 
 class SplashPage extends StatefulWidget {

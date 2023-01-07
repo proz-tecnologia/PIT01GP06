@@ -9,6 +9,7 @@ class MetasModel {
   final String idUser;
   final String icon;
   final double perfomance;
+
   MetasModel({
     this.id,
     required this.objective,
@@ -41,7 +42,6 @@ class MetasModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'objective': objective,
       'value': value,
       'date': date.millisecondsSinceEpoch,
@@ -51,9 +51,9 @@ class MetasModel {
     };
   }
 
-  factory MetasModel.fromMap(Map<String, dynamic> map) {
+  factory MetasModel.fromMap(String id, Map<String, dynamic> map) {
     return MetasModel(
-      id: map['id'] != null ? map['id'] as String : null,
+      id: id, //map['id'] != null ? map['id'] as String : null,
       objective: map['objective'] as String,
       value: map['value'] as double,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
@@ -62,11 +62,6 @@ class MetasModel {
       perfomance: map['perfomance'] as double,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory MetasModel.fromJson(String source) =>
-      MetasModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
