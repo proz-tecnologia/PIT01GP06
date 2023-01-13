@@ -55,7 +55,7 @@ class MetasModel {
 
   factory MetasModel.fromMap(String id, Map<String, dynamic> map) {
     return MetasModel(
-      id: id, //map['id'] != null ? map['id'] as String : null,
+      id: id,
       goal: map['goal'] as String,
       objective: map['objective'] as String,
       value: map['value'] as double,

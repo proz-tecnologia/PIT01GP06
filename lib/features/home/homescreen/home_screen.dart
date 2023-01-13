@@ -10,10 +10,26 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_b
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/title_widget.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+import '../../../shared/injection.dart';
+import '../../transactions/metas/metas_state.dart';
+import 'homescreen_controller.dart';
 import 'widgets/action_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final controllerScreenMetas = getIt.get<MetaScreenController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controllerScreenMetas.getMetas();    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +147,52 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 32,
               ),
-              const MetasCard(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: ValueListenableBuilder(
+                  valueListenable: controllerScreenMetas.notifier,
+                  builder: (context, state, _) {
+                    if (state is MetasInitialState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is MetasErrorState) {
+                      return const Text('Não há dados a serem exibidos');
+                    }
+                    if (state is MetasSuccessState) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 460.0,
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.all(8.0),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: state.todoMetas.length,
+                                  itemBuilder: (context, index) {
+                                    final todo = state.todoMetas[index];
+                                    return SizedBox(
+                                      width: 350.0,
+                                      child: MetasCard(
+                                          UniqueKey(),
+                                          todo.id,
+                                          todo.objective,
+                                          todo.value,
+                                          todo.date,
+                                          todo.icon,
+                                          todo.perfomance),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
               const SizedBox(
                 height: 32,
               ),

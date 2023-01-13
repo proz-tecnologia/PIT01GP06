@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/addReceita': (context) => const ReceitasPage(),
         '/metas': (context) => const MetasPage(),
       },
-      supportedLocales: const [Locale('en', 'US')],
+      supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

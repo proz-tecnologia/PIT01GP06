@@ -27,10 +27,10 @@ class _MetasPageState extends State<MetasPage> {
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
-  final _valueController =
-      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-  final _perfomanceController =
-      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
+  final _valueController = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+  final _perfomanceController = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
 
   get dataPrevista => _dateGoal;
@@ -162,9 +162,10 @@ class _MetasPageState extends State<MetasPage> {
                         icon: const Icon(Icons.event),
                         dateLabelText: 'Data',
                         onChanged: (val) => setState(() {
-                          var _datePreview = DateTime.parse(val);
-                          DateTime _dateGoal = DateTime.parse(
-                              DateFormat("yyyy-MM-dd").format(_datePreview));
+                          var datePreview = DateTime.parse(val);
+                          // ignore: unused_local_variable
+                          DateTime dateGoal = DateTime.parse(
+                              DateFormat("yyyy-MM-dd").format(datePreview));
                         }),
                       ),
                       const SizedBox(
@@ -198,6 +199,7 @@ class _MetasPageState extends State<MetasPage> {
                       var valueGols = _valueController.numberValue;
                       var valuePerfomance = _perfomanceController.numberValue;
                       controller.addMetas(
+                        '',
                         'meta',
                         _objectiveController.text,
                         valueGols,
