@@ -1,17 +1,22 @@
-import 'package:projeto_final_flutter/features/home/splashpage/splash_states.dart';
-import 'package:projeto_final_flutter/shared/shared_preferences_keys.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
+import '../homelogin/homelogin_repository.dart';
+
+enum SplashState { loading, authenticated, unauthenticated }
 
 class SplashController {
-  Future<SplashState> isAuthenticated() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isAuthenticated =
-        prefs.getBool(SharedPreferencesKeys.userLogged) ?? false;
+  final HomeLoginRepository _repository;
+  SplashController(this._repository);
 
-    if (isAuthenticated) {
-      return SplashStateAuthenticated();
+  final notifier = ValueNotifier<SplashState>(SplashState.loading);
+  SplashState get state => notifier.value;
+
+  Future<void> isAuthenticated() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (_repository.isLogged) {
+      notifier.value = SplashState.authenticated;
     } else {
-      return SplashUnauthenticated();
+      notifier.value = SplashState.unauthenticated;
     }
   }
 }

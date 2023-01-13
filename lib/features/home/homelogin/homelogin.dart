@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../shared/shared_preferences_keys.dart';
 import '../../../theme/global/colors.dart';
 import 'homelogin_controller.dart';
 import 'homelogin_repository.dart';
@@ -19,11 +17,6 @@ class _HomeLoginState extends State<HomeLogin> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   bool _obscureText = true;
-
-  // void _saveAutenticated() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool(SharedPreferencesKeys.userLogged, true);
-  // }
 
   @override
   void initState() {
@@ -226,7 +219,7 @@ class _HomeLoginState extends State<HomeLogin> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               onPressed: () {
-                                Navigator.pushNamed(context, ('/signup'));                                        
+                                Navigator.pushNamed(context, ('/signup'));
                               },
                             ),
                           ]),

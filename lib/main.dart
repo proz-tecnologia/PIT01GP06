@@ -5,19 +5,21 @@ import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_page.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_page.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+import 'features/transactions/metas/metas_page.dart';
 import 'features/wallets/bank_account/add_bank_account_page.dart';
 import 'features/home/homesignup/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/wallets/card/add_card_page.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'shared/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  setup();
   runApp(const MyApp());
 }
 
@@ -37,10 +39,9 @@ class MyApp extends StatelessWidget {
         '/addCard': (context) => const AddCard(),
         '/addDespesa': (context) => const DespesasPage(),
         '/addReceita': (context) => const ReceitasPage(),
+        '/metas': (context) => const MetasPage(),
       },
-      supportedLocales: const [
-        Locale('pt', 'BR')
-      ],
+      supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
