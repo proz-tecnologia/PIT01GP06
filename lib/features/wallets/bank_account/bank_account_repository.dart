@@ -13,8 +13,8 @@ class BankAccountRepository implements IBankAccountRepository{
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
-  Future<void> addBankAccount(BankAccountModel bankAccount) {
-    return _db.collection("users")
+  Future<void> addBankAccount(BankAccountModel bankAccount) async {
+    await _db.collection("users")
             .doc(_uid)
             .collection('bankAccounts')
             .add(bankAccount.toMap());
