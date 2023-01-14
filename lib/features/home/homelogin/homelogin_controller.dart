@@ -1,73 +1,32 @@
 import 'package:flutter/material.dart';
-import 'homelogin_model.dart';
+import 'package:projeto_final_flutter/features/home/homelogin/homelogin_state.dart';
 import 'homelogin_repository.dart';
-import 'homelogin_state.dart';
 
-class HomeLoginController extends ChangeNotifier {
-  final HomeLoginRepository repository;
-  HomeLoginController(this.repository);
+class HomeLoginController {
+  final HomeLoginRepository _repository;
+  HomeLoginController(this._repository);
+  final notifier = ValueNotifier<HomeLoginState>(HomeLoginStateInitial());
+  HomeLoginState get state => notifier.value;
 
-  HomeLoginState _state = HomeLoginStateInitial();
-
-  HomeLoginState get state => _state;
-
-  List<User> _users = [];
-
-  List<User> get users => _users;
-
-  void updateState(HomeLoginState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
-  void createUser({
-    required String loginId,
-    required String email,
-    required String pwd,
-  }) async {
-    updateState(HomeLoginStateLoading());
+  Future<void> login(String email, String password) async {
+    notifier.value = HomeLoginStateLoading();
     try {
-      final result = await repository.createUser(
-        User(loginId: loginId, email: email, pwd: pwd),
-      );
-      if (result) {
-        updateState(HomeLoginStateSuccess());
-      } else {
-        updateState(HomeLoginStateError());
-      }
+      await Future.delayed(const Duration(seconds: 2));
+      await _repository.login(email, password);
+      notifier.value = HomeLoginStateSuccess();
     } catch (e) {
-      updateState(HomeLoginStateError());
+      notifier.value = HomeLoginStateError();
     }
   }
 
-  Future<void> getUsers() async {
-    updateState(HomeLoginStateLoading());
-    try {
-      _users = await repository.getUsers();
-      if (_users.isNotEmpty) {
-        updateState(HomeLoginStateSuccess());
-      } else {
-        updateState(HomeLoginStateInitial());
-      }
-    } catch (e) {
-      updateState(HomeLoginStateError());
-    }
-  }
-
-  Future<void> getLogin(String email, String pwd) async {
-    final mail = email;
-    final senha = pwd;
-
-    updateState(HomeLoginStateLoading());
-    try {
-      final login = await repository.getLogin(mail, senha);
-      if (login == true) {
-        updateState(HomeLoginStateSuccess());
-      } else {
-        updateState(HomeLoginStateInitial());
-      }
-    } catch (e) {
-      updateState(HomeLoginStateError());
-    }
-  }
+  // Future<void> register(String email, String password) async {
+  //   notifier.value = HomeLoginStateLoading();
+  //   try {
+  //     await Future.delayed(const Duration(seconds: 2));
+  //     await _repository.register(email, password);
+  //     notifier.value = HomeLoginStateSuccess();
+  //   } catch (e, stackTrace) {
+  //     notifier.value = HomeLoginStateError();
+  //   }
+  // }
 }

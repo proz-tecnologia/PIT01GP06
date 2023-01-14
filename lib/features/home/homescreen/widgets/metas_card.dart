@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/delete_button.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/editbutton.dart';
+import '../../../../shared/injection.dart';
+import '../homescreen_controller.dart';
 
-class MetasCard extends StatelessWidget {
-  const MetasCard({Key? key}) : super(key: key);
+class MetasCard extends StatefulWidget {
+  final String? id;
+  final String objective;
+  final double value;
+  final DateTime date;
+  final String icon;
+  final double perfomance;
+
+  const MetasCard(
+    Key? key,
+    this.id,
+    this.objective,
+    this.value,
+    this.date,
+    this.icon,
+    this.perfomance,
+  ) : super(key: key);
+
+  @override
+  State<MetasCard> createState() => _MetasCardState();
+}
+
+class _MetasCardState extends State<MetasCard> {
+  final controllerScreenMetas = getIt.get<MetaScreenController>();
+
+  double get progress =>
+      double.parse(((widget.perfomance / widget.value).toStringAsFixed(2)));
+
+  String? get idRegistro => widget.id;
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +59,18 @@ class MetasCard extends StatelessWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Objetivo:',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           Text(
-                            'Viagem Irlanda',
-                            style: TextStyle(
+                            widget.objective,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
@@ -62,18 +91,18 @@ class MetasCard extends StatelessWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Valor estimado:',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           Text(
-                            'R\$ 4.000,00',
-                            style: TextStyle(
+                            'R\$ ${widget.value.toStringAsFixed(2)}',
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
@@ -94,18 +123,18 @@ class MetasCard extends StatelessWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'Valor guardado:',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           Text(
-                            'R\$ 2.000,00',
-                            style: TextStyle(
+                            'R\$ ${widget.perfomance.toStringAsFixed(2)}',
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
@@ -117,18 +146,20 @@ class MetasCard extends StatelessWidget {
                         horizontal: 40, vertical: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16)),
                           child: LinearProgressIndicator(
                             minHeight: 22,
-                            value: 0.5,
-                            backgroundColor: Color(0xffFAEEE7),
-                            color: Color(0xffF7B538),
+                            value: progress,
+                            backgroundColor: const Color(0xffFAEEE7),
+                            color: const Color(0xffF7B538),
                           ),
                         ),
-                        SizedBox(height: 8),
-                        Text('50% concluído')
+                        const SizedBox(height: 8),
+                        Text(
+                            '${(progress * 100).toStringAsFixed(2)} % concluído')
                       ],
                     ),
                   ),
@@ -136,7 +167,9 @@ class MetasCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       DeleteButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          controllerScreenMetas.deleteMeta(idRegistro!);
+                        },
                       ),
                       EditButton(
                         title: 'Editar',

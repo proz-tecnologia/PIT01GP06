@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback navigateTo;
   final String title;
+
   const PrimaryButton({
     super.key,
     required this.navigateTo,

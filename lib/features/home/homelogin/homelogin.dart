@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../theme/global/colors.dart';
+import 'homelogin_controller.dart';
+import 'homelogin_repository.dart';
+import 'homelogin_state.dart';
 
 class HomeLogin extends StatefulWidget {
   const HomeLogin({super.key});
@@ -10,12 +13,31 @@ class HomeLogin extends StatefulWidget {
 
 class _HomeLoginState extends State<HomeLogin> {
   final _formKey = GlobalKey<FormState>();
+  final controller = HomeLoginController(FirebaseRepository());
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   bool _obscureText = true;
 
   @override
+  void initState() {
+    super.initState();
+    controller.notifier.addListener(() {
+      if (controller.state is HomeLoginStateError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Erro no login! Tente outra vez!')));
+      }
+      if (controller.state is HomeLoginStateSuccess) {
+        //Navega para a pagina de acesso principal da aplicação
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/screen', (route) => false);
+        //Navigator.of(context).pushReplacementNamed('HomeScreen');
+      }
+    });
+  }
+
+  @override
   void dispose() {
+    controller.notifier.dispose();
     _email.dispose();
     _password.dispose();
     super.dispose();
@@ -131,23 +153,40 @@ class _HomeLoginState extends State<HomeLogin> {
                         const SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
-                          height: 50,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                Navigator.pushReplacementNamed(context, 'screen');
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: MyColor.darkThemeAccentColor,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(16.0)))),
-                            child: const Text('ENTRAR'),
-                          ),
-                        ),
+                        ValueListenableBuilder(
+                            valueListenable: controller.notifier,
+                            builder: (_, state, __) {
+                              return (state is HomeLoginStateSuccess)
+                                  ? const CircularProgressIndicator()
+                                  : Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 50,
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState
+                                                      ?.validate() ??
+                                                  false) {
+                                                controller.login(_email.text,
+                                                    _password.text);
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: MyColor
+                                                    .darkThemeAccentColor,
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    16.0)))),
+                                            child: const Text('ENTRAR'),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                            }),
                         const SizedBox(
                           height: 20,
                         ),
@@ -175,9 +214,12 @@ class _HomeLoginState extends State<HomeLogin> {
                             ),
                             const Text('Ainda não tem cadastro? Então'),
                             TextButton(
-                              child: const Text('cadastre-se aqui', style: TextStyle(fontWeight: FontWeight.bold),),
-                              onPressed: (){
-                                 Navigator.pushNamed(context, ('signup'));
+                              child: const Text(
+                                'cadastre-se aqui',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(context, ('/signup'));
                               },
                             ),
                           ]),

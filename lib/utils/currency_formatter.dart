@@ -1,0 +1,119 @@
+import 'package:flutter/services.dart';
+
+class CurrencyFormatter extends TextInputFormatter{
+
+   CurrencyFormatter({this.moeda = false, this.casasDecimais = 2})
+      : assert(casasDecimais == 2 || casasDecimais == 3,
+            'Quantidade de casas decimais deve ser 2 ou 3. Informado: $casasDecimais');
+
+  /// Define o tamanho máximo do campo.
+  int maxLength = 12;
+
+  final bool moeda;
+  final int casasDecimais;
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final newValueLength = newValue.text.length;
+
+    if (newValueLength == 0) {
+      return newValue;
+    }
+    if (newValueLength > maxLength) {
+      return oldValue;
+    }
+
+    const simbolo = 'R\$ ';
+    final newText = StringBuffer();
+    var centsValue = "";
+    var valorFinal = newValue.text;
+    var numero = int.parse(newValue.text);
+
+    var textValue = newValue.text.padLeft(
+        newValue.text.length == 1 ? casasDecimais + 1 : casasDecimais, "");
+    if (textValue.length >= casasDecimais) {
+      centsValue = textValue.substring(
+          textValue.length - casasDecimais, textValue.length);
+      valorFinal = textValue.substring(0, textValue.length - casasDecimais);
+    }
+
+    // apaga o campo quando os valores foram zero.
+    if (numero == 0 && int.tryParse(centsValue) == 0) {
+      return const TextEditingValue(
+        text: "",
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+
+    // retorna apenas o valor decimal, após o 0
+    if (textValue.length == casasDecimais) {
+      valorFinal ='0,$centsValue';
+      if (moeda) {
+        valorFinal = simbolo + valorFinal;
+      }
+      newText.write(valorFinal);
+
+      return TextEditingValue(
+        text: newText.toString(),
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+    }
+
+    // formata o número com 0, + centavos
+    if (numero > 0 && numero <= 9) {
+      if (casasDecimais == 3) {
+        centsValue = '00${numero.toString()}';
+      } else {
+        centsValue = '0${numero.toString()}';
+      }
+
+      numero = 0;
+    } else if (numero >= 10 && numero < 100) {
+      if (casasDecimais == 3) {
+        centsValue = '0${numero.toString()}';
+      } else {
+        centsValue = numero.toString();
+      }
+
+      numero = 0;
+    } else if (valorFinal.isNotEmpty) {
+      numero = int.parse(valorFinal);
+    }
+
+    // adiciona
+
+    if (numero > 999) {
+      valorFinal = '${adicionarSeparador(numero.toString())},$centsValue';
+    } else {
+      valorFinal = '${numero.toString()},$centsValue';
+    }
+
+    if (moeda) {
+      valorFinal = simbolo + valorFinal;
+    }
+    newText.write(valorFinal);
+
+    return TextEditingValue(
+      text: newText.toString(),
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
+  String adicionarSeparador(String texto) {
+  var valorFinal = "";
+  var pointCount = 0;
+  for (var i = texto.length - 1; i > -1; i--) {
+    if (pointCount == 3) {
+      valorFinal = '.$valorFinal';
+      pointCount = 0;
+    }
+    pointCount = pointCount + 1;
+    valorFinal = texto[i] + valorFinal;
+  }
+
+    return valorFinal;
+  }
+
+
