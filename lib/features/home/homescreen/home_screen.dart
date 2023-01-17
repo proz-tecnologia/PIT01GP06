@@ -28,16 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    controllerScreenMetas.getMetas();
+    //controllerScreenMetas.getMetas();
    
     WidgetsBinding.instance
         .addPostFrameCallback((_) => controllerScreenMetas.getMetas());
-  }
-
-  @override
-  void dispose() {
-    controllerScreenMetas.notifier.dispose();
-    super.dispose();
   }
 
   @override
