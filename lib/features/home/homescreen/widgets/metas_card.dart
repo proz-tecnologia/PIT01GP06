@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/delete_button.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/editbutton.dart';
 import '../../../../shared/injection.dart';
+import '../../../transactions/metas/metas_state.dart';
 import '../homescreen_controller.dart';
 
 class MetasCard extends StatefulWidget {
@@ -173,7 +174,20 @@ class _MetasCardState extends State<MetasCard> {
                       ),
                       EditButton(
                         title: 'Editar',
-                        onPressed: () {},
+                        onPressed: () {
+                          controllerScreenMetas.getIdMetas(idRegistro!);
+                          if (controllerScreenMetas.stateScreen is MetasSuccessState) {
+                            Navigator.of(context)
+                              .pushNamed('/metaedit', arguments: {
+                              'id': widget.id,
+                              'objective': widget.objective,
+                              'value': widget.value,
+                              'date': widget.date,
+                              'icon': widget.icon,
+                              'perfomance': widget.perfomance,
+                            });
+                          }
+                        },
                       )
                     ],
                   )

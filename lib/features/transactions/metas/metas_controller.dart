@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../home/homelogin/homelogin_repository.dart';
@@ -10,7 +12,7 @@ class MetasController {
   final MetasRepository _metasRepository;
   MetasController(this._loginRepository, this._metasRepository);
   final notifier = ValueNotifier<MetaState>(MetasInitialState());
-  
+
   CollectionReference metas = FirebaseFirestore.instance.collection('IdUser');
 
   MetaState get state => notifier.value;
@@ -39,4 +41,5 @@ class MetasController {
       notifier.value = MetasErrorState();
     }
   }
+  
 }

@@ -3,24 +3,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homelogin/homelogin_repository.dart';
-import '../../home/homescreen/widgets/primary_button_widget.dart';
+import '../../home/homescreen/homescreen_controller.dart';
 import 'metas_repository.dart';
 
-class MetasPage extends StatefulWidget {
-  const MetasPage({super.key});
+class MetasPageEdit extends StatefulWidget {
+  final String? id;
+  final String? objective;
+  final double? value;
+  final DateTime? date;
+  final String? icon;
+  final double? perfomance;
+
+  const MetasPageEdit({
+    Key? key,
+    this.id,
+    required this.objective,
+    required this.value,
+    required this.date,
+    required this.icon,
+    required this.perfomance,
+  }) : super(key: key);
 
   @override
-  State<MetasPage> createState() => _MetasPageState();
+  State<MetasPageEdit> createState() => _MetasPageEditState();
 }
 
-class _MetasPageState extends State<MetasPage> {
+class _MetasPageEditState extends State<MetasPageEdit> {
   var decimalController =
       MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-  final controller = MetasController(
+  final controller = MetaScreenController(
     getIt.get<HomeLoginRepository>(),
     FirebaseMetasRepository(),
   );
@@ -33,10 +47,23 @@ class _MetasPageState extends State<MetasPage> {
       decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
 
-  get dataPrevista => _dateGoal;
+  // get dataPrevista => _dateGoal;
+  // final DateTime _dateGoal =
+  //     DateTime.parse(DateFormat("yyyy-MM-dd").format(datePreview));
 
-  final DateTime _dateGoal =
-      DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
+  String? get id => widget.id;
+
+  DateTime get datePreview => _dateGoal;
+
+  @override
+  void initState() {
+    super.initState();
+    _objectiveController.text = widget.objective ?? '';
+    _valueController.text = (widget.value ?? 0.0).toString();
+    DateTime datePreview = widget.date ?? DateTime.now();
+    _iconController.text = widget.icon ?? '';
+    _perfomanceController.text = (widget.perfomance ?? 0.0).toString();
+  }
 
   @override
   void dispose() {
@@ -164,7 +191,7 @@ class _MetasPageState extends State<MetasPage> {
                         onChanged: (val) => setState(() {
                           var datePreview = DateTime.parse(val);
                           // ignore: unused_local_variable
-                          DateTime dateGoal = DateTime.parse(
+                          DateTime _dateGoal = DateTime.parse(
                               DateFormat("yyyy-MM-dd").format(datePreview));
                         }),
                       ),
@@ -193,23 +220,24 @@ class _MetasPageState extends State<MetasPage> {
                 height: 30,
               ),
               Center(
-                child: PrimaryButton(
-                    title: ('Adicionar meta'),
-                    navigateTo: () {
+                child: ElevatedButton(
+                    onPressed: () async {
                       var valueGols = _valueController.numberValue;
                       var valuePerfomance = _perfomanceController.numberValue;
-                      controller.addMetas(
-                        '',
+                      await controller.updateMetas(
+                        id!,
                         'meta',
                         _objectiveController.text,
                         valueGols,
-                        valuePerfomance,
-                        dataPrevista,
+                        datePreview,
                         _iconController.text,
+                        valuePerfomance,
                       );
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }),
+                      Navigator.of(context).pushNamed('/screen');
+                      //Navigator.of(context).pushNamedAndRemoveUntil(
+                      //    ('/screen'), (route) => false);
+                    },
+                    child: const Text('Editar')),
               ),
               const SizedBox(
                 height: 10,

@@ -7,6 +7,9 @@ import 'metas_model.dart';
 abstract class MetasRepository {
   Future<bool> addMetas(MetasModel metasModel);
   Future<List<MetasModel>> getMetas(String userId);
+  Future<List<MetasModel>> getIdMetas(String idMetas);
+  Future<void> updateMetas(MetasModel todoMetas);
+
   Future<bool> deleteMeta(String userId);
 }
 
@@ -28,6 +31,23 @@ class FirebaseMetasRepository implements MetasRepository {
   }
 
   @override
+  Future<List<MetasModel>> getIdMetas(String idMetas) async {
+
+    final result = await _firestore
+        .collection('IdUser')
+        .doc(_uid)
+        .collection('contas')
+        .where("id", isEqualTo: idMetas)
+        .get();
+    final todoMeta = List<MetasModel>.from(
+        result.docs.map((doc) => MetasModel.fromMap(doc.id, doc.data())));
+    return todoMeta;
+    
+  }
+
+
+
+  @override
   Future<bool> addMetas(MetasModel metasModel) async {
     try {
       final result = await _firestore
@@ -38,6 +58,20 @@ class FirebaseMetasRepository implements MetasRepository {
       return result.id.isNotEmpty;
     } catch (e) {
       return false;
+    }
+  }
+
+  @override
+  Future<void> updateMetas(MetasModel todoMetas) async {
+    try {
+      await _firestore
+          .collection(db)
+          .doc(_uid)
+          .collection(accounts)
+          .doc(todoMetas.id)
+          .set(todoMetas.toMap());
+    } catch (e) {
+      rethrow;
     }
   }
 
