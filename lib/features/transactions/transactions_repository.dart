@@ -7,15 +7,16 @@ class TransactionsRepository {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getBankAccountsSnapshot() {
     return _db
-        .collection('users')
+        .collection('Iduser')
         .doc(_uid)
         .collection('bankAccounts')
         .snapshots();
   }
 
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getCardsSnapshot() {
     return _db
-    .collection('users')
+    .collection('Iduser')
     .doc(_uid)
     .collection('cards')
     .snapshots();
