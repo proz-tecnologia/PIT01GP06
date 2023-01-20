@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
@@ -27,7 +26,6 @@ class _DespesasPageState extends State<DespesasPage> {
   int _indexSelecionado = 0;
   String _subcategoria = '';
   TransactionsController transactionsController = TransactionsController();
-  DespesasRepository despesasRepository = DespesasRepository();
   TransactionsRepository transactionsRepository = TransactionsRepository();
   DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   String _contaVinculada = '';
@@ -303,15 +301,6 @@ class _DespesasPageState extends State<DespesasPage> {
                       valor = TransactionsController()
                           .convertStringToDouble(_valorController.text);
 
-                      // DespesasModel despesaModel = DespesasModel(
-                      //   descricao: _descricaoController.text,
-                      //   valor: _valorController.text,
-                      //   categoria: _categoria,
-                      //   subcategoria: _subcategoria,
-                      //   data: _dataDespesa,
-                      //   conta: _contaVinculada
-                      // );
-
                       TransactionModel transactionsModel = TransactionModel(
                         type: 'Despesa',
                         descricao: _descricaoController.text,
@@ -326,8 +315,8 @@ class _DespesasPageState extends State<DespesasPage> {
                         idUser: uid,
                       );
 
-                      //TODO ADD NO REPOSITÓRIO O TRANSACTIONSMODEL
-                      //despesasRepository.addDespesa(despesaModel);
+                    
+                      transactionsRepository.addTransacao(transactionsModel);
 
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           ('/screen'), (route) => false);

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/transactions/receitas/receitas_repository.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
 import '../../../utils/currency_formatter.dart';
 import '../transactions/transactions_model.dart';
@@ -24,7 +23,6 @@ class _ReceitasPageState extends State<ReceitasPage> {
   final TextEditingController _valorController = TextEditingController();
   double? valor;
   String _categoria = '';
-  final ReceitasRepository _receitasRepository = ReceitasRepository();
   String _contaVinculada = '';
   DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   final TextEditingController _dateTimePickerController = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
@@ -235,8 +233,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                         idUser: uid,
                       );
 
-                      //TODO ADD NO REPOSITÓRIO O TRANSACTIONSMODEL
-                      //_receitasRepository.addReceita(transactionsModel);
+                      transactionsRepository.addTransacao(transactionsModel);
 
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           ('/screen'), (route) => false);
