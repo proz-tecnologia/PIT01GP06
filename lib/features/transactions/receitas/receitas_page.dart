@@ -5,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/transactions/receitas/receitas_model.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_repository.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
-
 import '../../../utils/currency_formatter.dart';
 import '../transactions/transactions_model.dart';
 import '../transactions_repository.dart';
-import 'receitas_controller.dart';
 
 class ReceitasPage extends StatefulWidget {
   const ReceitasPage({super.key});

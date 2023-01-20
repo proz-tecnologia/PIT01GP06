@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/transactions/despesas/despesas_model.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import '../../../utils/currency_formatter.dart';
-import 'despesas_controller.dart';
 import 'package:intl/intl.dart';
 
 class DespesasPage extends StatefulWidget {
