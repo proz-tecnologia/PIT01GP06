@@ -46,23 +46,21 @@ class _MetasPageEditState extends State<MetasPageEdit> {
   final _perfomanceController = MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
-
-  // get dataPrevista => _dateGoal;
-  // final DateTime _dateGoal =
-  //     DateTime.parse(DateFormat("yyyy-MM-dd").format(datePreview));
+  late DateTime _dateGoal;
+  
+  // DateTime.parse(DateFormat("yyyy-MM-dd").format(datePreview));
 
   String? get id => widget.id;
-
-  DateTime get datePreview => _dateGoal;
+  
 
   @override
   void initState() {
     super.initState();
     _objectiveController.text = widget.objective ?? '';
-    _valueController.text = (widget.value ?? 0.0).toString();
-    DateTime datePreview = widget.date ?? DateTime.now();
+    _valueController.updateValue(widget.value ?? 0.0);
+    //datePreview = widget.date ?? DateTime.now();
     _iconController.text = widget.icon ?? '';
-    _perfomanceController.text = (widget.perfomance ?? 0.0).toString();
+    _perfomanceController.updateValue(widget.perfomance ?? 0.0);
   }
 
   @override
@@ -183,7 +181,7 @@ class _MetasPageEditState extends State<MetasPageEdit> {
                         locale: const Locale('pt', 'BR'),
                         type: DateTimePickerType.date,
                         dateMask: 'dd/MM/yyyy',
-                        initialValue: DateTime.now().toString(),
+                        initialValue: widget.date.toString(),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2030),
                         icon: const Icon(Icons.event),
@@ -191,7 +189,7 @@ class _MetasPageEditState extends State<MetasPageEdit> {
                         onChanged: (val) => setState(() {
                           var datePreview = DateTime.parse(val);
                           // ignore: unused_local_variable
-                          DateTime _dateGoal = DateTime.parse(
+                          _dateGoal = DateTime.parse(
                               DateFormat("yyyy-MM-dd").format(datePreview));
                         }),
                       ),
@@ -229,7 +227,7 @@ class _MetasPageEditState extends State<MetasPageEdit> {
                         'meta',
                         _objectiveController.text,
                         valueGols,
-                        datePreview,
+                        _dateGoal,
                         _iconController.text,
                         valuePerfomance,
                       );

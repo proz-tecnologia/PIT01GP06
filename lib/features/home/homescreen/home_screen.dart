@@ -27,11 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    super.initState();     
-      
-     WidgetsBinding.instance
-        .addPostFrameCallback((_) => controllerScreenMetas.getMetas());  
-       
+    super.initState();
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => controllerScreenMetas.getMetas());
   }
 
   @override
@@ -201,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               PrimaryButton(
                   navigateTo: () {
-                    Navigator.of(context).pushNamed('/metas');                    
+                    Navigator.of(context).pushNamed('/metas');
                   },
                   title: 'Adicionar meta'),
               const SizedBox(

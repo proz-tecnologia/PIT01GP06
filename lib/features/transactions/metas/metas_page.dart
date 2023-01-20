@@ -18,12 +18,14 @@ class MetasPage extends StatefulWidget {
 }
 
 class _MetasPageState extends State<MetasPage> {
-  var decimalController =
-      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
+  
   final controller = MetasController(
     getIt.get<HomeLoginRepository>(),
     FirebaseMetasRepository(),
   );
+  var decimalController =
+      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
+
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
