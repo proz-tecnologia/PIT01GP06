@@ -9,10 +9,11 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/metas_car
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/title_widget.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.dart';
+import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 import '../../../shared/injection.dart';
 import '../../transactions/metas/metas_state.dart';
-import 'homescreen_controller.dart';
+
 import 'widgets/action_button.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final controllerScreenMetas = getIt.get<MetaScreenController>();
+  final controllerScreenMetas = getIt.get<MetasController>();
 
   @override
   void initState() {
