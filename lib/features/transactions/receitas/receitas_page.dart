@@ -214,8 +214,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                   title: ('Adicionar receita'),
                   navigateTo: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      valor = transactionsController
-                          .convertStringToDouble(_valorController.text);
+                      valor = transactionsController.convertStringToDouble(_valorController.text);
                       // ReceitasModel receitaModel = ReceitasModel(
                       //   descricao: _descricaoController.text,
                       //   valor: valor!,
