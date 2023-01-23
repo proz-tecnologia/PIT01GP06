@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:projeto_final_flutter/features/transactions/receitas/receitas_model.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
 
 class TransactionsRepository {

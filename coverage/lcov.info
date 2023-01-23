@@ -1,8 +1,3 @@
-SF:lib\features\home\homelogin\homelogin_model.dart
-DA:6,1
-LF:1
-LH:1
-end_of_record
 SF:lib\features\home\homelogin\homelogin_repository.dart
 DA:15,1
 DA:18,0
@@ -18,6 +13,11 @@ DA:37,1
 DA:39,1
 LF:12
 LH:6
+end_of_record
+SF:lib\features\home\homelogin\homelogin_model.dart
+DA:6,1
+LF:1
+LH:1
 end_of_record
 SF:lib\firebase_options.dart
 DA:18,0
