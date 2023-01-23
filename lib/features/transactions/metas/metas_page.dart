@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
-import 'package:projeto_final_flutter/shared/constant.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homelogin/homelogin_repository.dart';
@@ -21,20 +20,21 @@ class MetasPage extends StatefulWidget {
 }
 
 class _MetasPageState extends State<MetasPage> {
-  
   final controller = MetasController(
     getIt.get<HomeLoginRepository>(),
     FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance),
   );
-
-
+  var decimalController =
+      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
-  final TextEditingController _valueController = TextEditingController();
-  final TextEditingController _perfomanceController = TextEditingController();
+  final _valueController = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+  final _perfomanceController = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
-  TransactionsController transactionsController = TransactionsController();
+
   get dataPrevista => _dateGoal;
 
   final DateTime _dateGoal =
@@ -198,15 +198,14 @@ class _MetasPageState extends State<MetasPage> {
                 child: PrimaryButton(
                     title: ('Adicionar meta'),
                     navigateTo: () {
-                      double value = transactionsController.convertStringToDouble(_valueController.text);
-                      double performance = transactionsController.convertStringToDouble(_perfomanceController.text);
-
+                      var valueGols = _valueController.numberValue;
+                      var valuePerfomance = _perfomanceController.numberValue;
                       controller.addMetas(
                         '',
                         'meta',
                         _objectiveController.text,
-                        value,
-                        performance,
+                        valueGols,
+                        valuePerfomance,
                         dataPrevista,
                         _iconController.text,
                       );

@@ -1,10 +1,10 @@
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homelogin/homelogin_repository.dart';
@@ -34,6 +34,7 @@ class MetasPageEdit extends StatefulWidget {
 }
 
 class _MetasPageEditState extends State<MetasPageEdit> {
+  var decimalController = MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
   final controller = MetaScreenController(
     getIt.get<HomeLoginRepository>(),
     FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance),
@@ -41,15 +42,14 @@ class _MetasPageEditState extends State<MetasPageEdit> {
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
-  // final _valueController = MoneyMaskedTextController(
-  //     decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
-  // final _perfomanceController = MoneyMaskedTextController(
-  //     decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+  final _valueController = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+  final _perfomanceController = MoneyMaskedTextController(
+      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
-  TextEditingController _valueController = TextEditingController();
-  TextEditingController _perfomanceController = TextEditingController();
   late DateTime _dateGoal;
-  TransactionsController transactionsController = TransactionsController();
+
+  // DateTime.parse(DateFormat("yyyy-MM-dd").format(datePreview));
 
   String? get id => widget.id;
 
@@ -57,12 +57,10 @@ class _MetasPageEditState extends State<MetasPageEdit> {
   void initState() {
     super.initState();
     _objectiveController.text = widget.objective ?? '';
-    //_valueController.updateValue(widget.value ?? 0.0);
-    _valueController = TextEditingController(text: widget.value.toString());
-    _iconController.text = widget.icon ?? '';
-    _perfomanceController = TextEditingController(text: widget.perfomance.toString());
+    _valueController.updateValue(widget.value ?? 0.0);
     _dateGoal = widget.date!;
-    //_perfomanceController.updateValue(widget.perfomance ?? 0.0);
+    _iconController.text = widget.icon ?? '';
+    _perfomanceController.updateValue(widget.perfomance ?? 0.0);
   }
 
   @override
@@ -222,21 +220,20 @@ class _MetasPageEditState extends State<MetasPageEdit> {
               Center(
                 child: ElevatedButton(
                     onPressed: () async {
-                       double value = transactionsController.convertStringToDouble(_valueController.text);
-                      double performance = transactionsController.convertStringToDouble(_perfomanceController.text);
-                      
+                      var valueGols = _valueController.numberValue;
+                      var valuePerfomance = _perfomanceController.numberValue;
                       await controller.updateMetas(
                         id!,
                         'meta',
                         _objectiveController.text,
-                        value,
+                        valueGols,
                         _dateGoal,
                         _iconController.text,
-                        performance,
+                        valuePerfomance,
                       );
-                      Navigator.of(context).pushNamed('/screen');
-                      //Navigator.of(context).pushNamedAndRemoveUntil(
-                      //    ('/screen'), (route) => false);
+                      //Navigator.of(context).pushNamed('/screen');
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          ('/screen'), (route) => false);
                     },
                     child: const Text('Editar')),
               ),
