@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/delete_button.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/editbutton.dart';
+import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import '../../../../shared/injection.dart';
-import '../homescreen_controller.dart';
+import '../../../transactions/metas/metas_state.dart';
+
 
 class MetasCard extends StatefulWidget {
   final String? id;
@@ -27,7 +29,7 @@ class MetasCard extends StatefulWidget {
 }
 
 class _MetasCardState extends State<MetasCard> {
-  final controllerScreenMetas = getIt.get<MetaScreenController>();
+  final controller = getIt.get<MetasController>();
 
   double get progress =>
       double.parse(((widget.perfomance / widget.value).toStringAsFixed(2)));
@@ -168,12 +170,25 @@ class _MetasCardState extends State<MetasCard> {
                     children: [
                       DeleteButton(
                         onPressed: () {
-                          controllerScreenMetas.deleteMeta(idRegistro!);
+                          controller.deleteMeta(idRegistro!);
                         },
                       ),
                       EditButton(
                         title: 'Editar',
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.getIdMetas(idRegistro!);
+                          if (controller.state is MetasSuccessState) {
+                            Navigator.of(context)
+                              .pushNamed('/metaedit', arguments: {
+                              'id': widget.id,
+                              'objective': widget.objective,
+                              'value': widget.value,
+                              'date': widget.date,
+                              'icon': widget.icon,
+                              'perfomance': widget.perfomance,
+                            });
+                          }
+                        },
                       )
                     ],
                   )

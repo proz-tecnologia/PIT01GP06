@@ -3,6 +3,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart'
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_page.dart';
+import 'package:projeto_final_flutter/features/transactions/metas/metas_page_edit.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_page.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 import 'features/transactions/metas/metas_page.dart';
@@ -40,7 +41,18 @@ class MyApp extends StatelessWidget {
         '/addDespesa': (context) => const DespesasPage(),
         '/addReceita': (context) => const ReceitasPage(),
         '/metas': (context) => const MetasPage(),
-      },
+        '/metaedit': (context) {
+          final args = (ModalRoute.of(context)?.settings.arguments ?? {}) as Map;
+          return MetasPageEdit(
+            id: args['id'] ?? '',
+            objective: args['objective'],
+            value: args['value'],
+            date: args['date'],
+            icon: args['icon'],
+            perfomance: args['perfomance'],
+           );
+        } //context    
+      }, //routes
       supportedLocales: const [Locale('pt', 'BR')],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
