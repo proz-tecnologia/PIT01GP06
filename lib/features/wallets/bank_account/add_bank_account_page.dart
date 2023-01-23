@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:projeto_final_flutter/features/wallets/bank_account/bank_account_model.dart';
 
@@ -18,14 +19,15 @@ class _AddBankAccountState extends State<AddBankAccount> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _instituicaoController = TextEditingController();
   String _tipoConta = 'Corrente';
-  final TextEditingController _saldoController =
-      TextEditingController();
+  final _balanceController =
+      MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
 
   @override
   void dispose() {
     _nomeController.dispose();
     _instituicaoController.dispose();
-    _saldoController.dispose();
+    _balanceController.dispose();
     super.dispose();
   }
 
@@ -138,7 +140,7 @@ class _AddBankAccountState extends State<AddBankAccount> {
                       height: 8,
                     ),
                     TextFormField(
-                      controller: _saldoController,
+                      controller: _balanceController,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
@@ -166,11 +168,14 @@ class _AddBankAccountState extends State<AddBankAccount> {
                           navigateTo: () {
                             if (_formKey.currentState?.validate() ?? false) {
                               BankAccountModel account = BankAccountModel(
+                                  type: 'receita',
+                                  subtype: 'corrente',
+                                  typeconta: 'Conta',
                                   nomeConta: _nomeController.text,
                                   nomeInstituicao: _instituicaoController.text,
-                                  tipoConta: _tipoConta,
-                                  saldoConta: _saldoController.text);
-
+                                  tipoConta: _tipoConta,                                 
+                                  balance:_balanceController.numberValue,
+                                  );
                                 BankAccountRepository().addBankAccount(account);
 
                               Navigator.of(context).pushNamedAndRemoveUntil(

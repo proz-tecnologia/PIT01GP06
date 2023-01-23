@@ -1,4 +1,4 @@
-class ReceitasController{
+class ReceitasController{  
 
   List<Map<String, dynamic>> listaCategorias = [
     {'id': 0, 'categoria' : 'Outros'},

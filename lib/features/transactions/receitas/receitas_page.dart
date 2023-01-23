@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_model.dart';
@@ -21,7 +22,8 @@ class ReceitasPage extends StatefulWidget {
 class _ReceitasPageState extends State<ReceitasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descricaoController = TextEditingController();
-  final TextEditingController _valorController = TextEditingController();
+  final _valorController = MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   String _categoria = '';
   final ReceitasController _receitasController = ReceitasController();
   final ReceitasRepository _receitasRepository = ReceitasRepository();
@@ -104,7 +106,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                         height: 30,
                       ),
                        const Text(
-                        'Categoria da despesa',
+                        'Categoria da Receita',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
@@ -209,8 +211,11 @@ class _ReceitasPageState extends State<ReceitasPage> {
                   navigateTo: (){
                     if (_formKey.currentState?.validate() ?? false) {
                       ReceitasModel receitaModel = ReceitasModel(
+                        type: 'receita',
+                        typeconta: 'avulsa',
                         descricao: _descricaoController.text,
-                        valor: _valorController.text,
+                        valor: _valorController.numberValue,
+                        balance: _valorController.numberValue,
                         categoria: _categoria,
                         data: _dataReceita,
                         conta: _contaVinculada

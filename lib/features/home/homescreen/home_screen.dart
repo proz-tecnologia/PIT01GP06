@@ -31,7 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => controllerScreenMetas.getMetas());
+        .addPostFrameCallback((_) {
+          controllerScreenMetas.getMetas();
+        });
   }
 
   @override

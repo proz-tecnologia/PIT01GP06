@@ -1,3 +1,4 @@
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,17 +21,22 @@ class DespesasPage extends StatefulWidget {
 class _DespesasPageState extends State<DespesasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descricaoController = TextEditingController();
-  final TextEditingController _valorController = TextEditingController();
+  final _valorController = MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   String _categoria = '';
   int _indexSelecionado = 0;
   String _subcategoria = '';
   DespesasController despesasController = DespesasController();
   DespesasRepository despesasRepository = DespesasRepository();
-  TransactionsRepository transactionsRepository = TransactionsRepository(); 
+  TransactionsRepository transactionsRepository = TransactionsRepository();
   String _contaVinculada = '';
   String _contaOuCartao = "Conta";
-  String _dataDespesa = DateFormat("dd-MM-yyyy").format(DateTime.now());
+  DateTime? _dataDespesa;
+  late double totalBalance;
+  late int dataevent;
 
+  DateTime get dataDespesa => _dataDespesa ?? DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
   @override
   void dispose() {
@@ -280,10 +286,13 @@ class _DespesasPageState extends State<DespesasPage> {
                         lastDate: DateTime(2030),
                         icon: const Icon(Icons.event),
                         dateLabelText: 'Data',
-                        onChanged: (val) => setState(() {
-                          var dateTimeData = DateTime.parse(val);
-                          _dataDespesa = DateFormat("dd-MM-yyyy").format(dateTimeData);
-                        }),
+                        onChanged: (val) => setState(
+                          () {
+                            var dateTimeData = DateTime.parse(val);
+                            _dataDespesa = DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(dateTimeData));
+                          },
+                        ),
                       ),
                     ],
                   )),
@@ -293,19 +302,35 @@ class _DespesasPageState extends State<DespesasPage> {
               Center(
                 child: PrimaryButton(
                   title: ('Adicionar despesa'),
-                  navigateTo: () {
+                  navigateTo: () async {
                     if (_formKey.currentState?.validate() ?? false) {
+                      var result = await despesasRepository
+                          .getDespesaCategoria(_categoria);
+                      if (result.isEmpty) {
+                        totalBalance = 0.0;
+                      } else {
+                        totalBalance = result[0].balance;
+                      }                      
+
+                      dataevent = DateTime.now().millisecondsSinceEpoch;
+
                       DespesasModel despesaModel = DespesasModel(
-                        descricao: _descricaoController.text,
-                        valor: _valorController.text,
-                        categoria: _categoria,
-                        subcategoria: _subcategoria,
-                        data: _dataDespesa,
-                        conta: _contaVinculada
-                      );
+                          type: 'despesa',
+                          descricao: _descricaoController.text,
+                          valor: _valorController.numberValue,
+                          balance: _valorController.numberValue + totalBalance,
+                          categoria: _categoria,
+                          subcategoria: _subcategoria,
+                          timeReg: dataevent,
+                          data: dataDespesa,
+                          day: dataDespesa.day,
+                          month:dataDespesa.month,
+                          year:dataDespesa.year,
+                          typeconta: _contaOuCartao,
+                          conta: _contaVinculada);
 
                       despesasRepository.addDespesa(despesaModel);
-
+                     
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           ('/screen'), (route) => false);
                     }
@@ -321,4 +346,9 @@ class _DespesasPageState extends State<DespesasPage> {
       ),
     );
   }
+}
+
+class ListaDespesa {
+  final List<DespesasModel> listDespesa;
+  ListaDespesa(this.listDespesa);
 }

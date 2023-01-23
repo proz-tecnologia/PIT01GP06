@@ -6,9 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
-import '../../home/homelogin/homelogin_repository.dart';
 import '../../home/homescreen/widgets/primary_button_widget.dart';
-import 'metas_repository.dart';
 
 class MetasPage extends StatefulWidget {
   const MetasPage({super.key});
@@ -18,27 +16,21 @@ class MetasPage extends StatefulWidget {
 }
 
 class _MetasPageState extends State<MetasPage> {
-  
-  final controller = MetasController(
-    getIt.get<HomeLoginRepository>(),
-    FirebaseMetasRepository(),
-  );
+  final controller = getIt.get<MetasController>();
+
   var decimalController =
       MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
   final _valueController = MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   final _perfomanceController = MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
+  late DateTime _dateGoal;
 
   get dataPrevista => _dateGoal;
-
-  final DateTime _dateGoal =
-      DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
   @override
   void dispose() {
@@ -166,7 +158,7 @@ class _MetasPageState extends State<MetasPage> {
                         onChanged: (val) => setState(() {
                           var datePreview = DateTime.parse(val);
                           // ignore: unused_local_variable
-                          DateTime dateGoal = DateTime.parse(
+                          _dateGoal = DateTime.parse(
                               DateFormat("yyyy-MM-dd").format(datePreview));
                         }),
                       ),

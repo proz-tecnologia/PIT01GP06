@@ -5,7 +5,6 @@ import 'package:projeto_final_flutter/features/transactions/metas/metas_controll
 import '../../../../shared/injection.dart';
 import '../../../transactions/metas/metas_state.dart';
 
-
 class MetasCard extends StatefulWidget {
   final String? id;
   final String objective;
@@ -31,8 +30,14 @@ class MetasCard extends StatefulWidget {
 class _MetasCardState extends State<MetasCard> {
   final controller = getIt.get<MetasController>();
 
-  double get progress =>
-      double.parse(((widget.perfomance / widget.value).toStringAsFixed(2)));
+  double get progress {
+    if (widget.value.isNaN || widget.value != 0.0) {
+      return double.parse(
+          ((widget.perfomance / widget.value).toStringAsFixed(2)));
+    } else {
+      return 0.0;
+    }
+  }
 
   String? get idRegistro => widget.id;
 
@@ -179,7 +184,7 @@ class _MetasCardState extends State<MetasCard> {
                           controller.getIdMetas(idRegistro!);
                           if (controller.state is MetasSuccessState) {
                             Navigator.of(context)
-                              .pushNamed('/metaedit', arguments: {
+                                .pushNamed('/metaedit', arguments: {
                               'id': widget.id,
                               'objective': widget.objective,
                               'value': widget.value,
