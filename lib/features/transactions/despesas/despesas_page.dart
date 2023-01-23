@@ -314,7 +314,6 @@ class _DespesasPageState extends State<DespesasPage> {
                         year: transactionsController.getYear(dateFormat.format(_dataDespesa)),
                         idUser: uid,
                       );
-
                     
                       transactionsRepository.addTransacao(transactionsModel);
 

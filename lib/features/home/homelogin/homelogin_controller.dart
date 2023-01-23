@@ -11,7 +11,6 @@ class HomeLoginController {
   Future<void> login(String email, String password) async {
     notifier.value = HomeLoginStateLoading();
     try {
-      await Future.delayed(const Duration(seconds: 2));
       await _repository.login(email, password);
       notifier.value = HomeLoginStateSuccess();
     } catch (e) {

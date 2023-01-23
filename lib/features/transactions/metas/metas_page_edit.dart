@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -34,7 +36,7 @@ class MetasPageEdit extends StatefulWidget {
 class _MetasPageEditState extends State<MetasPageEdit> {
   final controller = MetaScreenController(
     getIt.get<HomeLoginRepository>(),
-    FirebaseMetasRepository(),
+    FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance),
   );
 
   final _formKey = GlobalKey<FormState>();
