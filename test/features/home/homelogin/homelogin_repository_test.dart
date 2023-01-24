@@ -3,12 +3,9 @@
 //erro conexão com firebase
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:matcher/matcher.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin_model.dart';
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin_repository.dart';
-import 'package:projeto_final_flutter/firebase_options.dart';
 import 'package:mocktail/mocktail.dart';
 
 class FirebaseMock extends Mock implements FirebaseAuth {}
