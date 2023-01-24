@@ -1,25 +1,26 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class TransactionModel {
+  String? id;
   String type;
-  String? descricao;
-  double valor;
-  String categoria;
-  String? subcategoria;
+  String subtype;
+  String descricao;
+  double value;
+  String nature;
   String idConta;
   DateTime dateTime;
   int day;
   int month;
   int year;
   String idUser;
-  
+
   TransactionModel({
+    this.id,
     required this.type,
-    this.descricao,
-    required this.valor,
-    required this.categoria,
-    this.subcategoria,
+    required this.subtype,
+    required this.descricao,
+    required this.value,
+    required this.nature,
     required this.idConta,
     required this.dateTime,
     required this.day,
@@ -28,15 +29,45 @@ class TransactionModel {
     required this.idUser,
   });
 
+  TransactionModel copyWith({
+    String? id,
+    String? type,
+    String? subtype,
+    String? descricao,
+    double? value,
+    String? nature,
+    String? idConta,
+    DateTime? dateTime,
+    int? day,
+    int? month,
+    int? year,
+    String? idUser,
+  }) {
+    return TransactionModel(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      subtype: subtype ?? this.subtype,
+      descricao: descricao ?? this.descricao,
+      value: value ?? this.value,
+      nature: nature ?? this.nature,
+      idConta: idConta ?? this.idConta,
+      dateTime: dateTime ?? this.dateTime,
+      day: day ?? this.day,
+      month: month ?? this.month,
+      year: year ?? this.year,
+      idUser: idUser ?? this.idUser,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'type': type,
+      'subtype': subtype,
       'descricao': descricao,
-      'valor': valor,
-      'categoria': categoria,
-      'subcategoria': subcategoria,
+      'value': value,
+      'nature': nature,
       'idConta': idConta,
-      'dateTime': dateTime.microsecondsSinceEpoch,
+      'dateTime': dateTime.millisecondsSinceEpoch,
       'day': day,
       'month': month,
       'year': year,
@@ -44,13 +75,14 @@ class TransactionModel {
     };
   }
 
-  factory TransactionModel.fromMap(Map<String, dynamic> map) {
+  factory TransactionModel.fromMap(String id, Map<String, dynamic> map) {
     return TransactionModel(
+      id: id,
       type: map['type'] as String,
-      descricao: map['descricao'] != null ? map['descricao'] as String : null,
-      valor: map['valor'] as double,
-      categoria: map['categoria'] as String,
-      subcategoria: map['subcategoria'] != null ? map['subcategoria'] as String : null,
+      subtype: map['subtype'] as String,
+      descricao: map['descricao'] as String,
+      value: map['value'] as double,
+      nature: map['nature'] as String,
       idConta: map['idConta'] as String,
       dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime'] as int),
       day: map['day'] as int,
@@ -62,10 +94,10 @@ class TransactionModel {
 
   String toJson() => json.encode(toMap());
 
-  factory TransactionModel.fromJson(String source) => TransactionModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() {
-    return 'TransactionModel(type: $type, descricao: $descricao, valor: $valor, categoria: $categoria, subcategoria: $subcategoria, idConta: $idConta, dateTime: $dateTime, day: $day, month: $month, year: $year, idUser: $idUser)';
+    return 'TransactionModel(id: $id, type: $type, subtype: $subtype, descricao: $descricao, value: $value, nature: $nature, idConta: $idConta, dateTime: $dateTime, day: $day, month: $month, year: $year, idUser: $idUser)';
   }
-} 
+
+  
+}

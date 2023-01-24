@@ -30,15 +30,13 @@ class _MetasPageState extends State<MetasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();
   final _valueController = MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   final _perfomanceController = MoneyMaskedTextController(
       decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
+  late DateTime _dateGoal;
 
   get dataPrevista => _dateGoal;
-
-  final DateTime _dateGoal =
-      DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
   @override
   void dispose() {
@@ -166,7 +164,7 @@ class _MetasPageState extends State<MetasPage> {
                         onChanged: (val) => setState(() {
                           var datePreview = DateTime.parse(val);
                           // ignore: unused_local_variable
-                          DateTime dateGoal = DateTime.parse(
+                          _dateGoal = DateTime.parse(
                               DateFormat("yyyy-MM-dd").format(datePreview));
                         }),
                       ),

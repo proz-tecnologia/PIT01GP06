@@ -1,9 +1,13 @@
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_controller.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_model.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
@@ -20,25 +24,27 @@ class DespesasPage extends StatefulWidget {
 class _DespesasPageState extends State<DespesasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descricaoController = TextEditingController();
-  final TextEditingController _valorController = TextEditingController();
-  double? valor;
+  final _valorController = MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   String _categoria = '';
   int _indexSelecionado = 0;
   String _subcategoria = '';
-  TransactionsController transactionsController = TransactionsController();
+  DespesasController despesasController = DespesasController();
+  DespesasRepository despesasRepository = DespesasRepository();
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   String _contaVinculada = '';
   String _contaOuCartao = "Conta";
-  DateTime _dataDespesa = DateTime.now();
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final TextEditingController _dateTimePickerController = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  DateTime? _dataDespesa;
+  late double totalBalance;
+  late int dataevent;
+
+  DateTime get dataDespesa => _dataDespesa ?? DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
   @override
   void dispose() {
     _descricaoController.dispose();
     _valorController.dispose();
-    _dateTimePickerController.dispose();
     super.dispose();
   }
 
@@ -124,13 +130,12 @@ class _DespesasPageState extends State<DespesasPage> {
                           if (value != null) {
                             setState(() {
                               _indexSelecionado = value;
-                              _categoria = transactionsController
-                                  .listaCategoriasDespesas[value]['categoria'];
+                              _categoria = despesasController
+                                  .listaCategorias[value]['categoria'];
                             });
                           }
                         },
-                        items: transactionsController.listaCategoriasDespesas
-                            .map((item) {
+                        items: despesasController.listaCategorias.map((item) {
                           return DropdownMenuItem(
                             value: item['id'] as int,
                             child: Text(item['categoria'].toString()),
@@ -158,7 +163,7 @@ class _DespesasPageState extends State<DespesasPage> {
                               });
                             }
                           },
-                          items: transactionsController
+                          items: despesasController
                               .getListaSubcategorias(_indexSelecionado)),
                       const SizedBox(
                         height: 30,
@@ -279,14 +284,18 @@ class _DespesasPageState extends State<DespesasPage> {
                         locale: const Locale('pt', 'BR'),
                         type: DateTimePickerType.date,
                         dateMask: 'dd/MM/yyyy',
-                        controller: _dateTimePickerController,
+                        initialValue: DateTime.now().toString(),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2030),
                         icon: const Icon(Icons.event),
                         dateLabelText: 'Data',
-                        onChanged: (val) => setState(() {
-                          _dataDespesa = DateTime.parse(val);
-                        }),
+                        onChanged: (val) => setState(
+                          () {
+                            var dateTimeData = DateTime.parse(val);
+                            _dataDespesa = DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(dateTimeData));
+                          },
+                        ),
                       ),
                     ],
                   )),
@@ -296,27 +305,35 @@ class _DespesasPageState extends State<DespesasPage> {
               Center(
                 child: PrimaryButton(
                   title: ('Adicionar despesa'),
-                  navigateTo: () {
+                  navigateTo: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      valor = TransactionsController()
-                          .convertStringToDouble(_valorController.text);
+                      var result = await despesasRepository
+                          .getDespesaCategoria(_categoria);
+                      if (result.isEmpty) {
+                        totalBalance = 0.0;
+                      } else {
+                        totalBalance = result[0].balance;
+                      }                      
 
-                      TransactionModel transactionsModel = TransactionModel(
-                        type: 'Despesa',
-                        descricao: _descricaoController.text,
-                        valor: valor!,
-                        categoria: _categoria,
-                        subcategoria: _subcategoria,
-                        idConta: _contaVinculada,
-                        dateTime: _dataDespesa,
-                        day: transactionsController.getDay(dateFormat.format(_dataDespesa)),
-                        month: transactionsController.getMonth(dateFormat.format(_dataDespesa)),
-                        year: transactionsController.getYear(dateFormat.format(_dataDespesa)),
-                        idUser: uid,
-                      );
-                    
-                      transactionsRepository.addTransacao(transactionsModel);
+                      dataevent = DateTime.now().millisecondsSinceEpoch;
 
+                      DespesasModel despesaModel = DespesasModel(
+                          type: 'despesa',
+                          descricao: _descricaoController.text,
+                          valor: _valorController.numberValue,
+                          balance: _valorController.numberValue + totalBalance,
+                          categoria: _categoria,
+                          subcategoria: _subcategoria,
+                          timeReg: dataevent,
+                          data: dataDespesa,
+                          day: dataDespesa.day,
+                          month:dataDespesa.month,
+                          year:dataDespesa.year,
+                          typeconta: _contaOuCartao,
+                          conta: _contaVinculada);
+
+                      despesasRepository.addDespesa(despesaModel);
+                     
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           ('/screen'), (route) => false);
                     }
@@ -332,4 +349,9 @@ class _DespesasPageState extends State<DespesasPage> {
       ),
     );
   }
+}
+
+class ListaDespesa {
+  final List<DespesasModel> listDespesa;
+  ListaDespesa(this.listDespesa);
 }
