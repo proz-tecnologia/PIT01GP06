@@ -10,7 +10,10 @@ abstract class HomeLoginRepository {
 }
 
 class FirebaseRepository implements HomeLoginRepository {
-  FirebaseAuth get _firebase => FirebaseAuth.instance;
+  final FirebaseAuth _firebase;
+
+  FirebaseRepository(this._firebase);
+  
 
   @override
   bool get isLogged => _firebase.currentUser != null;

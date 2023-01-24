@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import '../../transactions/metas/metas_model.dart';
 import '../../transactions/metas/metas_repository.dart';
 import '../../transactions/metas/metas_state.dart';
 import '../homelogin/homelogin_repository.dart';
@@ -23,6 +24,37 @@ class MetaScreenController {
     }
   }
 
+  Future<void> getIdMetas(String id) async {
+    try {
+      final result = await _metasRepository.getIdMetas(id);
+      notifier.value = MetasSuccessState(result);
+    } catch (e) {
+      notifier.value = MetasErrorState();
+    }
+  }
+
+  Future<void> updateMetas(String id, String goal, String objective,
+      double value, DateTime date, String icon, double perfomance) async {
+    final userId = _loginRepository.currentUser?.uid ?? '';
+    try {
+      final todoMetasRequest = MetasModel(
+        id: id,
+        goal: 'meta',
+        objective: objective,
+        value: value,
+        date: date,
+        idUser: userId,
+        icon: icon,
+        perfomance: perfomance,
+      );
+      await _metasRepository.updateMetas(todoMetasRequest);
+      final result = await _metasRepository.getMetas(id);
+      notifier.value = MetasSuccessState(result);
+    } catch (e) {
+      notifier.value = MetasErrorState();
+    }
+  }
+
   Future<void> deleteMeta(String id) async {
     try {
       final result = await _metasRepository.deleteMeta(id);
@@ -37,34 +69,3 @@ class MetaScreenController {
   }
 }
 
-String getCurrentMonth() {
-  return 'Novembro';
-}
-
-String getNextMonth() {
-  return 'Dezembro';
-}
-
-String getPreviousMonth() {
-  return 'Outubro';
-}
-
-void showPreviousWallet() {}
-
-void showNextWallet() {}
-
-void deleteWallet() {}
-
-void editWallet() {}
-
-void showPreviousGoal() {}
-
-void showNextGoal() {}
-
-void deleteGoal() {}
-
-void editGoal() {}
-
-void addExpense() {}
-
-void addRevenue() {}

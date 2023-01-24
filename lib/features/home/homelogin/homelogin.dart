@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../theme/global/colors.dart';
 import 'homelogin_controller.dart';
@@ -13,7 +14,7 @@ class HomeLogin extends StatefulWidget {
 
 class _HomeLoginState extends State<HomeLogin> {
   final _formKey = GlobalKey<FormState>();
-  final controller = HomeLoginController(FirebaseRepository());
+  final controller = HomeLoginController(FirebaseRepository(FirebaseAuth.instance));
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   bool _obscureText = true;

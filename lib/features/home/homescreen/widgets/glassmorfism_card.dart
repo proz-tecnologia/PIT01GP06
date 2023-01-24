@@ -92,7 +92,7 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                                   fontSize: 24),
                             ),
                             const SizedBox(height: 20),
-                            const Text('Seu saldo atual é de:',
+                            const Text('Seu saldo total é de:',
                                 style: TextStyle(
                                     color: MyColor.lightThemesecondaryTextColor,
                                     fontSize: 16)),

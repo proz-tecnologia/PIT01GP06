@@ -3,7 +3,7 @@ import 'dart:convert';
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class ReceitasModel {
   String? descricao;
-  String valor;
+  double valor;
   String categoria;
   String data;
   String conta;
@@ -29,7 +29,7 @@ class ReceitasModel {
   factory ReceitasModel.fromMap(Map<String, dynamic> map) {
     return ReceitasModel(
       descricao: map['descricao'] != null ? map['descricao'] as String : null,
-      valor: map['valor'] as String,
+      valor: map['valor'] as double,
       categoria: map['categoria'] as String,
       data: map['data'] as String,
       conta: map['conta'] as String,

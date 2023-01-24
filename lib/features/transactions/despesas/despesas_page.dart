@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/transactions/despesas/despesas_model.dart';
-import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
+import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import '../../../utils/currency_formatter.dart';
-import 'despesas_controller.dart';
 import 'package:intl/intl.dart';
 
 class DespesasPage extends StatefulWidget {
@@ -21,21 +21,24 @@ class _DespesasPageState extends State<DespesasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descricaoController = TextEditingController();
   final TextEditingController _valorController = TextEditingController();
+  double? valor;
   String _categoria = '';
   int _indexSelecionado = 0;
   String _subcategoria = '';
-  DespesasController despesasController = DespesasController();
-  DespesasRepository despesasRepository = DespesasRepository();
-  TransactionsRepository transactionsRepository = TransactionsRepository(); 
+  TransactionsController transactionsController = TransactionsController();
+  TransactionsRepository transactionsRepository = TransactionsRepository();
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   String _contaVinculada = '';
   String _contaOuCartao = "Conta";
-  String _dataDespesa = DateFormat("dd-MM-yyyy").format(DateTime.now());
-
+  DateTime _dataDespesa = DateTime.now();
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final TextEditingController _dateTimePickerController = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
 
   @override
   void dispose() {
     _descricaoController.dispose();
     _valorController.dispose();
+    _dateTimePickerController.dispose();
     super.dispose();
   }
 
@@ -121,12 +124,13 @@ class _DespesasPageState extends State<DespesasPage> {
                           if (value != null) {
                             setState(() {
                               _indexSelecionado = value;
-                              _categoria = despesasController
-                                  .listaCategorias[value]['categoria'];
+                              _categoria = transactionsController
+                                  .listaCategoriasDespesas[value]['categoria'];
                             });
                           }
                         },
-                        items: despesasController.listaCategorias.map((item) {
+                        items: transactionsController.listaCategoriasDespesas
+                            .map((item) {
                           return DropdownMenuItem(
                             value: item['id'] as int,
                             child: Text(item['categoria'].toString()),
@@ -154,7 +158,7 @@ class _DespesasPageState extends State<DespesasPage> {
                               });
                             }
                           },
-                          items: despesasController
+                          items: transactionsController
                               .getListaSubcategorias(_indexSelecionado)),
                       const SizedBox(
                         height: 30,
@@ -275,14 +279,13 @@ class _DespesasPageState extends State<DespesasPage> {
                         locale: const Locale('pt', 'BR'),
                         type: DateTimePickerType.date,
                         dateMask: 'dd/MM/yyyy',
-                        initialValue: DateTime.now().toString(),
+                        controller: _dateTimePickerController,
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2030),
                         icon: const Icon(Icons.event),
                         dateLabelText: 'Data',
                         onChanged: (val) => setState(() {
-                          var dateTimeData = DateTime.parse(val);
-                          _dataDespesa = DateFormat("dd-MM-yyyy").format(dateTimeData);
+                          _dataDespesa = DateTime.parse(val);
                         }),
                       ),
                     ],
@@ -295,16 +298,24 @@ class _DespesasPageState extends State<DespesasPage> {
                   title: ('Adicionar despesa'),
                   navigateTo: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      DespesasModel despesaModel = DespesasModel(
+                      valor = TransactionsController()
+                          .convertStringToDouble(_valorController.text);
+
+                      TransactionModel transactionsModel = TransactionModel(
+                        type: 'Despesa',
                         descricao: _descricaoController.text,
-                        valor: _valorController.text,
+                        valor: valor!,
                         categoria: _categoria,
                         subcategoria: _subcategoria,
-                        data: _dataDespesa,
-                        conta: _contaVinculada
+                        idConta: _contaVinculada,
+                        dateTime: _dataDespesa,
+                        day: transactionsController.getDay(dateFormat.format(_dataDespesa)),
+                        month: transactionsController.getMonth(dateFormat.format(_dataDespesa)),
+                        year: transactionsController.getYear(dateFormat.format(_dataDespesa)),
+                        idUser: uid,
                       );
-
-                      despesasRepository.addDespesa(despesaModel);
+                    
+                      transactionsRepository.addTransacao(transactionsModel);
 
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           ('/screen'), (route) => false);
