@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/homescreen_controller.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/screenmetas_state.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/animated_fab.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/bottonbar.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/card_monthlysummary.dart';
@@ -14,6 +16,7 @@ import 'package:projeto_final_flutter/theme/global/colors.dart';
 import '../../../shared/injection.dart';
 import '../../transactions/metas/metas_state.dart';
 
+import '../../transactions/transactions_repository.dart';
 import 'widgets/action_button.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,16 +27,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final controllerBalanceRevenues = BalanceRevenuesController(TransactionsRepository());
+
   final controllerScreenMetas = getIt.get<MetasController>();
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) {
-          controllerScreenMetas.getMetas();
-        });
+    controllerBalanceRevenues.getBalanceRevenues();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controllerScreenMetas.getMetas();
+    });
   }
 
   @override
@@ -63,7 +68,27 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 80,
               ),
-              const GlassmorfismCard(),
+              SizedBox(
+                  child: ValueListenableBuilder(
+                valueListenable: controllerBalanceRevenues.notifier,
+                builder: (context, stateScreen, _) {
+                  if (stateScreen is ScreenHomeInitialState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (stateScreen is ScreenHomeErrorState) {
+                    return const Text('Não há dados a serem exibidos');
+                  }
+                  if (stateScreen is ScreenHomeSuccessState) {
+                    return Center(
+                      child: GlassmorfismCard(
+                          balanceRevenues: stateScreen.sumBalance),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              )),
               const SizedBox(
                 height: 32,
               ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -19,8 +20,7 @@ class _AddBankAccountState extends State<AddBankAccount> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _instituicaoController = TextEditingController();
   String _tipoConta = 'Corrente';
-  final _balanceController =
-      MoneyMaskedTextController(
+  final _balanceController = MoneyMaskedTextController(
       decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
 
   @override
@@ -125,10 +125,6 @@ class _AddBankAccountState extends State<AddBankAccount> {
                           value: 'Poupança',
                           child: Text('Poupança'),
                         ),
-                        DropdownMenuItem(
-                          value: 'Salário',
-                          child: Text('Salário'),
-                        ),
                       ],
                     ),
                     const SizedBox(
@@ -168,15 +164,16 @@ class _AddBankAccountState extends State<AddBankAccount> {
                           navigateTo: () {
                             if (_formKey.currentState?.validate() ?? false) {
                               BankAccountModel account = BankAccountModel(
-                                  type: 'receita',
-                                  subtype: 'corrente',
-                                  typeconta: 'Conta',
-                                  nomeConta: _nomeController.text,
-                                  nomeInstituicao: _instituicaoController.text,
-                                  tipoConta: _tipoConta,                                 
-                                  balance:_balanceController.numberValue,
-                                  );
-                                BankAccountRepository().addBankAccount(account);
+                                type: 'receita',
+                                subtype: 'corrente',
+                                typeconta: 'Conta',
+                                nomeConta: _nomeController.text,
+                                nomeInstituicao: _instituicaoController.text,
+                                tipoConta: _tipoConta,
+                                balance: _balanceController.numberValue,
+                                dateReg: Timestamp.fromDate(DateTime.now()),
+                              );
+                              BankAccountRepository().addBankAccount(account);
 
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                   ('/screen'), (route) => false);

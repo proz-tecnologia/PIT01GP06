@@ -20,9 +20,9 @@ class FirebaseMetasRepository implements MetasRepository {
   @override
   Future<List<MetasModel>> getMetas(String userId) async {
     final result = await _firestore
-        .collection('IdUser')
-        .doc(userId)
-        .collection('contas')
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
         .where("goal", isEqualTo: 'meta')
         .get();
     final todoMetas = List<MetasModel>.from(

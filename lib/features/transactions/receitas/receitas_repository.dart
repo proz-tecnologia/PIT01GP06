@@ -1,31 +1,68 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_model.dart';
 
 import '../../../shared/constant.dart';
+import '../../wallets/bank_account/bank_account_model.dart';
 
-class ReceitasRepository{
+class ReceitasRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
+  Future<void> addReceita(ReceitasModel receitasModel) async {
+    //adiciona receita à coleccion
+    _db
+        .collection(db)
+        .doc(_uid)
+        .collection(transactions)
+        .add(receitasModel.toMap());
 
-  Future<bool> addMetas(ReceitasModel receitasModel) async {
-    try {
-      final result = await _db
-          .collection(db)
-          .doc(_uid)
-          .collection(accounts)
-          .add(receitasModel.toMap());
-      return result.id.isNotEmpty;
-    } catch (e) {
-      return false;
-    }
-  }
+    ///adiciona receita à conta bancária
+    //verifica o id da conta
+    final result = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .where("typeconta", isEqualTo: 'Conta')
+        .where("nomeConta", isEqualTo: receitasModel.conta)
+        .get();
+    final idBank = List<BankAccountModel>.from(
+        result.docs.map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
+    
+    //soma o valor da transação ao saldo do banco
+    _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .doc(idBank[0].id)
+        .update({'balance': idBank[0].balance + receitasModel.valor}).then(
+            (value) => log("DocumentSnapshot successfully updated!"),
+            onError: (e) => log("Error updating document $e"));
 
-  Future<DocumentReference<Map<String, dynamic>>> addReceita(ReceitasModel despesa){
-    return _db.collection('users')
-    .doc(_uid)
-    .collection("receitas")
-    .add(despesa.toMap());
+    ///atualiza acumulado do saldo balance por tipo de receita
+    //verifica o id da receita
+    final updateBalance = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .where("categoria", isEqualTo: receitasModel.categoria)
+        .orderBy('timeReg', descending: true)
+        .limit(1)
+        .get();
+
+    final idReceita = List<ReceitasModel>.from(updateBalance.docs
+        .map((doc) => ReceitasModel.fromMap(doc.id, doc.data())));
+    
+    //atualiza o balance da receita por categoria
+    _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .doc(idReceita[0].id)
+        .update({'balance': idReceita[0].balance + receitasModel.valor}).then(
+            (value) => log("DocumentSnapshot successfully updated!"),
+            onError: (e) => log("Error updating document $e"));
   }
 }

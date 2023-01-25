@@ -1,16 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class BankAccountModel {
   String? id;
   String type = 'receita';
-  String subtype = 'corrente';
+  String subtype; //corrente, poupança
   String typeconta = 'Conta';
   String nomeConta;
   String nomeInstituicao;
   String tipoConta;  
   double balance;
-
+  Timestamp dateReg;
+  
   BankAccountModel({
     this.id,
     required this.type,
@@ -20,6 +23,7 @@ class BankAccountModel {
     required this.nomeInstituicao,
     required this.tipoConta,
     required this.balance,
+    required this.dateReg,
   });
 
   BankAccountModel copyWith({
@@ -31,6 +35,7 @@ class BankAccountModel {
     String? nomeInstituicao,
     String? tipoConta,
     double? balance,
+    Timestamp? dateReg,
   }) {
     return BankAccountModel(
       id: id ?? this.id,
@@ -41,6 +46,7 @@ class BankAccountModel {
       nomeInstituicao: nomeInstituicao ?? this.nomeInstituicao,
       tipoConta: tipoConta ?? this.tipoConta,
       balance: balance ?? this.balance,
+      dateReg: dateReg ?? this.dateReg,
     );
   }
 
@@ -53,6 +59,7 @@ class BankAccountModel {
       'nomeInstituicao': nomeInstituicao,
       'tipoConta': tipoConta,
       'balance': balance,
+      'dateReg': dateReg
     };
   }
 
@@ -66,6 +73,7 @@ class BankAccountModel {
       nomeInstituicao: map['nomeInstituicao'] as String,
       tipoConta: map['tipoConta'] as String,      
       balance: map['balance'] as double,
+      dateReg: map['dateReg'] as Timestamp,
     );
   }
 

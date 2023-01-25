@@ -47,6 +47,7 @@ class DespesasRepository {
           .where("typeconta", isEqualTo: despesa.typeconta)
           .where("nomeCartao", isEqualTo: despesa.conta)
           .get();
+          
       final idCard = List<CardModel>.from(
           result.docs.map((doc) => CardModel.fromMap(doc.id, doc.data())));
 
@@ -55,7 +56,7 @@ class DespesasRepository {
           .doc(_uid)
           .collection(accounts)
           .doc(idCard[0].id)
-          .update({'balance': idCard[0].balance - despesa.valor}).then(
+          .update({'balance': idCard[0].balance + despesa.valor}).then(
               (value) => log("DocumentSnapshot successfully updated!"),
               onError: (e) => log("Error updating document $e"));
     }

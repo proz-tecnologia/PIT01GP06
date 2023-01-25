@@ -16,4 +16,5 @@ class CardRepository implements ICardRepository {
   Future<void> addCard(CardModel card) {
     return _db.collection(db).doc(_uid).collection(accounts).add(card.toMap());
   }
+
 }

@@ -28,9 +28,13 @@ class _ReceitasPageState extends State<ReceitasPage> {
   final ReceitasController _receitasController = ReceitasController();
   final ReceitasRepository _receitasRepository = ReceitasRepository();
   String _contaVinculada = '';
-  String _dataReceita = DateFormat("dd-MM-yyyy").format(DateTime.now());
+  DateTime? _dataReceita;
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  
+
+  DateTime get dataReceita =>
+      _dataReceita ??
+      DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
+
   @override
   void dispose() {
     _descricaoController.dispose();
@@ -40,28 +44,34 @@ class _ReceitasPageState extends State<ReceitasPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Adicionar receita'),
-      ),
-      body: Padding(
-         padding: const EdgeInsets.symmetric(horizontal: 24),
-         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Descreva sua receita (opcional)',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                     const SizedBox(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Adicionar receita'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Descreva sua receita (opcional)',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
                         height: 8,
                       ),
                       TextFormField(
@@ -73,7 +83,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                           ),
                         ),
                       ),
-                       const SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       const Text('Valor da receita',
@@ -105,7 +115,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       const SizedBox(
                         height: 30,
                       ),
-                       const Text(
+                      const Text(
                         'Categoria da Receita',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -142,13 +152,16 @@ class _ReceitasPageState extends State<ReceitasPage> {
                         height: 8,
                       ),
                       StreamBuilder<QuerySnapshot>(
-                          stream: transactionsRepository.getBankAccountsSnapshot(),
+                          stream:
+                              transactionsRepository.getBankAccountsSnapshot(),
                           builder: (context, snapshot) {
-                            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
                               return const Text("Nenhuma conta adicionada");
                             }
                             return DropdownButtonFormField(
-                              validator: (value) => value == null ? 'Campo obrigatório' : null,
+                              validator: (value) =>
+                                  value == null ? 'Campo obrigatório' : null,
                               onChanged: (value) {
                                 if (value != null) {
                                   setState(() {
@@ -157,35 +170,34 @@ class _ReceitasPageState extends State<ReceitasPage> {
                                 }
                               },
                               items: snapshot.data!.docs.map((wallet) {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? wallet['nomeConta']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? Text(wallet['nomeConta'])
-                                        : const Text(''),
-                                  );
-                                }
-                              ).toList(),
+                                return DropdownMenuItem<String>(
+                                  value: wallet
+                                          .data()
+                                          .toString()
+                                          .contains('nomeConta')
+                                      ? wallet['nomeConta']
+                                      : '',
+                                  child: wallet
+                                          .data()
+                                          .toString()
+                                          .contains('nomeConta')
+                                      ? Text(wallet['nomeConta'])
+                                      : const Text(''),
+                                );
+                              }).toList(),
                             );
                           }),
-                           const SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       const Text(
                         'Escolha a data da receita:',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                        const SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
-                       DateTimePicker(
+                      DateTimePicker(
                         locale: const Locale('pt', 'BR'),
                         type: DateTimePickerType.date,
                         dateMask: 'dd/MM/yyyy',
@@ -196,46 +208,52 @@ class _ReceitasPageState extends State<ReceitasPage> {
                         dateLabelText: 'Data',
                         onChanged: (val) => setState(() {
                           var dateTimeData = DateTime.parse(val);
-                          _dataReceita = DateFormat("dd-MM-yyyy").format(dateTimeData);
+                          _dataReceita = DateTime.parse(
+                              DateFormat("yyyy-MM-dd").format(dateTimeData));
                         }),
                       ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-               const SizedBox(
-                height: 30,
-              ),
-              Center(
-                child: PrimaryButton(
-                  title: ('Adicionar receita'),
-                  navigateTo: (){
-                    if (_formKey.currentState?.validate() ?? false) {
-                      ReceitasModel receitaModel = ReceitasModel(
-                        type: 'receita',
-                        typeconta: 'avulsa',
-                        descricao: _descricaoController.text,
-                        valor: _valorController.numberValue,
-                        balance: _valorController.numberValue,
-                        categoria: _categoria,
-                        data: _dataReceita,
-                        conta: _contaVinculada
-                      );
-
-                      _receitasRepository.addReceita(receitaModel);
-
-                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
-                  },
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-               const SizedBox(
-                height: 10,
-              ),
-            ],
+                Center(
+                  child: PrimaryButton(
+                    title: ('Adicionar receita'),
+                    navigateTo: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        ReceitasModel receitaModel = ReceitasModel(
+                          type: 'receita',
+                          typeconta: 'avulsa',
+                          descricao: _descricaoController.text,
+                          valor: _valorController.numberValue,
+                          balance: _valorController.numberValue,
+                          categoria: _categoria,
+                          data: dataReceita,
+                          day: dataReceita.day,
+                          month:dataReceita.month,
+                          year:dataReceita.year,
+                          conta: _contaVinculada,
+                          dateReg: Timestamp.fromDate(DateTime.now()),
+                        );
+
+                        _receitasRepository.addReceita(receitaModel);
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            ('/screen'), (route) => false);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
           ),
-         ),
         ),
+      ),
     );
   }
 }

@@ -84,6 +84,6 @@ class CardModel {
 
   @override
   String toString() {
-    return 'CardModel(id: $id, nomeCartao: $nomeCartao, bandeiraCartao: $bandeiraCartao, contaDoCartao: $contaDoCartao, limiteCartao: $limiteCartao, balance: $balance, dateReg: $dateReg,)';
+    return 'CardModel(id: $id, nomeCartao: $nomeCartao, bandeiraCartao: $bandeiraCartao, contaDoCartao: $contaDoCartao, limiteCartao: $limiteCartao, balance: $balance, dateReg: $dateReg)';
   }
 }

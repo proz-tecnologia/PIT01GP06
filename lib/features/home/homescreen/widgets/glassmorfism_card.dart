@@ -6,7 +6,9 @@ import 'package:projeto_final_flutter/features/home/homesignup/signup_controller
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 
 class GlassmorfismCard extends StatefulWidget {
-  const GlassmorfismCard({super.key});
+  final double? balanceRevenues;
+
+  const GlassmorfismCard({Key? key, this.balanceRevenues}) : super(key: key);
 
   @override
   State<GlassmorfismCard> createState() => _GlassmorfismCardState();
@@ -100,9 +102,13 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(isVisible ? 'R\$ 1.000,00' : 'R\$ ....',
+                                Text(
+                                    isVisible
+                                        ? 'R\$ ${widget.balanceRevenues}'
+                                        : 'R\$ ....',
                                     style: const TextStyle(
-                                        color: MyColor.lightThemesecondaryTextColor,
+                                        color: MyColor
+                                            .lightThemesecondaryTextColor,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 24)),
                                 IconButton(
@@ -182,9 +188,9 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                                   color: Colors.white70, fontSize: 16),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Kaio Fonseca',
-                              style: TextStyle(
+                            Text(
+                              SignUpController.getUserName(),
+                              style: const TextStyle(
                                   color: Colors.white70,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24),
@@ -197,7 +203,10 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(isVisible ? 'R\$ 1.000,00' : 'R\$ ....',
+                                Text(
+                                    isVisible
+                                        ? 'R\$ ${widget.balanceRevenues}'
+                                        : 'R\$ ....',
                                     style: const TextStyle(
                                         color: Colors.white70,
                                         fontWeight: FontWeight.w600,

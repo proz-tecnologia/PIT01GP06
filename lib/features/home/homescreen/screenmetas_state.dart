@@ -1,12 +1,11 @@
-import '../../transactions/metas/metas_model.dart';
+abstract class ScreenHomeState {}
 
-abstract class ScreenMetaState {}
+class ScreenHomeInitialState implements ScreenHomeState {}
 
-class ScreenMetasInitialState implements ScreenMetaState {}
+class ScreenHomeSuccessState implements ScreenHomeState {
+  late final double sumBalance;
+  ScreenHomeSuccessState(this.sumBalance);
 
-class ScreenMetasSuccessState implements ScreenMetaState {
-  final List<MetasModel> todoMetas;
-  ScreenMetasSuccessState(this.todoMetas);
 }
 
-class ScreenMetasErrorState implements ScreenMetaState {}
+class ScreenHomeErrorState implements ScreenHomeState {}

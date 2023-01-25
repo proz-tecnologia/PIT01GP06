@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ReceitasModel {
   String? id;
   String type = 'receita';
@@ -9,8 +11,12 @@ class ReceitasModel {
   double valor;
   double balance;
   String categoria;
-  String data;
+  DateTime data;
+  int day;
+  int month;
+  int year;
   String conta;
+  Timestamp dateReg;
 
   ReceitasModel({
     this.id,
@@ -21,7 +27,11 @@ class ReceitasModel {
     required this.balance,
     required this.categoria,
     required this.data,
+    required this.day,
+    required this.month,
+    required this.year,
     required this.conta,
+    required this.dateReg,
   });
 
   ReceitasModel copyWith({
@@ -32,8 +42,12 @@ class ReceitasModel {
     double? valor,
     double? balance,
     String? categoria,
-    String? data,
+    DateTime? data,
+    int? day,
+    int? month,
+    int? year,
     String? conta,
+    Timestamp? dateReg,
   }) {
     return ReceitasModel(
       id: id ?? this.id,
@@ -44,7 +58,11 @@ class ReceitasModel {
       balance: balance ?? this.balance,
       categoria: categoria ?? this.categoria,
       data: data ?? this.data,
+      day: day ?? this.day,
+      month: month ?? this.month,
+      year: year ?? this.year,
       conta: conta ?? this.conta,
+      dateReg: dateReg ?? this.dateReg,
     );
   }
 
@@ -56,8 +74,12 @@ class ReceitasModel {
       'valor': valor,
       'balance': balance,
       'categoria': categoria,
-      'data': data,
+      'data':data.millisecondsSinceEpoch,
+      'day': day,
+      'month': month,
+      'year': year,
       'conta': conta,
+      'dateReg': dateReg
     };
   }
 
@@ -70,15 +92,16 @@ class ReceitasModel {
       valor: map['valor'] as double,
       balance: map['balance'] as double,
       categoria: map['categoria'] as String,
-      data: map['data'] as String,
+      data: DateTime.fromMillisecondsSinceEpoch(map['data'] as int),
+      day: map['day'] as int,
+      month: map['month'] as int,
+      year: map['year'] as int,
       conta: map['conta'] as String,
+      dateReg: map['dateReg'] as Timestamp,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  @override
-  String toString() {
-    return 'ReceitasModel(id: $id, type: $type, typeconta: $typeconta, descricao: $descricao, valor: $valor, balance: $balance, categoria: $categoria, data: $data, conta: $conta)';
-  }
+  
 }

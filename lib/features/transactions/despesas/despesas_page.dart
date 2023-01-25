@@ -286,8 +286,7 @@ class _DespesasPageState extends State<DespesasPage> {
                         lastDate: DateTime(2030),
                         icon: const Icon(Icons.event),
                         dateLabelText: 'Data',
-                        onChanged: (val) => setState(
-                          () {
+                        onChanged: (val) => setState(() {
                             var dateTimeData = DateTime.parse(val);
                             _dataDespesa = DateTime.parse(
                                 DateFormat("yyyy-MM-dd").format(dateTimeData));
@@ -348,7 +347,3 @@ class _DespesasPageState extends State<DespesasPage> {
   }
 }
 
-class ListaDespesa {
-  final List<DespesasModel> listDespesa;
-  ListaDespesa(this.listDespesa);
-}

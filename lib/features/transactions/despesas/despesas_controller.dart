@@ -15,6 +15,8 @@ class DespesasController {
     {'id': 9, 'categoria': 'Serviços financeiros'},
     {'id': 10, 'categoria': 'Transporte'},
     {'id': 11, 'categoria': 'Uso pessoal'},
+    {'id': 12, 'categoria': 'Cartão Crédito'},
+
   ];
 
   List<DropdownMenuItem<String>> getListaSubcategorias(int indice) {
@@ -314,6 +316,13 @@ class DespesasController {
             value: 'Vestuário',
             child: Text('Vestuário'),
           ),
+        ];
+        case 12: 
+        return [
+            const DropdownMenuItem(
+            value: 'Outros',
+            child: Text('Outros'),
+          ),           
         ];
       default:
         return [];
