@@ -28,7 +28,7 @@ class _DespesasPageState extends State<DespesasPage> {
       decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   String _categoria = '';
   int _indexSelecionado = 0;
-  String _subcategoria = '';
+  String _subcategoria = 'Outros';
   DespesasController despesasController = DespesasController();
   DespesasRepository despesasRepository = DespesasRepository();
   TransactionsRepository transactionsRepository = TransactionsRepository();
@@ -37,9 +37,25 @@ class _DespesasPageState extends State<DespesasPage> {
   DateTime? _dataDespesa;
   late double totalBalance;
   late int dataevent;
+  List<String> bankAccounts = [];
+  List<String> cardAccounts = [];
 
   DateTime get dataDespesa => _dataDespesa ?? DateTime.parse(
                                 DateFormat("yyyy-MM-dd").format(DateTime.now()));
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bankAccounts = await TransactionsRepository().getListBankAccountsSnapshot();
+      cardAccounts = await TransactionsRepository().getListCardsSnapshot();
+      setState((){});
+    });
+  }
+
+
+
+
 
   @override
   void dispose() {
@@ -123,6 +139,9 @@ class _DespesasPageState extends State<DespesasPage> {
                         height: 8,
                       ),
                       DropdownButtonFormField(
+                        onTap: () => setState(() {
+                          _subcategoria = 'Outros';
+                        }),
                         hint: const Text('Escolha a categoria'),
                         validator: (value) =>
                             value == null ? 'Campo obrigatório' : null,
@@ -152,8 +171,26 @@ class _DespesasPageState extends State<DespesasPage> {
                       const SizedBox(
                         height: 8,
                       ),
+                      _categoria == 'Cartão Crédito' ? cardAccounts.isNotEmpty ? 
+                      DropdownButtonFormField(
+                              validator: (value) => value == null ? 'Campo obrigatório' : null,
+                              hint: const Text('Escolha o cartão'),
+                              items: cardAccounts.map((e){
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e)
+                                        );
+                                }).toList(),
+                              onChanged: (String? value) {
+                                  setState(() {
+                                    _subcategoria = value!;
+                                  });
+                              
+                              },
+                            ) : const Text('Nenhum cartão adicionado') :
                       DropdownButtonFormField<String>(
                           hint: const Text('Escolha a subcategoria'),
+                          value: _subcategoria,
                           validator: (value) =>
                               value == null ? 'Campo obrigatório' : null,
                           onChanged: (value) {
@@ -188,6 +225,7 @@ class _DespesasPageState extends State<DespesasPage> {
                                   groupValue: _contaOuCartao,
                                   onChanged: (value) {
                                     setState(() {
+                                      _contaVinculada = '';
                                       _contaOuCartao = value!;
                                     });
                                   },
@@ -197,8 +235,13 @@ class _DespesasPageState extends State<DespesasPage> {
                             const SizedBox(
                               width: 10,
                             ),
-                            Expanded(
+                            _categoria != 'Cartão Crédito' ? Expanded(
                               child: ListTile(
+                                onTap: (() {
+                                  setState(() {
+                                    _contaVinculada = '';
+                                  });
+                                }),
                                 title: const Text('Cartão'),
                                 leading: Radio(
                                   value: 'Cartão',
@@ -210,66 +253,34 @@ class _DespesasPageState extends State<DespesasPage> {
                                   },
                                 ),
                               ),
-                            ),
+                            ) : const Text(''),
                           ],
                         ),
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                          stream: _contaOuCartao == 'Conta'
-                              ? transactionsRepository.getBankAccountsSnapshot()
-                              : transactionsRepository.getCardsSnapshot(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return _contaOuCartao == 'Conta'
-                                  ? const Text("Nenhuma conta adicionada")
-                                  : const Text('Nenhum cartão adicionado');
-                            }
-                            return DropdownButtonFormField(
-                              validator: (value) =>
-                                  value == null ? 'Campo obrigatório' : null,
-                              onChanged: (value) {
-                                if (value != null) {
+                      (_contaOuCartao == 'Conta' && bankAccounts.isNotEmpty) || (_contaOuCartao == 'Cartão' && cardAccounts.isNotEmpty) ? 
+                      DropdownButtonFormField(
+                              value: _contaOuCartao == 'Conta' ? bankAccounts[0] : cardAccounts[0],
+                              validator: (value) => value == null ? 'Campo obrigatório' : null,
+                              hint: (_contaOuCartao == 'Conta') ? const Text('Escolha a conta') : const Text('Escolha o cartão'),
+                              items: (_contaOuCartao == 'Conta') ? 
+                                bankAccounts.map((e){
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e)
+                                  );
+                                }).toList()
+                                  :  cardAccounts.map((e){
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e)
+                                        );
+                                }).toList(),
+                              onChanged: (String? value) {
                                   setState(() {
-                                    _contaVinculada = value;
+                                    _contaVinculada = value!;
                                   });
-                                }
                               },
-                              items: snapshot.data!.docs.map((wallet) {
-                                if (_contaOuCartao == 'Conta') {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? wallet['nomeConta']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? Text(wallet['nomeConta'])
-                                        : const Text(''),
-                                  );
-                                } else {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeCartao')
-                                        ? wallet['nomeCartao']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeCartao')
-                                        ? Text(wallet['nomeCartao'])
-                                        : const Text(''),
-                                  );
-                                }
-                              }).toList(),
-                            );
-                          }),
+                            ) : const Text('Adicione alguma carteira à sua conta.'),
                       const SizedBox(
                         height: 30,
                       ),

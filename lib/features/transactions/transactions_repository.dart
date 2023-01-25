@@ -8,23 +8,38 @@ class TransactionsRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getBankAccountsSnapshot() {
-    return _db
+  Future<List<String>> getListBankAccountsSnapshot() async {
+    List<String> bankAccounts = [];
+
+    final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
         .collection(accounts)
         .where("typeconta", isEqualTo: 'Conta')
-        .snapshots();
+        .get();
+
+      querySnapshot.docs.forEach((doc) {
+        bankAccounts.add(doc['nomeConta']);
+      });
+
+      return bankAccounts;
   }
 
+  Future<List<String>> getListCardsSnapshot() async {
+    List<String> cards = [];
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getCardsSnapshot() {
-    return _db
+    final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
         .collection(accounts)
         .where("typeconta", isEqualTo: 'Cartão')
-        .snapshots();
+        .get();
+
+      querySnapshot.docs.forEach((doc) {
+        cards.add(doc['nomeCartao']);
+      });
+
+      return cards;
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getDespesaSaldo(

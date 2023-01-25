@@ -6,15 +6,16 @@ class DespesasController {
     {'id': 0, 'categoria': 'Outros'},
     {'id': 1, 'categoria': 'Alimentos e Bebidas'},
     {'id': 2, 'categoria': 'Anim. estimação'},
-    {'id': 3, 'categoria': 'Educação'},
-    {'id': 4, 'categoria': 'Lazer'},
-    {'id': 5, 'categoria': 'Moradia'},
-    {'id': 6, 'categoria': 'Pagamentos'},
-    {'id': 7, 'categoria': 'Saúde'},
-    {'id': 8, 'categoria': 'Serviços'},
-    {'id': 9, 'categoria': 'Serviços financeiros'},
-    {'id': 10, 'categoria': 'Transporte'},
-    {'id': 11, 'categoria': 'Uso pessoal'},
+    {'id': 3, 'categoria': 'Cartão Crédito'},
+    {'id': 4, 'categoria': 'Educação'},
+    {'id': 5, 'categoria': 'Lazer'},
+    {'id': 6, 'categoria': 'Moradia'},
+    {'id': 7, 'categoria': 'Pagamentos'},
+    {'id': 8, 'categoria': 'Saúde'},
+    {'id': 9, 'categoria': 'Serviços'},
+    {'id': 10, 'categoria': 'Serviços financeiros'},
+    {'id': 11, 'categoria': 'Transporte'},
+    {'id': 12, 'categoria': 'Uso pessoal'},
   ];
 
   List<DropdownMenuItem<String>> getListaSubcategorias(int indice) {
@@ -76,7 +77,14 @@ class DespesasController {
             child: Text('Veterinário'),
           ),
         ];
-      case 3: 
+      case 3:
+        return [
+          const DropdownMenuItem(
+            value: 'Outros',
+            child: Text('Outros'),
+          ),
+        ];
+      case 4: 
         return [
             const DropdownMenuItem(
             value: 'Outros',
@@ -99,7 +107,7 @@ class DespesasController {
             child: Text('Transporte Escolar'),
           ),
         ];  
-      case 4: 
+      case 5: 
         return[
             const DropdownMenuItem(
             value: 'Outros',
@@ -126,7 +134,7 @@ class DespesasController {
             child: Text('Viagens'),
           ),
         ];
-      case 5: 
+      case 6: 
         return[
            const DropdownMenuItem(
             value: 'Outros',
@@ -157,7 +165,7 @@ class DespesasController {
             child: Text('Telefone'),
           ),
         ];
-      case 6: 
+      case 7: 
         return[
           const DropdownMenuItem(
             value: 'Outros',
@@ -180,7 +188,7 @@ class DespesasController {
             child: Text('Taxas'),
           ),
         ];
-      case 7: 
+      case 8: 
         return[
             const DropdownMenuItem(
             value: 'Outros',
@@ -211,7 +219,7 @@ class DespesasController {
             child: Text('Terapia'),
           ),
         ];
-      case 8: 
+      case 9: 
         return [
            const DropdownMenuItem(
             value: 'Outros',
@@ -234,7 +242,7 @@ class DespesasController {
             child: Text('TI'),
           ),
         ];
-      case 9: 
+      case 10: 
         return [
            const DropdownMenuItem(
             value: 'Outros',
@@ -257,7 +265,7 @@ class DespesasController {
             child: Text('Seguros'),
           ),
         ];
-      case 10: 
+      case 11: 
         return [
             const DropdownMenuItem(
             value: 'Outros',
@@ -292,7 +300,7 @@ class DespesasController {
             child: Text('Transporte Público'),
           ),
         ];
-      case 11: 
+      case 12: 
         return [
             const DropdownMenuItem(
             value: 'Outros',
