@@ -33,8 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    super.initState();
-
+    super.initState();    
     controllerBalanceRevenues.getBalanceRevenues();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerScreenMetas.getMetas();

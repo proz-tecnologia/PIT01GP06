@@ -19,8 +19,8 @@ class ReceitasRepository {
         .collection(transactions)
         .add(receitasModel.toMap());
 
-    ///adiciona receita à conta bancária
-    //verifica o id da conta
+    ///procedimento - adicionar receita à conta bancária
+    //verifica o id da conta bancária
     final result = await _db
         .collection(db)
         .doc(_uid)
@@ -31,7 +31,7 @@ class ReceitasRepository {
     final idBank = List<BankAccountModel>.from(
         result.docs.map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
     
-    //soma o valor da transação ao saldo do banco
+    //soma o valor da transação ao saldo da conta bancária
     _db
         .collection(db)
         .doc(_uid)
@@ -41,14 +41,14 @@ class ReceitasRepository {
             (value) => log("DocumentSnapshot successfully updated!"),
             onError: (e) => log("Error updating document $e"));
 
-    ///atualiza acumulado do saldo balance por tipo de receita
-    //verifica o id da receita
+    ///atualizacão acumulado do saldo balance receita por tipo de receita
+    //consulta para verificar o id da receita
     final updateBalance = await _db
         .collection(db)
         .doc(_uid)
-        .collection(accounts)
+        .collection(transactions)
         .where("categoria", isEqualTo: receitasModel.categoria)
-        .orderBy('timeReg', descending: true)
+        .orderBy('dateReg', descending: true)
         .limit(1)
         .get();
 
@@ -59,7 +59,7 @@ class ReceitasRepository {
     _db
         .collection(db)
         .doc(_uid)
-        .collection(accounts)
+        .collection(transactions)
         .doc(idReceita[0].id)
         .update({'balance': idReceita[0].balance + receitasModel.valor}).then(
             (value) => log("DocumentSnapshot successfully updated!"),

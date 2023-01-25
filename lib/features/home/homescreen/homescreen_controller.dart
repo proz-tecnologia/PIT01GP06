@@ -78,7 +78,7 @@ class BalanceRevenuesController {
 
   final notifier = ValueNotifier<ScreenHomeState>(ScreenHomeInitialState());
 
-  ScreenHomeState get stateScreen => notifier.value;
+  ScreenHomeState get stateScreenBalance => notifier.value;
 
   Future<void> getBalanceRevenues() async {
     notifier.value = ScreenHomeInitialState();
