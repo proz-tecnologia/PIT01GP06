@@ -8,7 +8,7 @@ class TransactionsRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<List<String>> getListBankAccountsSnapshot() async {
+  Future<List<String>?> getListBankAccountsSnapshot() async {
     List<String> bankAccounts = [];
 
     final querySnapshot = await _db
@@ -18,15 +18,19 @@ class TransactionsRepository {
         .where("typeconta", isEqualTo: 'Conta')
         .get();
 
-      querySnapshot.docs.forEach((doc) {
-        bankAccounts.add(doc['nomeConta']);
-      });
+      if(querySnapshot.docs.isNotEmpty){
+        querySnapshot.docs.forEach((doc) {
+          bankAccounts.add(doc['nomeConta']);
+        });
+        return bankAccounts;
+      } else{
+        return null;
+      } 
 
-      return bankAccounts;
   }
 
-  Future<List<String>> getListCardsSnapshot() async {
-    List<String> cards = [];
+  Future<List<String>?> getListCardsSnapshot() async {
+    List<String> cardsAccounts = [];
 
     final querySnapshot = await _db
         .collection(db)
@@ -35,11 +39,15 @@ class TransactionsRepository {
         .where("typeconta", isEqualTo: 'Cartão')
         .get();
 
-      querySnapshot.docs.forEach((doc) {
-        cards.add(doc['nomeCartao']);
-      });
+      if(querySnapshot.docs.isNotEmpty){
+        querySnapshot.docs.forEach((doc) {
+          cardsAccounts.add(doc['nomeCartao']);
+        });
+        return cardsAccounts;
+      } else{
+        return null;
+      }
 
-      return cards;
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getDespesaSaldo(

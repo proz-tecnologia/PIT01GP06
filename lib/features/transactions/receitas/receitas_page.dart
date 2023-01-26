@@ -30,7 +30,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
   String _contaVinculada = '';
   String _dataReceita = DateFormat("dd-MM-yyyy").format(DateTime.now());
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  List<String> bankAccounts = [];
+  List<String>? bankAccounts;
 
   @override
   void initState() {
@@ -152,12 +152,12 @@ class _ReceitasPageState extends State<ReceitasPage> {
                     const SizedBox(
                       height: 8,
                     ),
-                    bankAccounts.isNotEmpty
+                    bankAccounts != null
                         ? DropdownButtonFormField(
                             validator: (value) =>
                                 value == null ? 'Campo obrigatório' : null,
                             hint: const Text('Escolha a conta'),
-                            items: bankAccounts.map((e) {
+                            items: bankAccounts!.map((e) {
                                     return DropdownMenuItem(
                                         value: e, child: Text(e));
                                   }).toList(),
@@ -204,22 +204,25 @@ class _ReceitasPageState extends State<ReceitasPage> {
                   title: ('Adicionar receita'),
                   navigateTo: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      ReceitasModel receitaModel = ReceitasModel(
-                          type: 'receita',
-                          typeconta: 'avulsa',
-                          descricao: _descricaoController.text,
-                          valor: _valorController.numberValue,
-                          balance: _valorController.numberValue,
-                          categoria: _categoria,
-                          data: _dataReceita,
-                          conta: _contaVinculada);
+                      if(_contaVinculada != ''){
+                          ReceitasModel receitaModel = ReceitasModel(
+                              type: 'receita',
+                              typeconta: 'avulsa',
+                              descricao: _descricaoController.text,
+                              valor: _valorController.numberValue,
+                              balance: _valorController.numberValue,
+                              categoria: _categoria,
+                              data: _dataReceita,
+                              conta: _contaVinculada);
 
-                      _receitasRepository.addReceita(receitaModel);
+                          _receitasRepository.addReceita(receitaModel);
 
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
-                  },
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              ('/screen'), (route) => false);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
+                      }
+                  }},
                 ),
               ),
               const SizedBox(

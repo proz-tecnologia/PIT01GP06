@@ -23,7 +23,7 @@ class _AddCardState extends State<AddCard> {
   final _limiteCartaoController = MoneyMaskedTextController(
       decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   TransactionsRepository transactionsRepository = TransactionsRepository(); 
-  List<String> bankAccounts = [];
+  List<String>? bankAccounts;
 
   @override
   void initState() {
@@ -158,12 +158,12 @@ class _AddCardState extends State<AddCard> {
                       const SizedBox(
                         height: 8,
                       ),
-                      bankAccounts.isNotEmpty
+                      bankAccounts!= null
                         ? DropdownButtonFormField(
                             validator: (value) =>
                                 value == null ? 'Campo obrigatório' : null,
                             hint: const Text('Escolha a conta'),
-                            items: bankAccounts.map((e) {
+                            items: bankAccounts!.map((e) {
                                     return DropdownMenuItem(
                                         value: e, child: Text(e));
                                   }).toList(),

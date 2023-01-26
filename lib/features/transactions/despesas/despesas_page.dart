@@ -37,8 +37,8 @@ class _DespesasPageState extends State<DespesasPage> {
   DateTime? _dataDespesa;
   late double totalBalance;
   late int dataevent;
-  List<String> bankAccounts = [];
-  List<String> cardAccounts = [];
+  List<String>? bankAccounts;
+  List<String>? cardAccounts;
 
   DateTime get dataDespesa => _dataDespesa ?? DateTime.parse(
                                 DateFormat("yyyy-MM-dd").format(DateTime.now()));
@@ -171,11 +171,12 @@ class _DespesasPageState extends State<DespesasPage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      _categoria == 'Cartão Crédito' ? cardAccounts.isNotEmpty ? 
+                      _categoria == 'Cartão Crédito' ? 
+                      cardAccounts!=null ? 
                       DropdownButtonFormField(
                               validator: (value) => value == null ? 'Campo obrigatório' : null,
                               hint: const Text('Escolha o cartão'),
-                              items: cardAccounts.map((e){
+                              items: cardAccounts!.map((e){
                                         return DropdownMenuItem(
                                           value: e,
                                           child: Text(e)
@@ -257,19 +258,18 @@ class _DespesasPageState extends State<DespesasPage> {
                           ],
                         ),
                       ),
-                      (_contaOuCartao == 'Conta' && bankAccounts.isNotEmpty) || (_contaOuCartao == 'Cartão' && cardAccounts.isNotEmpty) ? 
+                      (_contaOuCartao == 'Conta' && bankAccounts != null) && (_contaOuCartao == 'Cartão' && cardAccounts != null) ? 
                       DropdownButtonFormField(
-                              value: _contaOuCartao == 'Conta' ? bankAccounts[0] : cardAccounts[0],
+                              value: _contaOuCartao == 'Conta' ? bankAccounts![0] : cardAccounts![0],
                               validator: (value) => value == null ? 'Campo obrigatório' : null,
-                              hint: (_contaOuCartao == 'Conta') ? const Text('Escolha a conta') : const Text('Escolha o cartão'),
                               items: (_contaOuCartao == 'Conta') ? 
-                                bankAccounts.map((e){
+                                bankAccounts!.map((e){
                                   return DropdownMenuItem(
                                     value: e,
                                     child: Text(e)
                                   );
                                 }).toList()
-                                  :  cardAccounts.map((e){
+                                  :  cardAccounts!.map((e){
                                         return DropdownMenuItem(
                                           value: e,
                                           child: Text(e)
@@ -318,36 +318,45 @@ class _DespesasPageState extends State<DespesasPage> {
                   title: ('Adicionar despesa'),
                   navigateTo: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      var result = await despesasRepository
-                          .getDespesaCategoria(_categoria);
-                      if (result.isEmpty) {
-                        totalBalance = 0.0;
-                      } else {
-                        totalBalance = result[0].balance;
-                      }                      
+                      if(_contaVinculada != ''){
+                          var result = await despesasRepository.getDespesaCategoria(_categoria);
+                          if (result.isEmpty) {
+                            totalBalance = 0.0;
+                          } else {
+                            totalBalance = result[0].balance;
+                          }                  
+              
+                          // _contaVinculada == 'Conta' ? bankAccounts[0] : cardAccounts[0];
+                          // print('_contaVinculada: $_contaVinculada');
+                                  
 
-                      dataevent = DateTime.now().millisecondsSinceEpoch;
+                          dataevent = DateTime.now().millisecondsSinceEpoch;
 
-                      DespesasModel despesaModel = DespesasModel(
-                          type: 'despesa',
-                          descricao: _descricaoController.text,
-                          valor: _valorController.numberValue,
-                          balance: _valorController.numberValue + totalBalance,
-                          categoria: _categoria,
-                          subcategoria: _subcategoria,
-                          timeReg: dataevent,
-                          data: dataDespesa,
-                          day: dataDespesa.day,
-                          month:dataDespesa.month,
-                          year:dataDespesa.year,
-                          typeconta: _contaOuCartao,
-                          conta: _contaVinculada);
+                          DespesasModel despesaModel = DespesasModel(
+                              type: 'despesa',
+                              descricao: _descricaoController.text,
+                              valor: _valorController.numberValue,
+                              balance: _valorController.numberValue + totalBalance,
+                              categoria: _categoria,
+                              subcategoria: _subcategoria,
+                              timeReg: dataevent,
+                              data: dataDespesa,
+                              day: dataDespesa.day,
+                              month:dataDespesa.month,
+                              year:dataDespesa.year,
+                              typeconta: _contaOuCartao,
+                              conta: _contaVinculada);
 
-                      despesasRepository.addDespesa(despesaModel);
-                     
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
+                          despesasRepository.addDespesa(despesaModel);
+                        
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              ('/screen'), (route) => false);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
+                        }
+
+                      }
+                      
                   },
                 ),
               ),

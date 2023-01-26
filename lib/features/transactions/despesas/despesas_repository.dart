@@ -14,6 +14,7 @@ class DespesasRepository {
 
   Future<void> addDespesa(DespesasModel despesa) async {
     //adiciona a despesa
+    print(despesa);
     _db.collection(db).doc(_uid).collection(transactions).add(despesa.toMap());
 
     //verifica a Conta associada à despesa e atualiza o saldo balance
@@ -25,9 +26,10 @@ class DespesasRepository {
           .where("typeconta", isEqualTo: despesa.typeconta)
           .where("nomeConta", isEqualTo: despesa.conta)
           .get();
+        print(result.docs);
       final idBank = List<BankAccountModel>.from(result.docs
           .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
-
+        print(idBank);
       _db
           .collection(db)
           .doc(_uid)
@@ -71,8 +73,7 @@ class DespesasRepository {
         .limit(1)
         .get();
 
-    final todoDespesa = List<DespesasModel>.from(
-        result.docs.map((doc) => DespesasModel.fromMap(doc.id, doc.data())));
+    final todoDespesa = List<DespesasModel>.from(result.docs.map((doc) => DespesasModel.fromMap(doc.id, doc.data())));
     return todoDespesa;
   }
 }
