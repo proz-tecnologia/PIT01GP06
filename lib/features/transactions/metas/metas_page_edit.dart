@@ -9,7 +9,6 @@ import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homelogin/homelogin_repository.dart';
 import '../../home/homescreen/homescreen_controller.dart';
-import 'metas_controller.dart';
 import 'metas_repository.dart';
 
 class MetasPageEdit extends StatefulWidget {

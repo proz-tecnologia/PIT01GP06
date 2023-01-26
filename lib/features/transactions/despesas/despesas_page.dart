@@ -1,6 +1,4 @@
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
@@ -8,8 +6,6 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_controller.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_model.dart';
 import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import '../../../utils/currency_formatter.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +28,8 @@ class _DespesasPageState extends State<DespesasPage> {
   DespesasController despesasController = DespesasController();
   DespesasRepository despesasRepository = DespesasRepository();
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  String _contaVinculada = '';
+
+  String? _selectedValue;
   String _contaOuCartao = "Conta";
   DateTime? _dataDespesa;
   late double totalBalance;
@@ -49,6 +46,9 @@ class _DespesasPageState extends State<DespesasPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       bankAccounts = await TransactionsRepository().getListBankAccountsSnapshot();
       cardAccounts = await TransactionsRepository().getListCardsSnapshot();
+      if( (_contaOuCartao == 'Conta' && bankAccounts != null) || (_contaOuCartao == 'Cartão' && cardAccounts != null)){
+        _contaOuCartao == 'Conta' ? _selectedValue = bankAccounts![0] : _selectedValue = cardAccounts![0];
+      }
       setState((){});
     });
   }
@@ -226,7 +226,11 @@ class _DespesasPageState extends State<DespesasPage> {
                                   groupValue: _contaOuCartao,
                                   onChanged: (value) {
                                     setState(() {
-                                      _contaVinculada = '';
+                                      if(bankAccounts != null){
+                                        _selectedValue = bankAccounts![0]; 
+                                      } else{
+                                        _selectedValue = null;
+                                      }
                                       _contaOuCartao = value!;
                                     });
                                   },
@@ -238,17 +242,17 @@ class _DespesasPageState extends State<DespesasPage> {
                             ),
                             _categoria != 'Cartão Crédito' ? Expanded(
                               child: ListTile(
-                                onTap: (() {
-                                  setState(() {
-                                    _contaVinculada = '';
-                                  });
-                                }),
                                 title: const Text('Cartão'),
                                 leading: Radio(
                                   value: 'Cartão',
                                   groupValue: _contaOuCartao,
                                   onChanged: (value) async {
                                     setState(() {
+                                      if(cardAccounts != null){
+                                        _selectedValue = cardAccounts![0];
+                                      } else {
+                                        _selectedValue = null;
+                                      }
                                       _contaOuCartao = value!;
                                     });
                                   },
@@ -258,7 +262,7 @@ class _DespesasPageState extends State<DespesasPage> {
                           ],
                         ),
                       ),
-                      (_contaOuCartao == 'Conta' && bankAccounts != null) && (_contaOuCartao == 'Cartão' && cardAccounts != null) ? 
+                      (_contaOuCartao == 'Conta' && bankAccounts != null) || (_contaOuCartao == 'Cartão' && cardAccounts != null) ? 
                       DropdownButtonFormField(
                               value: _contaOuCartao == 'Conta' ? bankAccounts![0] : cardAccounts![0],
                               validator: (value) => value == null ? 'Campo obrigatório' : null,
@@ -277,8 +281,9 @@ class _DespesasPageState extends State<DespesasPage> {
                                 }).toList(),
                               onChanged: (String? value) {
                                   setState(() {
-                                    _contaVinculada = value!;
+                                    _selectedValue = value;
                                   });
+                              
                               },
                             ) : const Text('Adicione alguma carteira à sua conta.'),
                       const SizedBox(
@@ -318,7 +323,7 @@ class _DespesasPageState extends State<DespesasPage> {
                   title: ('Adicionar despesa'),
                   navigateTo: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      if(_contaVinculada != ''){
+                      if(_selectedValue != null){
                           var result = await despesasRepository.getDespesaCategoria(_categoria);
                           if (result.isEmpty) {
                             totalBalance = 0.0;
@@ -326,8 +331,6 @@ class _DespesasPageState extends State<DespesasPage> {
                             totalBalance = result[0].balance;
                           }                  
               
-                          // _contaVinculada == 'Conta' ? bankAccounts[0] : cardAccounts[0];
-                          // print('_contaVinculada: $_contaVinculada');
                                   
 
                           dataevent = DateTime.now().millisecondsSinceEpoch;
@@ -345,7 +348,7 @@ class _DespesasPageState extends State<DespesasPage> {
                               month:dataDespesa.month,
                               year:dataDespesa.year,
                               typeconta: _contaOuCartao,
-                              conta: _contaVinculada);
+                              conta: _selectedValue!);
 
                           despesasRepository.addDespesa(despesaModel);
                         

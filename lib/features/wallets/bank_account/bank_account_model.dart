@@ -9,7 +9,7 @@ class BankAccountModel {
   String nomeConta;
   String nomeInstituicao;
   String tipoConta;  
-  double balance;
+  num balance;
 
   BankAccountModel({
     this.id,
@@ -65,11 +65,16 @@ class BankAccountModel {
       nomeConta: map['nomeConta'] as String,
       nomeInstituicao: map['nomeInstituicao'] as String,
       tipoConta: map['tipoConta'] as String,      
-      balance: map['balance'] as double,
+      balance: map['balance'] as num,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   
+
+  @override
+  String toString() {
+    return 'BankAccountModel(id: $id, type: $type, subtype: $subtype, typeconta: $typeconta, nomeConta: $nomeConta, nomeInstituicao: $nomeInstituicao, tipoConta: $tipoConta, balance: $balance)';
+  }
 }
