@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import 'package:projeto_final_flutter/features/wallets/card/card_repository.dart';
 import '../../../utils/currency_formatter.dart';
@@ -19,8 +20,19 @@ class _AddCardState extends State<AddCard> {
   final TextEditingController _nomeController = TextEditingController();
   String _bandeiraCartao = '';
   String? _contaVinculada;
-  final TextEditingController _limiteCartaoController = TextEditingController();
+  final _limiteCartaoController = MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   TransactionsRepository transactionsRepository = TransactionsRepository(); 
+  List<String>? bankAccounts;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bankAccounts = await TransactionsRepository().getListBankAccountsSnapshot();
+      setState((){});
+    });
+  }
 
   @override
   void dispose() {
@@ -146,32 +158,22 @@ class _AddCardState extends State<AddCard> {
                       const SizedBox(
                         height: 8,
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                        stream: transactionsRepository.getBankAccountsSnapshot(),
-                        builder: (context, snapshot) {
-                           if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return const Text('Nenhuma conta adicionada.') ;
-                        }
-                      return DropdownButtonFormField(
-                        // value: _contaVinculada,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              _contaVinculada = value;
-                            });
-                          }
-                        },
-                        items: 
-                          snapshot.data!.docs.map((e){
-                            return DropdownMenuItem<String>(
-                              value: e.data().toString().contains('nomeConta') ? e['nomeConta'] : '',  
-                              child: e.data().toString().contains('nomeConta') ? Text(e['nomeConta']): const Text(''),
-                            );
-                          }).toList()
- 
-                      );
-                      }),
+                      bankAccounts!= null
+                        ? DropdownButtonFormField(
+                            validator: (value) =>
+                                value == null ? 'Campo obrigatório' : null,
+                            hint: const Text('Escolha a conta'),
+                            items: bankAccounts!.map((e) {
+                                    return DropdownMenuItem(
+                                        value: e, child: Text(e));
+                                  }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                _contaVinculada = value!;
+                              });
+                            },
+                          )
+                        : const Text('Nenhuma conta adicionada'),
                       const SizedBox(
                         height: 30,
                       ),
@@ -180,10 +182,14 @@ class _AddCardState extends State<AddCard> {
                             navigateTo: () {
                               if (_formKey.currentState?.validate() ?? false) {
                                 CardModel cardModel = CardModel(
+                                  type: "despesa",
+                                  typeconta: 'Cartão',
                                   nomeCartao: _nomeController.text,
                                   bandeiraCartao: _bandeiraCartao,
-                                  limiteCartao: _limiteCartaoController.text,
-                                  contaDoCartao: _contaVinculada,
+                                  limiteCartao: _limiteCartaoController.numberValue,
+                                  contaDoCartao: _contaVinculada,              
+                                  balance: 0.0,
+                                  dateReg: Timestamp.fromDate(DateTime.now()),
                                 );
 
                                 CardRepository().addCard(cardModel);

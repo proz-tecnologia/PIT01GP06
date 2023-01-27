@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_controller.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_model.dart';
+import 'package:projeto_final_flutter/features/transactions/despesas/despesas_repository.dart';
 import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import '../../../utils/currency_formatter.dart';
 import 'package:intl/intl.dart';
@@ -20,25 +20,47 @@ class DespesasPage extends StatefulWidget {
 class _DespesasPageState extends State<DespesasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descricaoController = TextEditingController();
-  final TextEditingController _valorController = TextEditingController();
-  double? valor;
+  final _valorController = MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   String _categoria = '';
   int _indexSelecionado = 0;
-  String _subcategoria = '';
-  TransactionsController transactionsController = TransactionsController();
+  String _subcategoria = 'Outros';
+  DespesasController despesasController = DespesasController();
+  DespesasRepository despesasRepository = DespesasRepository();
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
-  String _contaVinculada = '';
+
+  String? _selectedValue;
   String _contaOuCartao = "Conta";
-  DateTime _dataDespesa = DateTime.now();
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final TextEditingController _dateTimePickerController = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
+  DateTime? _dataDespesa;
+  late double totalBalance;
+  late int dataevent;
+  List<String>? bankAccounts;
+  List<String>? cardAccounts;
+
+  DateTime get dataDespesa => _dataDespesa ?? DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(DateTime.now()));
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bankAccounts = await TransactionsRepository().getListBankAccountsSnapshot();
+      cardAccounts = await TransactionsRepository().getListCardsSnapshot();
+      if( (_contaOuCartao == 'Conta' && bankAccounts != null) || (_contaOuCartao == 'Cartão' && cardAccounts != null)){
+        _contaOuCartao == 'Conta' ? _selectedValue = bankAccounts![0] : _selectedValue = cardAccounts![0];
+      }
+      setState((){});
+    });
+  }
+
+
+
+
 
   @override
   void dispose() {
     _descricaoController.dispose();
     _valorController.dispose();
-    _dateTimePickerController.dispose();
     super.dispose();
   }
 
@@ -117,6 +139,9 @@ class _DespesasPageState extends State<DespesasPage> {
                         height: 8,
                       ),
                       DropdownButtonFormField(
+                        onTap: () => setState(() {
+                          _subcategoria = 'Outros';
+                        }),
                         hint: const Text('Escolha a categoria'),
                         validator: (value) =>
                             value == null ? 'Campo obrigatório' : null,
@@ -124,13 +149,12 @@ class _DespesasPageState extends State<DespesasPage> {
                           if (value != null) {
                             setState(() {
                               _indexSelecionado = value;
-                              _categoria = transactionsController
-                                  .listaCategoriasDespesas[value]['categoria'];
+                              _categoria = despesasController
+                                  .listaCategorias[value]['categoria'];
                             });
                           }
                         },
-                        items: transactionsController.listaCategoriasDespesas
-                            .map((item) {
+                        items: despesasController.listaCategorias.map((item) {
                           return DropdownMenuItem(
                             value: item['id'] as int,
                             child: Text(item['categoria'].toString()),
@@ -147,8 +171,27 @@ class _DespesasPageState extends State<DespesasPage> {
                       const SizedBox(
                         height: 8,
                       ),
+                      _categoria == 'Cartão Crédito' ? 
+                      cardAccounts!=null ? 
+                      DropdownButtonFormField(
+                              validator: (value) => value == null ? 'Campo obrigatório' : null,
+                              hint: const Text('Escolha o cartão'),
+                              items: cardAccounts!.map((e){
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e)
+                                        );
+                                }).toList(),
+                              onChanged: (String? value) {
+                                  setState(() {
+                                    _subcategoria = value!;
+                                  });
+                              
+                              },
+                            ) : const Text('Nenhum cartão adicionado') :
                       DropdownButtonFormField<String>(
                           hint: const Text('Escolha a subcategoria'),
+                          value: _subcategoria,
                           validator: (value) =>
                               value == null ? 'Campo obrigatório' : null,
                           onChanged: (value) {
@@ -158,7 +201,7 @@ class _DespesasPageState extends State<DespesasPage> {
                               });
                             }
                           },
-                          items: transactionsController
+                          items: despesasController
                               .getListaSubcategorias(_indexSelecionado)),
                       const SizedBox(
                         height: 30,
@@ -183,6 +226,11 @@ class _DespesasPageState extends State<DespesasPage> {
                                   groupValue: _contaOuCartao,
                                   onChanged: (value) {
                                     setState(() {
+                                      if(bankAccounts != null){
+                                        _selectedValue = bankAccounts![0]; 
+                                      } else{
+                                        _selectedValue = null;
+                                      }
                                       _contaOuCartao = value!;
                                     });
                                   },
@@ -192,7 +240,7 @@ class _DespesasPageState extends State<DespesasPage> {
                             const SizedBox(
                               width: 10,
                             ),
-                            Expanded(
+                            _categoria != 'Cartão Crédito' ? Expanded(
                               child: ListTile(
                                 title: const Text('Cartão'),
                                 leading: Radio(
@@ -200,71 +248,44 @@ class _DespesasPageState extends State<DespesasPage> {
                                   groupValue: _contaOuCartao,
                                   onChanged: (value) async {
                                     setState(() {
+                                      if(cardAccounts != null){
+                                        _selectedValue = cardAccounts![0];
+                                      } else {
+                                        _selectedValue = null;
+                                      }
                                       _contaOuCartao = value!;
                                     });
                                   },
                                 ),
                               ),
-                            ),
+                            ) : const Text(''),
                           ],
                         ),
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                          stream: _contaOuCartao == 'Conta'
-                              ? transactionsRepository.getBankAccountsSnapshot()
-                              : transactionsRepository.getCardsSnapshot(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return _contaOuCartao == 'Conta'
-                                  ? const Text("Nenhuma conta adicionada")
-                                  : const Text('Nenhum cartão adicionado');
-                            }
-                            return DropdownButtonFormField(
-                              validator: (value) =>
-                                  value == null ? 'Campo obrigatório' : null,
-                              onChanged: (value) {
-                                if (value != null) {
+                      (_contaOuCartao == 'Conta' && bankAccounts != null) || (_contaOuCartao == 'Cartão' && cardAccounts != null) ? 
+                      DropdownButtonFormField(
+                              value: _contaOuCartao == 'Conta' ? bankAccounts![0] : cardAccounts![0],
+                              validator: (value) => value == null ? 'Campo obrigatório' : null,
+                              items: (_contaOuCartao == 'Conta') ? 
+                                bankAccounts!.map((e){
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e)
+                                  );
+                                }).toList()
+                                  :  cardAccounts!.map((e){
+                                        return DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e)
+                                        );
+                                }).toList(),
+                              onChanged: (String? value) {
                                   setState(() {
-                                    _contaVinculada = value;
+                                    _selectedValue = value;
                                   });
-                                }
+                              
                               },
-                              items: snapshot.data!.docs.map((wallet) {
-                                if (_contaOuCartao == 'Conta') {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? wallet['nomeConta']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? Text(wallet['nomeConta'])
-                                        : const Text(''),
-                                  );
-                                } else {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeCartao')
-                                        ? wallet['nomeCartao']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeCartao')
-                                        ? Text(wallet['nomeCartao'])
-                                        : const Text(''),
-                                  );
-                                }
-                              }).toList(),
-                            );
-                          }),
+                            ) : const Text('Adicione alguma carteira à sua conta.'),
                       const SizedBox(
                         height: 30,
                       ),
@@ -279,14 +300,18 @@ class _DespesasPageState extends State<DespesasPage> {
                         locale: const Locale('pt', 'BR'),
                         type: DateTimePickerType.date,
                         dateMask: 'dd/MM/yyyy',
-                        controller: _dateTimePickerController,
+                        initialValue: DateTime.now().toString(),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2030),
                         icon: const Icon(Icons.event),
                         dateLabelText: 'Data',
-                        onChanged: (val) => setState(() {
-                          _dataDespesa = DateTime.parse(val);
-                        }),
+                        onChanged: (val) => setState(
+                          () {
+                            var dateTimeData = DateTime.parse(val);
+                            _dataDespesa = DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(dateTimeData));
+                          },
+                        ),
                       ),
                     ],
                   )),
@@ -296,30 +321,45 @@ class _DespesasPageState extends State<DespesasPage> {
               Center(
                 child: PrimaryButton(
                   title: ('Adicionar despesa'),
-                  navigateTo: () {
+                  navigateTo: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      valor = TransactionsController()
-                          .convertStringToDouble(_valorController.text);
+                      if(_selectedValue != null){
+                          var result = await despesasRepository.getDespesaCategoria(_categoria);
+                          if (result.isEmpty) {
+                            totalBalance = 0.0;
+                          } else {
+                            totalBalance = result[0].balance;
+                          }                  
+              
+                                  
 
-                      TransactionModel transactionsModel = TransactionModel(
-                        type: 'Despesa',
-                        descricao: _descricaoController.text,
-                        valor: valor!,
-                        categoria: _categoria,
-                        subcategoria: _subcategoria,
-                        idConta: _contaVinculada,
-                        dateTime: _dataDespesa,
-                        day: transactionsController.getDay(dateFormat.format(_dataDespesa)),
-                        month: transactionsController.getMonth(dateFormat.format(_dataDespesa)),
-                        year: transactionsController.getYear(dateFormat.format(_dataDespesa)),
-                        idUser: uid,
-                      );
-                    
-                      transactionsRepository.addTransacao(transactionsModel);
+                          dataevent = DateTime.now().millisecondsSinceEpoch;
 
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
+                          DespesasModel despesaModel = DespesasModel(
+                              type: 'despesa',
+                              descricao: _descricaoController.text,
+                              valor: _valorController.numberValue,
+                              balance: _valorController.numberValue + totalBalance,
+                              categoria: _categoria,
+                              subcategoria: _subcategoria,
+                              timeReg: dataevent,
+                              data: dataDespesa,
+                              day: dataDespesa.day,
+                              month:dataDespesa.month,
+                              year:dataDespesa.year,
+                              typeconta: _contaOuCartao,
+                              conta: _selectedValue!);
+
+                          despesasRepository.addDespesa(despesaModel);
+                        
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              ('/screen'), (route) => false);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
+                        }
+
+                      }
+                      
                   },
                 ),
               ),
@@ -332,4 +372,9 @@ class _DespesasPageState extends State<DespesasPage> {
       ),
     );
   }
+}
+
+class ListaDespesa {
+  final List<DespesasModel> listDespesa;
+  ListaDespesa(this.listDespesa);
 }

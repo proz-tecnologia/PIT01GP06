@@ -74,173 +74,180 @@ class _MetasPageEditState extends State<MetasPageEdit> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Adicionar Meta'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Descreva sua meta (opcional)',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _objectiveController,
-                        decoration: InputDecoration(
-                          hintText: 'Objetivo de sua meta',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Adicionar Meta'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Descreva sua meta (opcional)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextFormField(
+                          controller: _objectiveController,
+                          decoration: InputDecoration(
+                            hintText: 'Objetivo de sua meta',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text('Valor estimado',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _valueController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          CurrencyFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: 'R\$ 00,00',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text('Valor estimado',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextFormField(
+                          controller: _valueController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CurrencyFormatter(),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: 'R\$ 00,00',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Campo obrigatório.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Qual o tipo do investimento:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextFormField(
+                          controller: _perfomanceController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CurrencyFormatter(),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: 'R\$ 00,00',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Campo obrigatório.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Escolha a data para alcançar a meta:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        DateTimePicker(
+                          locale: const Locale('pt', 'BR'),
+                          type: DateTimePickerType.date,
+                          dateMask: 'dd/MM/yyyy',
+                          initialValue: widget.date.toString(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030),
+                          icon: const Icon(Icons.event),
+                          dateLabelText: 'Data',
+                          onChanged: (val) => setState(() {
+                            var datePreview = DateTime.parse(val);
+                            // ignore: unused_local_variable
+                            _dateGoal = DateTime.parse(
+                                DateFormat("yyyy-MM-dd").format(datePreview));
+                          }),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Icone',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextFormField(
+                          controller: _iconController,
+                          decoration: InputDecoration(
+                            hintText: 'Icone',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Campo obrigatório.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Qual o tipo do investimento:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _perfomanceController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          CurrencyFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: 'R\$ 00,00',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Campo obrigatório.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Escolha a data para alcançar a meta:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      DateTimePicker(
-                        locale: const Locale('pt', 'BR'),
-                        type: DateTimePickerType.date,
-                        dateMask: 'dd/MM/yyyy',
-                        initialValue: widget.date.toString(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                        icon: const Icon(Icons.event),
-                        dateLabelText: 'Data',
-                        onChanged: (val) => setState(() {
-                          var datePreview = DateTime.parse(val);
-                          // ignore: unused_local_variable
-                          _dateGoal = DateTime.parse(
-                              DateFormat("yyyy-MM-dd").format(datePreview));
-                        }),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Icone',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _iconController,
-                        decoration: InputDecoration(
-                          hintText: 'Icone',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-              const SizedBox(
-                height: 30,
-              ),
-              Center(
-                child: ElevatedButton(
-                    onPressed: () async {
-                      var valueGols = _valueController.numberValue;
-                      var valuePerfomance = _perfomanceController.numberValue;
-                      await controller.updateMetas(
-                        id!,
-                        'meta',
-                        _objectiveController.text,
-                        valueGols,
-                        _dateGoal,
-                        _iconController.text,
-                        valuePerfomance,
-                      );
-                      //Navigator.of(context).pushNamed('/screen');
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    },
-                    child: const Text('Editar')),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
+                      ],
+                    )),
+                const SizedBox(
+                  height: 30,
+                ),
+                Center(
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        var valueGols = _valueController.numberValue;
+                        var valuePerfomance = _perfomanceController.numberValue;
+                        await controller.updateMetas(
+                          id!,
+                          'meta',
+                          _objectiveController.text,
+                          valueGols,
+                          _dateGoal,
+                          _iconController.text,
+                          valuePerfomance,
+                        );
+                        //Navigator.of(context).pushNamed('/screen');
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            ('/screen'), (route) => false);
+                      },
+                      child: const Text('Editar')),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
           ),
         ),
       ),

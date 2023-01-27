@@ -1,14 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_controller.dart';
+import 'package:projeto_final_flutter/features/transactions/receitas/receitas_model.dart';
+import 'package:projeto_final_flutter/features/transactions/receitas/receitas_repository.dart';
+
 import '../../../utils/currency_formatter.dart';
-import '../transactions/transactions_model.dart';
 import '../transactions_repository.dart';
+import 'receitas_controller.dart';
 
 class ReceitasPage extends StatefulWidget {
   const ReceitasPage({super.key});
@@ -20,23 +21,30 @@ class ReceitasPage extends StatefulWidget {
 class _ReceitasPageState extends State<ReceitasPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descricaoController = TextEditingController();
-  final TextEditingController _valorController = TextEditingController();
-  double? valor;
+  final _valorController = MoneyMaskedTextController(
+      decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
   String _categoria = '';
+  final ReceitasController _receitasController = ReceitasController();
+  final ReceitasRepository _receitasRepository = ReceitasRepository();
   String _contaVinculada = '';
-  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
-  final TextEditingController _dateTimePickerController = TextEditingController(text: DateFormat("dd-MM-yyyy").format(DateTime.now()));
-  DateTime _dataReceita = DateTime.now();
+  String _dataReceita = DateFormat("dd-MM-yyyy").format(DateTime.now());
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  TransactionsController transactionsController = TransactionsController();
+  List<String>? bankAccounts;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bankAccounts =
+          await TransactionsRepository().getListBankAccountsSnapshot();
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
     _descricaoController.dispose();
     _valorController.dispose();
-    _dateTimePickerController.dispose();
     super.dispose();
   }
 
@@ -108,7 +116,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       height: 30,
                     ),
                     const Text(
-                      'Categoria da receita',
+                      'Categoria da Receita',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
@@ -121,12 +129,12 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       onChanged: (value) {
                         if (value != null) {
                           setState(() {
-                            _categoria = transactionsController
-                                .listaCategoriasReceitas[value]['categoria'];
+                            _categoria = _receitasController
+                                .listaCategorias[value]['categoria'];
                           });
                         }
                       },
-                      items: transactionsController.listaCategoriasReceitas.map((item) {
+                      items: _receitasController.listaCategorias.map((item) {
                         return DropdownMenuItem(
                           value: item['id'] as int,
                           child: Text(item['categoria'].toString()),
@@ -143,42 +151,22 @@ class _ReceitasPageState extends State<ReceitasPage> {
                     const SizedBox(
                       height: 8,
                     ),
-                    StreamBuilder<QuerySnapshot>(
-                        stream:
-                            transactionsRepository.getBankAccountsSnapshot(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData ||
-                              snapshot.data!.docs.isEmpty) {
-                            return const Text("Nenhuma conta adicionada");
-                          }
-                          return DropdownButtonFormField(
+                    bankAccounts != null
+                        ? DropdownButtonFormField(
                             validator: (value) =>
                                 value == null ? 'Campo obrigatório' : null,
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  _contaVinculada = value;
-                                });
-                              }
+                            hint: const Text('Escolha a conta'),
+                            items: bankAccounts!.map((e) {
+                                    return DropdownMenuItem(
+                                        value: e, child: Text(e));
+                                  }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                _contaVinculada = value!;
+                              });
                             },
-                            items: snapshot.data!.docs.map((wallet) {
-                              return DropdownMenuItem<String>(
-                                value: wallet
-                                        .data()
-                                        .toString()
-                                        .contains('nomeConta')
-                                    ? wallet['nomeConta']
-                                    : '',
-                                child: wallet
-                                        .data()
-                                        .toString()
-                                        .contains('nomeConta')
-                                    ? Text(wallet['nomeConta'])
-                                    : const Text(''),
-                              );
-                            }).toList(),
-                          );
-                        }),
+                          )
+                        : const Text('Nenhuma conta adicionada'),
                     const SizedBox(
                       height: 30,
                     ),
@@ -193,13 +181,16 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       locale: const Locale('pt', 'BR'),
                       type: DateTimePickerType.date,
                       dateMask: 'dd/MM/yyyy',
-                      controller: _dateTimePickerController,
+                      initialValue: DateTime.now().toString(),
                       firstDate: DateTime(2020),
                       lastDate: DateTime(2030),
                       icon: const Icon(Icons.event),
+                      dateLabelText: 'Data',
                       onChanged: (val) => setState(() {
-                        _dataReceita = DateTime.parse(val);
-                       }),
+                        var dateTimeData = DateTime.parse(val);
+                        _dataReceita =
+                            DateFormat("dd-MM-yyyy").format(dateTimeData);
+                      }),
                     ),
                   ],
                 ),
@@ -212,33 +203,25 @@ class _ReceitasPageState extends State<ReceitasPage> {
                   title: ('Adicionar receita'),
                   navigateTo: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      valor = transactionsController.convertStringToDouble(_valorController.text);
-                      // ReceitasModel receitaModel = ReceitasModel(
-                      //   descricao: _descricaoController.text,
-                      //   valor: valor!,
-                      //   categoria: _categoria,
-                      //   data: _dataReceita,
-                      //   conta: _contaVinculada
-                      // );
-                      TransactionModel transactionsModel = TransactionModel(
-                        type: 'Receita',
-                        descricao: _descricaoController.text,
-                        valor: valor!,
-                        categoria: _categoria,
-                        idConta: _contaVinculada,
-                        dateTime: _dataReceita,
-                        day: transactionsController.getDay(dateFormat.format(_dataReceita)),
-                        month: transactionsController.getMonth(dateFormat.format(_dataReceita)),
-                        year: transactionsController.getYear(dateFormat.format(_dataReceita)),
-                        idUser: uid,
-                      );
+                      if(_contaVinculada != ''){
+                          ReceitasModel receitaModel = ReceitasModel(
+                              type: 'receita',
+                              typeconta: 'avulsa',
+                              descricao: _descricaoController.text,
+                              valor: _valorController.numberValue,
+                              balance: _valorController.numberValue,
+                              categoria: _categoria,
+                              data: _dataReceita,
+                              conta: _contaVinculada);
 
-                      transactionsRepository.addTransacao(transactionsModel);
+                          _receitasRepository.addReceita(receitaModel);
 
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
-                  },
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              ('/screen'), (route) => false);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
+                      }
+                  }},
                 ),
               ),
               const SizedBox(

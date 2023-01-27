@@ -1,4 +1,4 @@
-class ReceitasController{
+class ReceitasController{  
 
   double convertStringToDouble(String valor){
     double formattedValue = 0.0;
