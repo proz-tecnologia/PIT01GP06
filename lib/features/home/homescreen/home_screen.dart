@@ -28,15 +28,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final controllerRevenues = BalanceController(TransactionsRepository());
-
   final controllerScreenMetas = getIt.get<MetasController>();
+
+  int anoBalance = DateTime.now().year;
+  int mesBalance = DateTime.now().month;
+  int diaBalance = DateTime.now().day;
 
   @override
   void initState() {
     super.initState();
     controllerRevenues.getBalanceRevenues();
-    controllerRevenues.controllerData(
-        0, DateTime.now().day, DateTime.now().month, DateTime.now().year);
+    controllerRevenues.controllerData(0, diaBalance, mesBalance, anoBalance);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerScreenMetas.getMetas();
     });
@@ -113,8 +115,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 32),
                             child: HomeTitle(
                                 title: stateBalance.widgetBalance.monthname,
-                                onBackButtonPressed: () {},
-                                onForwardButtonPressed: () {}),
+                                onBackButtonPressed: () {
+                                  DateTime novaData = clickMesAnterior(
+                                      anoBalance, mesBalance, diaBalance);
+                                  anoBalance = novaData.year;
+                                  mesBalance = novaData.month;
+                                  diaBalance = novaData.day;
+                                  controllerRevenues.controllerData(
+                                    2,
+                                    diaBalance,
+                                    mesBalance,
+                                    anoBalance,
+                                  );
+                                },
+                                onForwardButtonPressed: () {
+                                  DateTime novaData = clickProximoMes(
+                                      anoBalance, mesBalance, diaBalance);
+                                  anoBalance = novaData.year;
+                                  mesBalance = novaData.month;
+                                  diaBalance = novaData.day;
+                                  controllerRevenues.controllerData(
+                                    2,
+                                    diaBalance,
+                                    mesBalance,
+                                    anoBalance,
+                                  );
+                                }),
                           ),
                           Center(
                             child: CardSummary(
@@ -286,4 +312,27 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ));
   }
+}
+
+DateTime clickProximoMes(int ano, int mes, int dia) {
+  if (mes > 12) {
+    ano++;
+    mes = 1;
+  } else {
+    mes++;
+  }
+  DateTime novaData = DateTime(ano, mes, dia);
+  return novaData;
+}
+
+// Função que passa para o mês anterior
+DateTime clickMesAnterior(int ano, int mes, int dia) {
+  if (mes < 1) {
+    ano--;
+    mes = 12;
+  } else {
+    mes--;
+  }
+  DateTime novaData = DateTime(ano, mes, dia);
+  return novaData;
 }

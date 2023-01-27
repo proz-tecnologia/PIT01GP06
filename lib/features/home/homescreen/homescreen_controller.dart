@@ -76,16 +76,16 @@ class BalanceController {
   final TransactionsRepository _transactionsRepository;
   BalanceController(this._transactionsRepository);
 
-  final notifierRevenues = ValueNotifier<ScreenGlobalState>( ScreenGlobalInitialState());  
+  final notifierRevenues =
+      ValueNotifier<ScreenGlobalState>(ScreenGlobalInitialState());
 
-  final notifierBalance = ValueNotifier<ScreenBalanceState>(ScreenBalanceInitialState());
-  
-  
+  final notifierBalance =
+      ValueNotifier<ScreenBalanceState>(ScreenBalanceInitialState());
+
   ScreenGlobalState get stateRevenues => notifierRevenues.value;
   ScreenBalanceState get stateBalance => notifierBalance.value;
- 
 
-  Future<void> getBalanceRevenues() async {    
+  Future<void> getBalanceRevenues() async {
     try {
       final balances = await _transactionsRepository.getBalanceRevenues();
       print(balances);
@@ -100,54 +100,28 @@ class BalanceController {
     }
   }
 
-  Future<void> controllerData( int botton, int dia, int mes, int ano)  async {    
+  Future<void> controllerData(int botton, int dia, int mes, int ano) async {
     try {
       if (botton == 0) {
-        final controleWidget = await _transactionsRepository.getBalanceUser(mes, ano);
-        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);    
-        
+        final controleWidget =
+            await _transactionsRepository.getBalanceUser(mes, ano);
+        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);
       } else if (botton == 1) {
         //Controle para frente
-        DateTime dataAjustada = clickProximoMes(ano, mes, dia);
-        final controleWidget = await _transactionsRepository.getBalanceUser(dataAjustada.month, dataAjustada.year);
-        notifierBalance.value = ScreenBalanceSuccessState(controleWidget); 
-        
-      } else if (botton == 2){
+        final controleWidget =
+            await _transactionsRepository.getBalanceUser(mes, ano);
+        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);
+      } else if (botton == 2) {
         //Controle para trás
-        DateTime dataAjustada = clickMesAnterior(ano, mes, dia); 
-
-        final controleWidget = await _transactionsRepository.getBalanceUser(dataAjustada.month, dataAjustada.year);
-        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);      
-      } 
+        final controleWidget =
+            await _transactionsRepository.getBalanceUser(mes, ano);
+        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);
+      }
     } catch (e) {
-      notifierBalance.value = ScreenBalanceErrorState(); 
+      notifierBalance.value = ScreenBalanceErrorState();
     }
   }
- 
 } //balanceController
-
-DateTime clickProximoMes(int ano, int mes, int dia) {
-  if (mes > 12) {
-    ano++;
-    mes = 1;
-  } else {
-    mes++;
-  }
-  DateTime novaData = DateTime(ano, mes, dia);
-  return novaData;
-}
-
-// Função que passa para o mês anterior
-DateTime clickMesAnterior(int ano, int mes, int dia) {
-  if (mes < 1) {
-    ano--;
-    mes = 12;
-  } else {
-    mes--;
-  }
-  DateTime novaData = DateTime(ano, mes, dia);
-  return novaData;
-}
 
 // String getCurrentMonth() {
 //   return 'Novembro';
