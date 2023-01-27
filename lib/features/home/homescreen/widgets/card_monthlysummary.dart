@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 
-class CardSummary extends StatelessWidget {
-  final String balance;
-  final String revenues;
-  final String expenses;
+class CardSummary extends StatefulWidget {
+  final double? balance;
+  final double? revenues;
+  final double? expenses;
 
-  const CardSummary({
+  const CardSummary(
     Key? key,
-    required this.balance,
-    required this.revenues,
-    required this.expenses,
-  }) : super(key: key);
+    this.balance,
+    this.revenues,
+    this.expenses,
+  ) : super(key: key);
 
+  @override
+  State<CardSummary> createState() => _CardSummaryState();
+}
+
+class _CardSummaryState extends State<CardSummary> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +25,7 @@ class CardSummary extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.add, color: Colors.green[500]),
-            Text("R\$ $balance",
+            Text("R\$ ${widget.balance}",
                 style: const TextStyle(
                     fontSize: 20,
                     color: Colors.green,
@@ -49,7 +54,7 @@ class CardSummary extends StatelessWidget {
                 const SizedBox(
                   height: 8,
                 ),
-                Text("R\$ $revenues",
+                Text("R\$ ${widget.revenues}",
                     style: const TextStyle(
                         fontSize: 15,
                         color: Colors.green,
@@ -80,7 +85,7 @@ class CardSummary extends StatelessWidget {
                 const SizedBox(
                   height: 8,
                 ),
-                Text("R\$ $expenses",
+                Text("R\$ ${widget.expenses}",
                     style: const TextStyle(
                       fontSize: 15,
                       color: Colors.red,

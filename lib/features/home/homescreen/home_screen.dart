@@ -27,14 +27,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final controllerBalanceRevenues = BalanceRevenuesController(TransactionsRepository());
+  final controllerRevenues = BalanceController(TransactionsRepository());
 
   final controllerScreenMetas = getIt.get<MetasController>();
 
   @override
   void initState() {
-    super.initState();    
-    controllerBalanceRevenues.getBalanceRevenues();
+    super.initState();
+    controllerRevenues.getBalanceRevenues();
+    controllerRevenues.controllerData(
+        0, DateTime.now().day, DateTime.now().month, DateTime.now().year);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerScreenMetas.getMetas();
     });
@@ -69,42 +71,65 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                   child: ValueListenableBuilder(
-                valueListenable: controllerBalanceRevenues.notifier,
-                builder: (context, stateScreen, _) {
-                  if (stateScreen is ScreenHomeInitialState) {
+                valueListenable: controllerRevenues.notifierRevenues,
+                builder: (context, stateRevenues, _) {
+                  if (stateRevenues is ScreenGlobalInitialState) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                  if (stateScreen is ScreenHomeErrorState) {
+                  if (stateRevenues is ScreenGlobalErrorState) {
                     return const Text('Não há dados a serem exibidos');
                   }
-                  if (stateScreen is ScreenHomeSuccessState) {
+                  if (stateRevenues is ScreenGlobalSuccessState) {
                     return Center(
                       child: GlassmorfismCard(
-                          balanceRevenues: stateScreen.sumBalance),
+                        balanceRevenues: stateRevenues.sumBalance,
+                      ),
                     );
                   }
                   return const SizedBox.shrink();
                 },
               )),
               const SizedBox(
-                height: 32,
+                height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: HomeTitle(
-                    title: 'Setembro',
-                    onBackButtonPressed: () {},
-                    onForwardButtonPressed: () {}),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              const CardSummary(
-                balance: '1.000,00',
-                revenues: '4.000,99',
-                expenses: '3.000,99',
+              SizedBox(
+                child: ValueListenableBuilder(
+                  valueListenable: controllerRevenues.notifierBalance,
+                  builder: (context, stateBalance, Widget? child) {
+                    if (stateBalance is ScreenBalanceInitialState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (stateBalance is ScreenBalanceErrorState) {
+                      return const Text('Não há dados a serem exibidos');
+                    }
+                    if (stateBalance is ScreenBalanceSuccessState) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: HomeTitle(
+                                title: stateBalance.widgetBalance.monthname,
+                                onBackButtonPressed: () {},
+                                onForwardButtonPressed: () {}),
+                          ),
+                          Center(
+                            child: CardSummary(
+                              UniqueKey(),
+                              stateBalance.widgetBalance.saldo,
+                              stateBalance.widgetBalance.receitas,
+                              stateBalance.widgetBalance.despesas,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
               const SizedBox(
                 height: 32,

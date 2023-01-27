@@ -47,299 +47,306 @@ class _DespesasPageState extends State<DespesasPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Adicionar despesa'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Descreva sua despesa (opcional)',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _descricaoController,
-                        decoration: InputDecoration(
-                          hintText: 'Insira uma descrição',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Adicionar despesa'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Descreva sua despesa (opcional)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextFormField(
+                          controller: _descricaoController,
+                          decoration: InputDecoration(
+                            hintText: 'Insira uma descrição',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text('Valor da despesa',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _valorController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          CurrencyFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: 'R\$ 00,00',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                        const SizedBox(
+                          height: 30,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Campo obrigatório.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Categoria da despesa',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      DropdownButtonFormField(
-                        hint: const Text('Escolha a categoria'),
-                        validator: (value) =>
-                            value == null ? 'Campo obrigatório' : null,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              _indexSelecionado = value;
-                              _categoria = despesasController
-                                  .listaCategorias[value]['categoria'];
-                            });
-                          }
-                        },
-                        items: despesasController.listaCategorias.map((item) {
-                          return DropdownMenuItem(
-                            value: item['id'] as int,
-                            child: Text(item['categoria'].toString()),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Subcategoria da despesa',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      DropdownButtonFormField<String>(
-                          hint: const Text('Escolha a subcategoria'),
+                        const Text('Valor da despesa',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        TextFormField(
+                          controller: _valorController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CurrencyFormatter(),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: 'R\$ 00,00',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Campo obrigatório.';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Categoria da despesa',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        DropdownButtonFormField(
+                          hint: const Text('Escolha a categoria'),
                           validator: (value) =>
                               value == null ? 'Campo obrigatório' : null,
                           onChanged: (value) {
                             if (value != null) {
                               setState(() {
-                                _subcategoria = value;
+                                _indexSelecionado = value;
+                                _categoria = despesasController
+                                    .listaCategorias[value]['categoria'];
                               });
                             }
                           },
-                          items: despesasController
-                              .getListaSubcategorias(_indexSelecionado)),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Vincular à conta/cartão:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: ListTile(
-                                title: const Text('Conta'),
-                                leading: Radio(
-                                  value: 'Conta',
-                                  groupValue: _contaOuCartao,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _contaOuCartao = value!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: ListTile(
-                                title: const Text('Cartão'),
-                                leading: Radio(
-                                  value: 'Cartão',
-                                  groupValue: _contaOuCartao,
-                                  onChanged: (value) async {
-                                    setState(() {
-                                      _contaOuCartao = value!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      StreamBuilder<QuerySnapshot>(
-                          stream: _contaOuCartao == 'Conta'
-                              ? transactionsRepository.getBankAccountsSnapshot()
-                              : transactionsRepository.getCardsSnapshot(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return _contaOuCartao == 'Conta'
-                                  ? const Text("Nenhuma conta adicionada")
-                                  : const Text('Nenhum cartão adicionado');
-                            }
-                            return DropdownButtonFormField(
-                              validator: (value) =>
-                                  value == null ? 'Campo obrigatório' : null,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _contaVinculada = value;
-                                  });
-                                }
-                              },
-                              items: snapshot.data!.docs.map((wallet) {
-                                if (_contaOuCartao == 'Conta') {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? wallet['nomeConta']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeConta')
-                                        ? Text(wallet['nomeConta'])
-                                        : const Text(''),
-                                  );
-                                } else {
-                                  return DropdownMenuItem<String>(
-                                    value: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeCartao')
-                                        ? wallet['nomeCartao']
-                                        : '',
-                                    child: wallet
-                                            .data()
-                                            .toString()
-                                            .contains('nomeCartao')
-                                        ? Text(wallet['nomeCartao'])
-                                        : const Text(''),
-                                  );
-                                }
-                              }).toList(),
+                          items: despesasController.listaCategorias.map((item) {
+                            return DropdownMenuItem(
+                              value: item['id'] as int,
+                              child: Text(item['categoria'].toString()),
                             );
-                          }),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Escolha a data da despesa:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      DateTimePicker(
-                        locale: const Locale('pt', 'BR'),
-                        type: DateTimePickerType.date,
-                        dateMask: 'dd/MM/yyyy',
-                        initialValue: DateTime.now().toString(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                        icon: const Icon(Icons.event),
-                        dateLabelText: 'Data',
-                        onChanged: (val) => setState(() {
-                            var dateTimeData = DateTime.parse(val);
-                            _dataDespesa = DateTime.parse(
-                                DateFormat("yyyy-MM-dd").format(dateTimeData));
-                          },
+                          }).toList(),
                         ),
-                      ),
-                    ],
-                  )),
-              const SizedBox(
-                height: 30,
-              ),
-              Center(
-                child: PrimaryButton(
-                  title: ('Adicionar despesa'),
-                  navigateTo: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      var result = await despesasRepository
-                          .getDespesaCategoria(_categoria);
-                      if (result.isEmpty) {
-                        totalBalance = 0.0;
-                      } else {
-                        totalBalance = result[0].balance;
-                      }                      
-
-                      dataevent = DateTime.now().millisecondsSinceEpoch;
-
-                      DespesasModel despesaModel = DespesasModel(
-                          type: 'despesa',
-                          descricao: _descricaoController.text,
-                          valor: _valorController.numberValue,
-                          balance: _valorController.numberValue + totalBalance,
-                          categoria: _categoria,
-                          subcategoria: _subcategoria,
-                          timeReg: dataevent,
-                          data: dataDespesa,
-                          day: dataDespesa.day,
-                          month:dataDespesa.month,
-                          year:dataDespesa.year,
-                          typeconta: _contaOuCartao,
-                          conta: _contaVinculada);
-
-                      despesasRepository.addDespesa(despesaModel);
-                     
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          ('/screen'), (route) => false);
-                    }
-                  },
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Subcategoria da despesa',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        DropdownButtonFormField<String>(
+                            hint: const Text('Escolha a subcategoria'),
+                            validator: (value) =>
+                                value == null ? 'Campo obrigatório' : null,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _subcategoria = value;
+                                });
+                              }
+                            },
+                            items: despesasController
+                                .getListaSubcategorias(_indexSelecionado)),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Vincular à conta/cartão:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: ListTile(
+                                  title: const Text('Conta'),
+                                  leading: Radio(
+                                    value: 'Conta',
+                                    groupValue: _contaOuCartao,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _contaOuCartao = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: ListTile(
+                                  title: const Text('Cartão'),
+                                  leading: Radio(
+                                    value: 'Cartão',
+                                    groupValue: _contaOuCartao,
+                                    onChanged: (value) async {
+                                      setState(() {
+                                        _contaOuCartao = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        StreamBuilder<QuerySnapshot>(
+                            stream: _contaOuCartao == 'Conta'
+                                ? transactionsRepository.getBankAccountsSnapshot()
+                                : transactionsRepository.getCardsSnapshot(),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData ||
+                                  snapshot.data!.docs.isEmpty) {
+                                return _contaOuCartao == 'Conta'
+                                    ? const Text("Nenhuma conta adicionada")
+                                    : const Text('Nenhum cartão adicionado');
+                              }
+                              return DropdownButtonFormField(
+                                validator: (value) =>
+                                    value == null ? 'Campo obrigatório' : null,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      _contaVinculada = value;
+                                    });
+                                  }
+                                },
+                                items: snapshot.data!.docs.map((wallet) {
+                                  if (_contaOuCartao == 'Conta') {
+                                    return DropdownMenuItem<String>(
+                                      value: wallet
+                                              .data()
+                                              .toString()
+                                              .contains('nomeConta')
+                                          ? wallet['nomeConta']
+                                          : '',
+                                      child: wallet
+                                              .data()
+                                              .toString()
+                                              .contains('nomeConta')
+                                          ? Text(wallet['nomeConta'])
+                                          : const Text(''),
+                                    );
+                                  } else {
+                                    return DropdownMenuItem<String>(
+                                      value: wallet
+                                              .data()
+                                              .toString()
+                                              .contains('nomeCartao')
+                                          ? wallet['nomeCartao']
+                                          : '',
+                                      child: wallet
+                                              .data()
+                                              .toString()
+                                              .contains('nomeCartao')
+                                          ? Text(wallet['nomeCartao'])
+                                          : const Text(''),
+                                    );
+                                  }
+                                }).toList(),
+                              );
+                            }),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Escolha a data da despesa:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        DateTimePicker(
+                          locale: const Locale('pt', 'BR'),
+                          type: DateTimePickerType.date,
+                          dateMask: 'dd/MM/yyyy',
+                          initialValue: DateTime.now().toString(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030),
+                          icon: const Icon(Icons.event),
+                          dateLabelText: 'Data',
+                          onChanged: (val) => setState(() {
+                              var dateTimeData = DateTime.parse(val);
+                              _dataDespesa = DateTime.parse(
+                                  DateFormat("yyyy-MM-dd").format(dateTimeData));
+                            },
+                          ),
+                        ),
+                      ],
+                    )),
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
+                Center(
+                  child: PrimaryButton(
+                    title: ('Adicionar despesa'),
+                    navigateTo: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        var result = await despesasRepository
+                            .getDespesaCategoria(_categoria);
+                        if (result.isEmpty) {
+                          totalBalance = 0.0;
+                        } else {
+                          totalBalance = result[0].balance;
+                        }                      
+    
+                        dataevent = DateTime.now().millisecondsSinceEpoch;
+    
+                        DespesasModel despesaModel = DespesasModel(
+                            type: 'despesa',
+                            descricao: _descricaoController.text,
+                            valor: _valorController.numberValue,
+                            balance: _valorController.numberValue + totalBalance,
+                            categoria: _categoria,
+                            subcategoria: _subcategoria,
+                            timeReg: dataevent,
+                            data: dataDespesa,
+                            day: dataDespesa.day,
+                            month:dataDespesa.month,
+                            year:dataDespesa.year,
+                            typeconta: _contaOuCartao,
+                            conta: _contaVinculada);
+    
+                        despesasRepository.addDespesa(despesaModel);
+                       
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            ('/screen'), (route) => false);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
           ),
         ),
       ),

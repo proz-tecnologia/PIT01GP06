@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/screenmetas_state.dart';
+import '../../../shared/classes.dart';
 import '../../transactions/metas/metas_model.dart';
 import '../../transactions/metas/metas_repository.dart';
 import '../../transactions/metas/metas_state.dart';
 import '../../transactions/transactions_repository.dart';
-import '../../wallets/bank_account/bank_account_model.dart';
 import '../homelogin/homelogin_repository.dart';
 
 class MetaScreenController {
@@ -72,67 +72,111 @@ class MetaScreenController {
   }
 }
 
-class BalanceRevenuesController {
+class BalanceController {
   final TransactionsRepository _transactionsRepository;
-  BalanceRevenuesController(this._transactionsRepository);
+  BalanceController(this._transactionsRepository);
 
-  final notifier = ValueNotifier<ScreenHomeState>(ScreenHomeInitialState());
+  final notifierRevenues = ValueNotifier<ScreenGlobalState>( ScreenGlobalInitialState());  
 
-  ScreenHomeState get stateScreenBalance => notifier.value;
+  final notifierBalance = ValueNotifier<ScreenBalanceState>(ScreenBalanceInitialState());
+  
+  
+  ScreenGlobalState get stateRevenues => notifierRevenues.value;
+  ScreenBalanceState get stateBalance => notifierBalance.value;
+ 
 
-  Future<void> getBalanceRevenues() async {
-    notifier.value = ScreenHomeInitialState();
-    try {       
+  Future<void> getBalanceRevenues() async {    
+    try {
       final balances = await _transactionsRepository.getBalanceRevenues();
-      print(balances);      
-
-
+      print(balances);
       double soma = 0.0;
       for (var balance in balances) {
         soma = soma + balance.balance;
       }
       print(soma);
-
-      // for (var balance in balances){
-      //   soma = soma + balance.balance;
-      // }
-      //ages.forEach((int age) => _addAndPrint(age));
-
-      notifier.value = ScreenHomeSuccessState(soma);
+      notifierRevenues.value = ScreenGlobalSuccessState(soma);
     } catch (e) {
-      notifier.value = ScreenHomeErrorState();
+      notifierRevenues.value = ScreenGlobalErrorState();
     }
   }
+
+  Future<void> controllerData( int botton, int dia, int mes, int ano)  async {    
+    try {
+      if (botton == 0) {
+        final controleWidget = await _transactionsRepository.getBalanceUser(mes, ano);
+        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);    
+        
+      } else if (botton == 1) {
+        //Controle para frente
+        DateTime dataAjustada = clickProximoMes(ano, mes, dia);
+        final controleWidget = await _transactionsRepository.getBalanceUser(dataAjustada.month, dataAjustada.year);
+        notifierBalance.value = ScreenBalanceSuccessState(controleWidget); 
+        
+      } else if (botton == 2){
+        //Controle para trás
+        DateTime dataAjustada = clickMesAnterior(ano, mes, dia); 
+
+        final controleWidget = await _transactionsRepository.getBalanceUser(dataAjustada.month, dataAjustada.year);
+        notifierBalance.value = ScreenBalanceSuccessState(controleWidget);      
+      } 
+    } catch (e) {
+      notifierBalance.value = ScreenBalanceErrorState(); 
+    }
+  }
+ 
+} //balanceController
+
+DateTime clickProximoMes(int ano, int mes, int dia) {
+  if (mes > 12) {
+    ano++;
+    mes = 1;
+  } else {
+    mes++;
+  }
+  DateTime novaData = DateTime(ano, mes, dia);
+  return novaData;
 }
 
-String getCurrentMonth() {
-  return 'Novembro';
+// Função que passa para o mês anterior
+DateTime clickMesAnterior(int ano, int mes, int dia) {
+  if (mes < 1) {
+    ano--;
+    mes = 12;
+  } else {
+    mes--;
+  }
+  DateTime novaData = DateTime(ano, mes, dia);
+  return novaData;
 }
 
-String getNextMonth() {
-  return 'Dezembro';
-}
+// String getCurrentMonth() {
+//   return 'Novembro';
+// }
 
-String getPreviousMonth() {
-  return 'Outubro';
-}
+// String getNextMonth() {
+//   return 'Dezembro';
+// }
 
-void showPreviousWallet() {}
+// String getPreviousMonth() {
+//   return 'Outubro';
+// }
 
-void showNextWallet() {}
+// void showPreviousWallet() {}
 
-void deleteWallet() {}
+// void showNextWallet() {}
 
-void editWallet() {}
+// void deleteWallet() {}
 
-void showPreviousGoal() {}
+// void editWallet() {}
 
-void showNextGoal() {}
+// void showPreviousGoal() {}
 
-void deleteGoal() {}
+// void showNextGoal() {}
 
-void editGoal() {}
+// void deleteGoal() {}
 
-void addExpense() {}
+// void editGoal() {}
 
-void addRevenue() {}
+// void addExpense() {}
+
+// void addRevenue() {}

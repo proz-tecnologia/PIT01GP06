@@ -9,7 +9,6 @@ import 'package:projeto_final_flutter/features/transactions/receitas/receitas_mo
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_repository.dart';
 
 import '../../../utils/currency_formatter.dart';
-import '../../home/homescreen/screenmetas_state.dart';
 import '../transactions_repository.dart';
 import 'receitas_controller.dart';
 

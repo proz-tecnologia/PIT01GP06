@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../shared/classes.dart';
 import '../../shared/constant.dart';
 import '../wallets/bank_account/bank_account_model.dart';
 import '../wallets/card/card_model.dart';
@@ -65,5 +66,55 @@ class TransactionsRepository {
         .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
     print(todoBalance);
     return todoBalance;
+  }
+
+  Future<BalanceUser> getBalanceUser(int mes, int ano) async {
+    final balanceUser = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(transactions)
+        .where('month', isEqualTo: mes)
+        .where('year', isEqualTo: ano)
+        .get();
+
+    final todoBalanceUsers = List<ListAccounts>.from(balanceUser.docs
+        .map((doc) => ListAccounts.fromMap(doc.id, doc.data())));
+
+    double receitas = 0.0;
+    double despesas = 0.0;
+    double saldo = 0.0;
+    String? monthname;
+    // String monthname = '';
+    Map<int, String> meses = {
+      1: "janeiro",
+      2: "fevereiro",
+      3: "março",
+      4: "abril",
+      5: "maio",
+      6: "junho",
+      7: "julho",
+      8: "agosto",
+      9: "setembro",
+      10: "outubro",
+      11: "novembro",
+      12: "dezembro"
+    };
+
+    monthname = meses[mes];
+
+    for (var todoBalanceUser in todoBalanceUsers) {
+      if (todoBalanceUser.type == 'receita') {
+        receitas = receitas + todoBalanceUser.valor;
+      } else {
+        despesas = despesas + todoBalanceUser.valor;
+      }     
+    }
+    saldo = receitas - despesas;
+    print("o valor apurado foi: receitas = $receitas, despesas = $despesas");
+    
+    BalanceUser resultado =
+        BalanceUser(mes, ano, monthname!, receitas, despesas, saldo);
+    print(resultado);
+    return resultado;
   }
 }
