@@ -230,7 +230,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
                             conta: _contaVinculada,
                             dateReg: Timestamp.fromDate(DateTime.now()),
                             );
-      
+                          
                           _receitasRepository.addReceita(receitaModel);
       
                           Navigator.of(context).pushNamedAndRemoveUntil(
