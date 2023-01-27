@@ -11,9 +11,9 @@ class BankAccountModel {
   String nomeConta;
   String nomeInstituicao;
   String tipoConta;  
-  double balance;
+  num balance;
   Timestamp dateReg;
-  
+
   BankAccountModel({
     this.id,
     required this.type,
@@ -34,7 +34,7 @@ class BankAccountModel {
     String? nomeConta,
     String? nomeInstituicao,
     String? tipoConta,
-    double? balance,
+    num? balance,
     Timestamp? dateReg,
   }) {
     return BankAccountModel(
@@ -72,7 +72,7 @@ class BankAccountModel {
       nomeConta: map['nomeConta'] as String,
       nomeInstituicao: map['nomeInstituicao'] as String,
       tipoConta: map['tipoConta'] as String,      
-      balance: map['balance'] as double,
+      balance: map['balance'] as num,
       dateReg: map['dateReg'] as Timestamp,
     );
   }
@@ -80,4 +80,9 @@ class BankAccountModel {
   String toJson() => json.encode(toMap());
 
   
+
+  @override
+  String toString() {
+    return 'BankAccountModel(id: $id, type: $type, subtype: $subtype, typeconta: $typeconta, nomeConta: $nomeConta, nomeInstituicao: $nomeInstituicao, tipoConta: $tipoConta, balance: $balance)';
+  }
 }

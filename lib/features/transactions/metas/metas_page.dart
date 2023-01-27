@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +8,9 @@ import 'package:intl/intl.dart';
 import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
+import '../../home/homelogin/homelogin_repository.dart';
 import '../../home/homescreen/widgets/primary_button_widget.dart';
+import 'metas_repository.dart';
 
 class MetasPage extends StatefulWidget {
   const MetasPage({super.key});
@@ -16,8 +20,10 @@ class MetasPage extends StatefulWidget {
 }
 
 class _MetasPageState extends State<MetasPage> {
-  final controller = getIt.get<MetasController>();
-
+  final controller = MetasController(
+    getIt.get<HomeLoginRepository>(),
+    FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance),
+  );
   var decimalController =
       MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
 

@@ -1,6 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../../shared/constant.dart';
 import 'metas_model.dart';
 
@@ -14,8 +17,12 @@ abstract class MetasRepository {
 }
 
 class FirebaseMetasRepository implements MetasRepository {
-  final _firestore = FirebaseFirestore.instance;
-  final _uid = FirebaseAuth.instance.currentUser!.uid;
+  
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebase;
+  
+  FirebaseMetasRepository(this._firestore, this._firebase);
+  
 
   @override
   Future<List<MetasModel>> getMetas(String userId) async {
@@ -35,7 +42,7 @@ class FirebaseMetasRepository implements MetasRepository {
 
     final result = await _firestore
         .collection('IdUser')
-        .doc(_uid)
+        .doc(_firebase.currentUser!.uid)
         .collection('contas')
         .where("id", isEqualTo: idMetas)
         .get();
@@ -52,7 +59,7 @@ class FirebaseMetasRepository implements MetasRepository {
     try {
       final result = await _firestore
           .collection(db)
-          .doc(_uid)
+          .doc(_firebase.currentUser!.uid)
           .collection(accounts)
           .add(metasModel.toMap());
       return result.id.isNotEmpty;
@@ -66,7 +73,7 @@ class FirebaseMetasRepository implements MetasRepository {
     try {
       await _firestore
           .collection(db)
-          .doc(_uid)
+          .doc(_firebase.currentUser!.uid)
           .collection(accounts)
           .doc(todoMetas.id)
           .set(todoMetas.toMap());
@@ -79,7 +86,7 @@ class FirebaseMetasRepository implements MetasRepository {
   Future<bool> deleteMeta(String todoId) async {
     try {
       final todo =
-          _firestore.collection(db).doc(_uid).collection(accounts).doc(todoId);
+          _firestore.collection(db).doc(_firebase.currentUser!.uid).collection(accounts).doc(todoId);
       if (todo.id.isNotEmpty) {
         await todo
             .delete()

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
 
 import '../../shared/classes.dart';
 import '../../shared/constant.dart';
@@ -10,22 +11,44 @@ class TransactionsRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getBankAccountsSnapshot() {
-    return _db
+  Future<List<String>?> getListBankAccountsSnapshot() async {
+    List<String> bankAccounts = [];
+
+    final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
         .collection(accounts)
         .where("typeconta", isEqualTo: 'Conta')
-        .snapshots();
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      querySnapshot.docs.forEach((doc) {
+        bankAccounts.add(doc['nomeConta']);
+      });
+      return bankAccounts;
+    } else {
+      return null;
+    }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getCardsSnapshot() {
-    return _db
+  Future<List<String>?> getListCardsSnapshot() async {
+    List<String> cardsAccounts = [];
+
+    final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
         .collection(accounts)
         .where("typeconta", isEqualTo: 'Cartão')
-        .snapshots();
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      querySnapshot.docs.forEach((doc) {
+        cardsAccounts.add(doc['nomeCartao']);
+      });
+      return cardsAccounts;
+    } else {
+      return null;
+    }
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getDespesaSaldo(
@@ -39,6 +62,8 @@ class TransactionsRepository {
         .limit(1)
         .snapshots();
   }
+
+
 
   Future<List<CardModel>> getCard() async {
     final result = await _db

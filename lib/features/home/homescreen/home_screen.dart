@@ -227,51 +227,48 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 32,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: ValueListenableBuilder(
-                  valueListenable: controllerScreenMetas.notifier,
-                  builder: (context, state, _) {
-                    if (state is MetasInitialState) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (state is MetasErrorState) {
-                      return const Text('Não há dados a serem exibidos');
-                    }
-                    if (state is MetasSuccessState) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 460.0,
-                              child: ListView.builder(
-                                  padding: const EdgeInsets.all(8.0),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: state.todoMetas.length,
-                                  itemBuilder: (context, index) {
-                                    final todo = state.todoMetas[index];
-                                    return SizedBox(
-                                      width: 350.0,
-                                      child: MetasCard(
-                                          UniqueKey(),
-                                          todo.id,
-                                          todo.objective,
-                                          todo.value,
-                                          todo.date,
-                                          todo.icon,
-                                          todo.perfomance),
-                                    );
-                                  }),
-                            ),
+              ValueListenableBuilder(
+                valueListenable: controllerScreenMetas.notifier,
+                builder: (context, state, _) {
+                  if (state is MetasInitialState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is MetasErrorState) {
+                    return const Text('Não há dados a serem exibidos');
+                  }
+                  if (state is MetasSuccessState) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 460.0,
+                            child: ListView.builder(
+                                padding: const EdgeInsets.all(8.0),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: state.todoMetas.length,
+                                itemBuilder: (context, index) {
+                                  final todo = state.todoMetas[index];
+                                  return SizedBox(
+                                    width: 350.0,
+                                    child: MetasCard(
+                                        UniqueKey(),
+                                        todo.id,
+                                        todo.objective,
+                                        todo.value,
+                                        todo.date,
+                                        todo.icon,
+                                        todo.perfomance),
+                                  );
+                                }),
                           ),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
+                        ),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               const SizedBox(
                 height: 32,

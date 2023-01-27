@@ -1,4 +1,6 @@
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -7,7 +9,6 @@ import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
 import '../../home/homelogin/homelogin_repository.dart';
 import '../../home/homescreen/homescreen_controller.dart';
-import 'metas_controller.dart';
 import 'metas_repository.dart';
 
 class MetasPageEdit extends StatefulWidget {
@@ -33,9 +34,11 @@ class MetasPageEdit extends StatefulWidget {
 }
 
 class _MetasPageEditState extends State<MetasPageEdit> {
-  var decimalController =
-      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-  final controller = getIt.get<MetasController>();
+  var decimalController = MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
+  final controller = MetaScreenController(
+    getIt.get<HomeLoginRepository>(),
+    FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance),
+  );
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();

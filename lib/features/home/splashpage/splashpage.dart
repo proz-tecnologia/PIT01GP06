@@ -13,9 +13,10 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final controller = SplashController(getIt.get<HomeLoginRepository>());
+  
   @override
   void initState() {
-    super.initState();
+    super.initState();    
     controller.isAuthenticated();
     controller.notifier.addListener(() {
       if (controller.state == SplashState.authenticated) {

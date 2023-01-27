@@ -107,4 +107,9 @@ class DespesasModel {
 
   String toJson() => json.encode(toMap());
   
+
+  @override
+  String toString() {
+    return 'DespesasModel(id: $id, type: $type, descricao: $descricao, valor: $valor, balance: $balance, categoria: $categoria, subcategoria: $subcategoria, timeReg: $timeReg, data: $data, day: $day, month: $month, year: $year, typeconta: $typeconta, conta: $conta)';
+  }
 }

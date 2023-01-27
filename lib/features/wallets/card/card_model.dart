@@ -12,7 +12,7 @@ class CardModel {
   String bandeiraCartao;
   String? contaDoCartao;
   double limiteCartao;
-  double balance;
+  num balance;
   Timestamp dateReg;
 
   CardModel({
@@ -74,7 +74,7 @@ class CardModel {
       contaDoCartao:
           map['contaDoCartao'] != null ? map['contaDoCartao'] as String : null,
       limiteCartao: map['limiteCartao'] as double,
-      balance: map['balance'] as double,
+      balance: map['balance'] as num,
       dateReg: map['dateReg'] as Timestamp,
 
     );
