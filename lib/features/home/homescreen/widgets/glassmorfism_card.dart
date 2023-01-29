@@ -104,7 +104,7 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                               children: [
                                 Text(
                                     isVisible
-                                        ? 'R\$ ${widget.balanceRevenues}'
+                                        ? 'R\$ ${widget.balanceRevenues?.toStringAsFixed(2).replaceAll('.', ',')}'
                                         : 'R\$ ....',
                                     style: const TextStyle(
                                         color: MyColor
@@ -203,9 +203,10 @@ class _GlassmorfismCardState extends State<GlassmorfismCard> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                
                                 Text(
                                     isVisible
-                                        ? 'R\$ ${widget.balanceRevenues}'
+                                        ? 'R\$ ${widget.balanceRevenues?.toStringAsFixed(2).replaceAll('.', ',')}'
                                         : 'R\$ ....',
                                     style: const TextStyle(
                                         color: Colors.white70,

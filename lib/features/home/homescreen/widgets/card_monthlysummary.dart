@@ -25,7 +25,7 @@ class _CardSummaryState extends State<CardSummary> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.add, color: Colors.green[500]),
-            Text("R\$ ${widget.balance}",
+            Text("R\$ ${widget.balance?.toStringAsFixed(2).replaceAll('.', ',')}",
                 style: const TextStyle(
                     fontSize: 20,
                     color: Colors.green,
@@ -54,7 +54,7 @@ class _CardSummaryState extends State<CardSummary> {
                 const SizedBox(
                   height: 8,
                 ),
-                Text("R\$ ${widget.revenues}",
+                Text("R\$ ${widget.revenues?.toStringAsFixed(2).replaceAll('.', ',')}",
                     style: const TextStyle(
                         fontSize: 15,
                         color: Colors.green,
@@ -85,7 +85,7 @@ class _CardSummaryState extends State<CardSummary> {
                 const SizedBox(
                   height: 8,
                 ),
-                Text("R\$ ${widget.expenses}",
+                Text("R\$ ${widget.expenses?.toStringAsFixed(2).replaceAll('.', ',')}",
                     style: const TextStyle(
                       fontSize: 15,
                       color: Colors.red,

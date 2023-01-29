@@ -10,22 +10,44 @@ class TransactionsRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getBankAccountsSnapshot() {
-    return _db
+  Future<List<String>?> getListBankAccountsSnapshot() async {
+    List<String> bankAccounts = [];
+
+    final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
         .collection(accounts)
         .where("typeconta", isEqualTo: 'Conta')
-        .snapshots();
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        bankAccounts.add(doc['nomeConta']);
+      }
+      return bankAccounts;
+    } else {
+      return null;
+    }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getCardsSnapshot() {
-    return _db
+  Future<List<String>?> getListCardsSnapshot() async {
+    List<String> cardsAccounts = [];
+
+    final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
         .collection(accounts)
         .where("typeconta", isEqualTo: 'Cartão')
-        .snapshots();
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        cardsAccounts.add(doc['nomeCartao']);
+      }
+      return cardsAccounts;
+    } else {
+      return null;
+    }
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getDespesaSaldo(
@@ -64,7 +86,6 @@ class TransactionsRepository {
 
     final todoBalance = List<BankAccountModel>.from(balanceRevenues.docs
         .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
-    print(todoBalance);
     return todoBalance;
   }
 
@@ -107,14 +128,57 @@ class TransactionsRepository {
         receitas = receitas + todoBalanceUser.valor;
       } else {
         despesas = despesas + todoBalanceUser.valor;
-      }     
+      }
     }
     saldo = receitas - despesas;
-    print("o valor apurado foi: receitas = $receitas, despesas = $despesas");
-    
+
     BalanceUser resultado =
         BalanceUser(mes, ano, monthname!, receitas, despesas, saldo);
-    print(resultado);
     return resultado;
+  }
+
+  Future<List<Map<String,dynamic>>?> getListWallet() async {
+    List<Map<String, dynamic>> listWallet = [];
+
+    final querySnapshot = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .where('typeconta', whereIn: ["Cartão", "Conta"]).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        Map idWallet = {'id': doc.id};
+        Map<String, dynamic> combinado = Map.from(idWallet)..addAll(doc.data());
+        listWallet.add(combinado);
+      }
+
+     
+
+    // if (querySnapshot.docs.isNotEmpty) {
+    //   final todoWallet = Map<String, dynamic>.from(querySnapshot.docs.map(doc)=>
+    //   Map<String, dynamic>.fromMap({doc.id: doc.data()}));
+
+    //   querySnapshot.docs.forEach((doc) {
+    //     listWallet.add(listWallet.map((e) => e.fromMap({doc.id: doc.data()})));
+    //   });
+
+
+      //   ((DocumentSnapshot document) {
+      //       Map<String, dynamic> data =
+      //           document.data()! as Map<String, dynamic>;
+      //       print(data);
+
+      //   if (querySnapshot.docs.isNotEmpty) {
+      //     querySnapshot.docs.forEach((doc) {
+      //       listWallet.add(doc.data());
+      //     });
+      //     return listWallet;
+      //   } else {
+      //     return null;
+      //   }
+      // }
+    }
+     return listWallet;
   }
 }

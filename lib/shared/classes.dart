@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 
 import '../features/transactions/despesas/despesas_model.dart';
 import '../features/wallets/bank_account/bank_account_model.dart';
@@ -14,6 +13,68 @@ class ListaBank {
 class ListaDespesa {
   final List<DespesasModel> listDespesa;
   ListaDespesa(this.listDespesa);
+}
+
+class Wallet {
+  String id;
+  String type;
+  String name;
+  String institution;
+  double balance;
+
+  Wallet({
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.institution,
+    required this.balance,
+  });
+
+  Wallet copyWith({
+    String? id,
+    String? type,
+    String? name,
+    String? institution,
+    double? balance,
+  }) {
+    return Wallet(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      name: name ?? this.name,
+      institution: institution ?? this.institution,
+      balance: balance ?? this.balance,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'type': type,
+      'name': name,
+      'institution': institution,
+      'balance': balance,
+    };
+  }
+
+  factory Wallet.fromMap(Map<String, dynamic> map) {
+    return Wallet(
+      id: map['id'] as String,
+      type: map['type'] as String,
+      name: map['name'] as String,
+      institution: map['institution'] as String,
+      balance: map['balance'] as double,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Wallet.fromJson(String source) =>
+      Wallet.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'ListWallet(id: $id, type: $type, name: $name, institution: $institution, balance: $balance)';
+  }
 }
 
 class BalanceUser {

@@ -82,21 +82,52 @@ class BalanceController {
   final notifierBalance =
       ValueNotifier<ScreenBalanceState>(ScreenBalanceInitialState());
 
+  final notifierWallet =
+      ValueNotifier<ScreenWalletState>(ScreenWalletInitialState());
+
   ScreenGlobalState get stateRevenues => notifierRevenues.value;
   ScreenBalanceState get stateBalance => notifierBalance.value;
+  ScreenWalletState get stateWallet => notifierWallet.value;
 
   Future<void> getBalanceRevenues() async {
     try {
       final balances = await _transactionsRepository.getBalanceRevenues();
-      print(balances);
       double soma = 0.0;
       for (var balance in balances) {
         soma = soma + balance.balance;
       }
-      print(soma);
       notifierRevenues.value = ScreenGlobalSuccessState(soma);
     } catch (e) {
       notifierRevenues.value = ScreenGlobalErrorState();
+    }
+  }
+
+  Future<void> getListWallet() async {
+    List<Wallet> listCarteira = [];
+    try {
+      List<Map<String, dynamic>>? listWallet =
+          await _transactionsRepository.getListWallet();
+
+      listWallet?.forEach((listWallet) {
+        if (listWallet['typeconta'] == 'Cartão') {
+          listCarteira.add(Wallet(
+              id: listWallet['id'],
+              type: listWallet['typeconta'],
+              name: listWallet['nomeCartao'],
+              institution: listWallet['bandeiraCartao'],
+              balance: listWallet['balance']));
+        } else if (listWallet['typeconta'] == 'Conta') {
+          listCarteira.add(Wallet(
+              id: listWallet['id'],
+              type: listWallet['typeconta'],
+              name: listWallet['nomeConta'],
+              institution: listWallet['tipoConta'],
+              balance: listWallet['balance']));
+        }
+      });
+      notifierWallet.value = ScreenWalletSuccessState(listCarteira);      
+    } catch (e) {
+      notifierWallet.value = ScreenWalletErrorState();
     }
   }
 
@@ -121,36 +152,4 @@ class BalanceController {
       notifierBalance.value = ScreenBalanceErrorState();
     }
   }
-} //balanceController
-
-// String getCurrentMonth() {
-//   return 'Novembro';
-// }
-
-// String getNextMonth() {
-//   return 'Dezembro';
-// }
-
-// String getPreviousMonth() {
-//   return 'Outubro';
-// }
-
-// void showPreviousWallet() {}
-
-// void showNextWallet() {}
-
-// void deleteWallet() {}
-
-// void editWallet() {}
-
-// void showPreviousGoal() {}
-
-// void showNextGoal() {}
-
-// void deleteGoal() {}
-
-// void editGoal() {}
-
-// void addExpense() {}
-
-// void addRevenue() {}
+}

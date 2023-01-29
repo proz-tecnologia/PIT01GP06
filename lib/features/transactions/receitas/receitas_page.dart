@@ -29,11 +29,23 @@ class _ReceitasPageState extends State<ReceitasPage> {
   final ReceitasRepository _receitasRepository = ReceitasRepository();
   String _contaVinculada = '';
   DateTime? _dataReceita;
+  //String _dataReceita = DateFormat("dd-MM-yyyy").format(DateTime.now());
   TransactionsRepository transactionsRepository = TransactionsRepository();
+  List<String>? bankAccounts;
 
   DateTime get dataReceita =>
       _dataReceita ??
       DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      bankAccounts =
+          await TransactionsRepository().getListBankAccountsSnapshot();
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -151,42 +163,22 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       const SizedBox(
                         height: 8,
                       ),
-                      StreamBuilder<QuerySnapshot>(
-                          stream:
-                              transactionsRepository.getBankAccountsSnapshot(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return const Text("Nenhuma conta adicionada");
-                            }
-                            return DropdownButtonFormField(
+                      bankAccounts != null
+                          ? DropdownButtonFormField(
                               validator: (value) =>
                                   value == null ? 'Campo obrigatório' : null,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    _contaVinculada = value;
-                                  });
-                                }
-                              },
-                              items: snapshot.data!.docs.map((wallet) {
-                                return DropdownMenuItem<String>(
-                                  value: wallet
-                                          .data()
-                                          .toString()
-                                          .contains('nomeConta')
-                                      ? wallet['nomeConta']
-                                      : '',
-                                  child: wallet
-                                          .data()
-                                          .toString()
-                                          .contains('nomeConta')
-                                      ? Text(wallet['nomeConta'])
-                                      : const Text(''),
-                                );
+                              hint: const Text('Escolha a conta'),
+                              items: bankAccounts!.map((e) {
+                                return DropdownMenuItem(
+                                    value: e, child: Text(e));
                               }).toList(),
-                            );
-                          }),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _contaVinculada = value!;
+                                });
+                              },
+                            )
+                          : const Text('Nenhuma conta adicionada'),
                       const SizedBox(
                         height: 30,
                       ),
@@ -223,25 +215,31 @@ class _ReceitasPageState extends State<ReceitasPage> {
                     title: ('Adicionar receita'),
                     navigateTo: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        ReceitasModel receitaModel = ReceitasModel(
-                          type: 'receita',
-                          typeconta: 'avulsa',
-                          descricao: _descricaoController.text,
-                          valor: _valorController.numberValue,
-                          balance: _valorController.numberValue,
-                          categoria: _categoria,
-                          data: dataReceita,
-                          day: dataReceita.day,
-                          month:dataReceita.month,
-                          year:dataReceita.year,
-                          conta: _contaVinculada,
-                          dateReg: Timestamp.fromDate(DateTime.now()),
-                        );
+                        if (_contaVinculada != '') {
+                          ReceitasModel receitaModel = ReceitasModel(
+                            type: 'receita',
+                            typeconta: 'avulsa',
+                            descricao: _descricaoController.text,
+                            valor: _valorController.numberValue,
+                            balance: _valorController.numberValue,
+                            categoria: _categoria,
+                            data: dataReceita,
+                            day: dataReceita.day,
+                            month: dataReceita.month,
+                            year: dataReceita.year,
+                            conta: _contaVinculada,
+                            dateReg: Timestamp.fromDate(DateTime.now()),
+                          );
 
-                        _receitasRepository.addReceita(receitaModel);
+                          _receitasRepository.addReceita(receitaModel);
 
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            ('/screen'), (route) => false);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              ('/screen'), (route) => false);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text(
+                                  'Adicione alguma conta para ser vinculada.')));
+                        }
                       }
                     },
                   ),

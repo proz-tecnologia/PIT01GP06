@@ -16,6 +16,7 @@ abstract class MetasRepository {
 class FirebaseMetasRepository implements MetasRepository {
   final _firestore = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
+  
 
   @override
   Future<List<MetasModel>> getMetas(String userId) async {

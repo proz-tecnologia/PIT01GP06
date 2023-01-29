@@ -5,10 +5,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
-import '../../home/homelogin/homelogin_repository.dart';
-import '../../home/homescreen/homescreen_controller.dart';
 import 'metas_controller.dart';
-import 'metas_repository.dart';
 
 class MetasPageEdit extends StatefulWidget {
   final String? id;
@@ -234,7 +231,7 @@ class _MetasPageEditState extends State<MetasPageEdit> {
                           _iconController.text,
                           valuePerfomance,
                         );
-                        //Navigator.of(context).pushNamed('/screen');
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             ('/screen'), (route) => false);
                       },
