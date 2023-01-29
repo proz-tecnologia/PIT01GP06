@@ -13,6 +13,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/title_wid
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.dart';
 import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+import '../../../shared/funcoes.dart';
 import '../../../shared/injection.dart';
 import '../../transactions/metas/metas_state.dart';
 
@@ -311,25 +312,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-DateTime clickProximoMes(int ano, int mes, int dia) {
-  if (mes > 12) {
-    ano++;
-    mes = 1;
-  } else {
-    mes++;
-  }
-  DateTime novaData = DateTime(ano, mes, dia);
-  return novaData;
-}
-
-// Função que passa para o mês anterior
-DateTime clickMesAnterior(int ano, int mes, int dia) {
-  if (mes < 1) {
-    ano--;
-    mes = 12;
-  } else {
-    mes--;
-  }
-  DateTime novaData = DateTime(ano, mes, dia);
-  return novaData;
-}
