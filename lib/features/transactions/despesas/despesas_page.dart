@@ -28,7 +28,6 @@ class _DespesasPageState extends State<DespesasPage> {
   DespesasController despesasController = DespesasController();
   DespesasRepository despesasRepository = DespesasRepository();
   TransactionsRepository transactionsRepository = TransactionsRepository();
-
   String? _selectedValue;
   String _contaOuCartao = "Conta";
   DateTime? _dataDespesa;
@@ -37,19 +36,24 @@ class _DespesasPageState extends State<DespesasPage> {
   List<String>? bankAccounts;
   List<String>? cardAccounts;
 
-  DateTime get dataDespesa => _dataDespesa ?? DateTime.parse(
-                                DateFormat("yyyy-MM-dd").format(DateTime.now()));
+  DateTime get dataDespesa =>
+      _dataDespesa ??
+      DateTime.parse(DateFormat("yyyy-MM-dd").format(DateTime.now()));
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      bankAccounts = await TransactionsRepository().getListBankAccountsSnapshot();
+      bankAccounts =
+          await TransactionsRepository().getListBankAccountsSnapshot();
       cardAccounts = await TransactionsRepository().getListCardsSnapshot();
-      if( (_contaOuCartao == 'Conta' && bankAccounts != null) || (_contaOuCartao == 'Cartão' && cardAccounts != null)){
-        _contaOuCartao == 'Conta' ? _selectedValue = bankAccounts![0] : _selectedValue = cardAccounts![0];
+      if ((_contaOuCartao == 'Conta' && bankAccounts != null) ||
+          (_contaOuCartao == 'Cartão' && cardAccounts != null)) {
+        _contaOuCartao == 'Conta'
+            ? _selectedValue = bankAccounts![0]
+            : _selectedValue = cardAccounts![0];
       }
-      setState((){});
+      setState(() {});
     });
   }
 
@@ -145,9 +149,6 @@ class _DespesasPageState extends State<DespesasPage> {
                           height: 8,
                         ),
                         DropdownButtonFormField(
-                        onTap: () => setState(() {
-                          _subcategoria = 'Outros';
-                        }),
                           hint: const Text('Escolha a categoria'),
                           validator: (value) =>
                               value == null ? 'Campo obrigatório' : null,
@@ -177,7 +178,7 @@ class _DespesasPageState extends State<DespesasPage> {
                         const SizedBox(
                           height: 8,
                         ),
-                      _categoria == 'Cartão Crédito' ? 
+                  _categoria == 'Cartão Crédito' ? 
                       cardAccounts!=null ? 
                       DropdownButtonFormField(
                               validator: (value) => value == null ? 'Campo obrigatório' : null,
@@ -379,3 +380,4 @@ class _DespesasPageState extends State<DespesasPage> {
     ));
   }
 }
+

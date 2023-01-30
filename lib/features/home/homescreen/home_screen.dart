@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/homescreen_controller.dart';
@@ -28,8 +29,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final controllerRevenues = BalanceController(TransactionsRepository());
+  final controller = BalanceController(TransactionsRepository());
   final controllerScreenMetas = getIt.get<MetasController>();
+  final ScrollController _scrollControllerWallet = ScrollController();
+  final ScrollController _scrollControllerMetas = ScrollController();
 
   int anoBalance = DateTime.now().year;
   int mesBalance = DateTime.now().month;
@@ -38,8 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    controllerRevenues.getBalanceRevenues();
-    controllerRevenues.controllerData(0, diaBalance, mesBalance, anoBalance);
+    controller.getBalanceRevenues();
+    controller.controllerData(0, diaBalance, mesBalance, anoBalance);
+    controller.getListWallet();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerScreenMetas.getMetas();
     });
@@ -74,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                   child: ValueListenableBuilder(
-                valueListenable: controllerRevenues.notifierRevenues,
+                valueListenable: controller.notifierRevenues,
                 builder: (context, stateRevenues, _) {
                   if (stateRevenues is ScreenGlobalInitialState) {
                     return const Center(
@@ -87,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (stateRevenues is ScreenGlobalSuccessState) {
                     return Center(
                       child: GlassmorfismCard(
-                        balanceRevenues: stateRevenues.sumBalance,
+                        balanceRevenues: double.parse(
+                            (stateRevenues.sumBalance).toStringAsFixed(2)),
                       ),
                     );
                   }
@@ -99,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                 child: ValueListenableBuilder(
-                  valueListenable: controllerRevenues.notifierBalance,
+                  valueListenable: controller.notifierBalance,
                   builder: (context, stateBalance, Widget? child) {
                     if (stateBalance is ScreenBalanceInitialState) {
                       return const Center(
@@ -122,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   anoBalance = novaData.year;
                                   mesBalance = novaData.month;
                                   diaBalance = novaData.day;
-                                  controllerRevenues.controllerData(
+                                  controller.controllerData(
                                     2,
                                     diaBalance,
                                     mesBalance,
@@ -135,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   anoBalance = novaData.year;
                                   mesBalance = novaData.month;
                                   diaBalance = novaData.day;
-                                  controllerRevenues.controllerData(
+                                  controller.controllerData(
                                     2,
                                     diaBalance,
                                     mesBalance,
@@ -146,9 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           Center(
                             child: CardSummary(
                               UniqueKey(),
-                              stateBalance.widgetBalance.saldo,
-                              stateBalance.widgetBalance.receitas,
-                              stateBalance.widgetBalance.despesas,
+                              double.parse((stateBalance.widgetBalance.saldo)
+                                  .toStringAsFixed(2)),
+                              double.parse((stateBalance.widgetBalance.receitas)
+                                  .toStringAsFixed(2)),
+                              double.parse((stateBalance.widgetBalance.despesas)
+                                  .toStringAsFixed(2)),
                             ),
                           ),
                         ],
@@ -171,45 +179,125 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: HomeTitle(
-                    title: 'Carteira',
-                    onBackButtonPressed: () {},
-                    onForwardButtonPressed: () {}),
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              const Wallet(),
-              const SizedBox(
-                height: 32,
-              ),
-              PrimaryButton(
-                title: 'Adicionar carteira',
-                navigateTo: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext bc) {
-                        return Wrap(
-                          children: [
-                            ListTile(
-                              leading:
-                                  const Icon(Icons.account_balance_rounded),
-                              title: const Text('Conta'),
-                              onTap: () => {
-                                Navigator.of(context)
-                                    .pushNamed('/addBankAccount')
-                              },
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.credit_card),
-                              title: const Text('Cartão'),
-                              onTap: () =>
-                                  {Navigator.of(context).pushNamed('/addCard')},
-                            ),
-                          ],
-                        );
-                      });
-                },
+                child: ValueListenableBuilder(
+                  valueListenable: controller.notifierWallet,
+                  builder: (context, stateWallet, Widget? child) {
+                    if (stateWallet is ScreenWalletInitialState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (stateWallet is ScreenWalletErrorState) {
+                      return const Text('Não há dados a serem exibidos');
+                    }
+                    if (stateWallet is ScreenWalletSuccessState) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SizedBox(
+                            height: 30.0,
+                            child: HomeTitle(
+                                title: 'Carteira',
+                                onBackButtonPressed: () {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    if (_scrollControllerMetas.hasClients) {
+                                      _scrollControllerMetas.animateTo(
+                                          _scrollControllerMetas
+                                              .position.minScrollExtent,
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.fastOutSlowIn);
+                                    }
+                                  });
+                                },
+                                onForwardButtonPressed: () {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    if (_scrollControllerMetas.hasClients) {
+                                      _scrollControllerMetas.animateTo(
+                                          _scrollControllerMetas
+                                              .position.maxScrollExtent,
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.fastOutSlowIn);
+                                    }
+                                  });
+                                }),
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: SizedBox(
+                                  height: 240.0,
+                                  width: 160,
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.all(12.0),
+                                    controller: _scrollControllerMetas,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: stateWallet.listCarteira.length,
+                                    itemBuilder: (context, index) {
+                                      final todo =
+                                          stateWallet.listCarteira[index];
+                                      return SizedBox(
+                                        width: 350.0,
+                                        child: Wallet(
+                                            UniqueKey(),
+                                            todo.id,
+                                            todo.type,
+                                            todo.name,
+                                            todo.institution,
+                                            todo.balance),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                    const SizedBox(
+                      height: 32,
+                    );
+                    PrimaryButton(
+                      title: 'Adicionar carteira',
+                      navigateTo: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext bc) {
+                              return Wrap(
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                        Icons.account_balance_rounded),
+                                    title: const Text('Conta'),
+                                    onTap: () => {
+                                      Navigator.of(context)
+                                          .pushNamed('/addBankAccount')
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const Icon(Icons.credit_card),
+                                    title: const Text('Cartão'),
+                                    onTap: () => {
+                                      Navigator.of(context)
+                                          .pushNamed('/addCard')
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                    );
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
               const SizedBox(
                 height: 32,
@@ -222,55 +310,77 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: HomeTitle(
                     title: 'Metas',
-                    onBackButtonPressed: () {},
-                    onForwardButtonPressed: () {}),
+                    onBackButtonPressed: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_scrollControllerWallet.hasClients) {
+                          _scrollControllerWallet.animateTo(
+                              _scrollControllerWallet.position.minScrollExtent,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn);
+                        }
+                      });
+                    },
+                    onForwardButtonPressed: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_scrollControllerWallet.hasClients) {
+                          _scrollControllerWallet.animateTo(
+                              _scrollControllerWallet.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.fastOutSlowIn);
+                        }
+                      });
+                    }),
               ),
               const SizedBox(
                 height: 32,
               ),
-              ValueListenableBuilder(
-                valueListenable: controllerScreenMetas.notifier,
-                builder: (context, state, _) {
-                  if (state is MetasInitialState) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (state is MetasErrorState) {
-                    return const Text('Não há dados a serem exibidos');
-                  }
-                  if (state is MetasSuccessState) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 460.0,
-                            child: ListView.builder(
-                                padding: const EdgeInsets.all(8.0),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: state.todoMetas.length,
-                                itemBuilder: (context, index) {
-                                  final todo = state.todoMetas[index];
-                                  return SizedBox(
-                                    width: 350.0,
-                                    child: MetasCard(
-                                        UniqueKey(),
-                                        todo.id,
-                                        todo.objective,
-                                        todo.value,
-                                        todo.date,
-                                        todo.icon,
-                                        todo.perfomance),
-                                  );
-                                }),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: ValueListenableBuilder(
+                  valueListenable: controllerScreenMetas.notifier,
+                  builder: (context, state, _) {
+                    if (state is MetasInitialState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is MetasErrorState) {
+                      return const Text('Não há dados a serem exibidos');
+                    }
+                    if (state is MetasSuccessState) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 460.0,
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.all(8.0),
+                                  controller: _scrollControllerWallet,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: state.todoMetas.length,
+                                  itemBuilder: (context, index) {
+                                    final todo = state.todoMetas[index];
+                                    return SizedBox(
+                                      width: 350.0,
+                                      child: MetasCard(
+                                          UniqueKey(),
+                                          todo.id,
+                                          todo.objective,
+                                          todo.value,
+                                          todo.date,
+                                          todo.icon,
+                                          todo.perfomance),
+                                    );
+                                  }),
+                            ),
                           ),
-                        ),
                       ],
                     );
                   }
                   return const SizedBox.shrink();
                 },
               ),
+            ),
               const SizedBox(
                 height: 32,
               ),
@@ -311,4 +421,3 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 }
-

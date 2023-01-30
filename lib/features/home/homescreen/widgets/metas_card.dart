@@ -108,7 +108,7 @@ class _MetasCardState extends State<MetasCard> {
                             height: 8,
                           ),
                           Text(
-                            'R\$ ${widget.value.toStringAsFixed(2)}',
+                            'R\$ ${widget.value.toStringAsFixed(2).replaceAll('.', ',')}',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
@@ -140,7 +140,7 @@ class _MetasCardState extends State<MetasCard> {
                             height: 8,
                           ),
                           Text(
-                            'R\$ ${widget.perfomance.toStringAsFixed(2)}',
+                            'R\$ ${widget.perfomance.toStringAsFixed(2).replaceAll('.', ',')}',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),

@@ -90,7 +90,8 @@ class _AddCardState extends State<AddCard> {
                       ),
                       DropdownButtonFormField(
                         hint: const Text('Escolha a bandeira do cartão'),
-                        validator: (value) => value == null ? 'Campo obrigatório' : null,
+                        validator: (value) =>
+                            value == null ? 'Campo obrigatório' : null,
                         onChanged: (value) {
                           if (value != null) {
                             setState(() {
@@ -186,8 +187,9 @@ class _AddCardState extends State<AddCard> {
                                   typeconta: 'Cartão',
                                   nomeCartao: _nomeController.text,
                                   bandeiraCartao: _bandeiraCartao,
-                                  limiteCartao: _limiteCartaoController.numberValue,
-                                  contaDoCartao: _contaVinculada,              
+                                  limiteCartao:
+                                      _limiteCartaoController.numberValue,
+                                  contaDoCartao: _contaVinculada,
                                   balance: 0.0,
                                   dateReg: Timestamp.fromDate(DateTime.now()),
                                 );
@@ -196,7 +198,7 @@ class _AddCardState extends State<AddCard> {
 
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                     ('/screen'), (route) => false);
-                              } 
+                              }
                             },
                             title: 'Adicionar Conta'),
                       )

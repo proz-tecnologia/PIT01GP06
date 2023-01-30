@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projeto_final_flutter/features/wallets/bank_account/bank_account_model.dart';
 import 'dart:async';
 import '../../../shared/constant.dart';
-import '../../wallets/bank_account/bank_account_model.dart';
 import '../../wallets/card/card_model.dart';
 import 'despesas_model.dart';
 
@@ -27,13 +27,15 @@ class DespesasRepository {
             .where("nomeCartao", isEqualTo: despesa.subcategoria)
             .get();
 
+        final idCard = List<CardModel>.from(
+            result.docs.map((doc) => CardModel.fromMap(doc.id, doc.data())));
 
         _db
             .collection(db)
             .doc(_uid)
             .collection(accounts)
             .doc(result.docs[0].id)
-            .update({'balance': 0}).then(
+            .update({'balance': idCard[0].balance - despesa.valor}).then(
                 (value) => log("DocumentSnapshot successfully updated!"),
                 onError: (e) => log("Error updating document $e"));
       }

@@ -11,6 +11,41 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   var index = 0;
+
+  void navigation(int index) {
+    switch (index) {
+      case 0:
+        {
+          Navigator.of(context).pushNamed('/screen');
+        }
+        break;
+
+      case 1:
+        {
+          Navigator.of(context).pushNamed('/addCard');
+        }
+        break;
+
+      case 2:
+        {
+          Navigator.of(context).pushNamed('/metas');
+        }
+        break;
+
+      case 3:
+        {
+          //statements;
+        }
+        break;
+
+      default:
+        {
+          Navigator.of(context).pushNamed('/screen');
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -21,6 +56,7 @@ class _BottomBarState extends State<BottomBar> {
         onTap: (value) {
           setState(() {
             index = value;
+            navigation(index);
             log("O valor de index é: $index");
           });
         },

@@ -22,9 +22,9 @@ class TransactionsRepository {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      querySnapshot.docs.forEach((doc) {
+      for(var doc in querySnapshot.docs){
         bankAccounts.add(doc['nomeConta']);
-      });
+      }
       return bankAccounts;
     } else {
       return null;
@@ -42,9 +42,9 @@ class TransactionsRepository {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         cardsAccounts.add(doc['nomeCartao']);
-      });
+      }
       return cardsAccounts;
     } else {
       return null;
@@ -89,7 +89,6 @@ class TransactionsRepository {
 
     final todoBalance = List<BankAccountModel>.from(balanceRevenues.docs
         .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
-    print(todoBalance);
     return todoBalance;
   }
 
@@ -132,14 +131,32 @@ class TransactionsRepository {
         receitas = receitas + todoBalanceUser.valor;
       } else {
         despesas = despesas + todoBalanceUser.valor;
-      }     
+      }
     }
     saldo = receitas - despesas;
-    print("o valor apurado foi: receitas = $receitas, despesas = $despesas");
-    
+
     BalanceUser resultado =
         BalanceUser(mes, ano, monthname!, receitas, despesas, saldo);
-    print(resultado);
     return resultado;
+  }
+
+  Future<List<Map<String,dynamic>>?> getListWallet() async {
+    List<Map<String, dynamic>> listWallet = [];
+
+    final querySnapshot = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .where('typeconta', whereIn: ["Cartão", "Conta"]).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        Map idWallet = {'id': doc.id};
+        Map<String, dynamic> combinado = Map.from(idWallet)..addAll(doc.data());
+        listWallet.add(combinado);
+      }
+
+    }
+     return listWallet;
   }
 }
