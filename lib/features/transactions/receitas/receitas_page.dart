@@ -58,8 +58,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+        Navigator.of(context).pushNamed('/screen');
         return false;
       },
       child: Scaffold(

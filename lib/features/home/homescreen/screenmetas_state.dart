@@ -1,4 +1,6 @@
 import '../../../shared/classes.dart';
+import '../../transactions/metas/metas_model.dart';
+
 
 abstract class ScreenHomeState {}
 
@@ -35,7 +37,6 @@ class ScreenBalanceSuccessState implements ScreenBalanceState {
 class ScreenBalanceErrorState implements ScreenBalanceState {}
 
 ///////
-///
 abstract class ScreenWalletState {}
 
 class ScreenWalletInitialState implements ScreenWalletState {}
@@ -46,3 +47,16 @@ class ScreenWalletSuccessState implements ScreenWalletState {
 }
 
 class ScreenWalletErrorState implements ScreenWalletState {}
+
+////
+
+abstract class ScreenMetaState {}
+
+class ScreenMetaInitialState implements ScreenMetaState {}
+
+class ScreenMetaSuccessState implements  ScreenMetaState {
+  late final List<MetasModel> todoMetas;
+  ScreenMetaSuccessState(this.todoMetas);
+}
+
+class ScreenMetaErrorState implements  ScreenMetaState {}

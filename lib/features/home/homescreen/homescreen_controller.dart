@@ -4,7 +4,6 @@ import 'package:projeto_final_flutter/features/home/homescreen/screenmetas_state
 import '../../../shared/classes.dart';
 import '../../transactions/metas/metas_model.dart';
 import '../../transactions/metas/metas_repository.dart';
-import '../../transactions/metas/metas_state.dart';
 import '../../transactions/transactions_repository.dart';
 import '../homelogin/homelogin_repository.dart';
 
@@ -12,27 +11,27 @@ class MetaScreenController {
   final HomeLoginRepository _loginRepository;
   final MetasRepository _metasRepository;
   MetaScreenController(this._loginRepository, this._metasRepository);
-  final notifier = ValueNotifier<MetaState>(MetasInitialState());
+  final notifier = ValueNotifier<ScreenMetaState>(ScreenMetaInitialState());
 
-  MetaState get stateScreen => notifier.value;
+  ScreenMetaState get stateScreen => notifier.value;
 
   Future<void> getMetas() async {
-    notifier.value = MetasInitialState();
+    notifier.value = ScreenMetaInitialState();
     try {
       final userId = _loginRepository.currentUser?.uid ?? '';
       final result = await _metasRepository.getMetas(userId);
-      notifier.value = MetasSuccessState(result);
+      notifier.value = ScreenMetaSuccessState(result);
     } catch (e) {
-      notifier.value = MetasErrorState();
+      notifier.value = ScreenMetaErrorState();
     }
   }
 
   Future<void> getIdMetas(String id) async {
     try {
       final result = await _metasRepository.getIdMetas(id);
-      notifier.value = MetasSuccessState(result);
+      notifier.value = ScreenMetaSuccessState(result);
     } catch (e) {
-      notifier.value = MetasErrorState();
+      notifier.value = ScreenMetaErrorState();
     }
   }
 
@@ -52,9 +51,9 @@ class MetaScreenController {
       );
       await _metasRepository.updateMetas(todoMetasRequest);
       final result = await _metasRepository.getMetas(id);
-      notifier.value = MetasSuccessState(result);
+      notifier.value = ScreenMetaSuccessState(result);
     } catch (e) {
-      notifier.value = MetasErrorState();
+      notifier.value = ScreenMetaErrorState();
     }
   }
 
@@ -62,9 +61,9 @@ class MetaScreenController {
     try {
       final result = await _metasRepository.deleteMeta(id);
       if (result) {
-        final todoMetas = (stateScreen as MetasSuccessState).todoMetas;
+        final todoMetas = (stateScreen as ScreenMetaSuccessState).todoMetas;
         todoMetas.removeWhere((todo) => todo.id == id);
-        notifier.value = MetasSuccessState(todoMetas);
+        notifier.value = ScreenMetaSuccessState(todoMetas);
       }
     } catch (e) {
       log("Registro não removido");

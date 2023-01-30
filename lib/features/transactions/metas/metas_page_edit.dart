@@ -1,13 +1,11 @@
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
 import '../../../shared/injection.dart';
 import '../../../utils/currency_formatter.dart';
+import '../../home/homescreen/homescreen_controller.dart';
 
 class MetasPageEdit extends StatefulWidget {
   final String? id;
@@ -33,7 +31,7 @@ class MetasPageEdit extends StatefulWidget {
 
 class _MetasPageEditState extends State<MetasPageEdit> {
   var decimalController = MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
-   final controller = getIt.get<MetasController>();
+   final controller = getIt.get<MetaScreenController>();
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _objectiveController = TextEditingController();

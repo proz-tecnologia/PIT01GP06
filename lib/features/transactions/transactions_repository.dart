@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
-
 import '../../shared/classes.dart';
 import '../../shared/constant.dart';
 import '../wallets/bank_account/bank_account_model.dart';

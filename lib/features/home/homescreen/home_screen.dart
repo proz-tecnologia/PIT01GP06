@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/homescreen_controller.dart';
@@ -12,14 +11,12 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/metas_car
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/primary_button_widget.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/title_widget.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.dart';
-import 'package:projeto_final_flutter/features/transactions/metas/metas_controller.dart';
+import 'package:projeto_final_flutter/shared/injection.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 import '../../../shared/funcoes.dart';
-import '../../../shared/injection.dart';
-import '../../transactions/metas/metas_state.dart';
-
 import '../../transactions/transactions_repository.dart';
 import 'widgets/action_button.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -30,7 +27,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = BalanceController(TransactionsRepository());
-  final controllerScreenMetas = getIt.get<MetasController>();
+
+  final controllerScreenMetas = getIt.get<MetaScreenController>();
   final ScrollController _scrollControllerWallet = ScrollController();
   final ScrollController _scrollControllerMetas = ScrollController();
 
@@ -41,14 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    controller.getBalanceRevenues();
-    controller.controllerData(0, diaBalance, mesBalance, anoBalance);
-    controller.getListWallet();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {  
       controllerScreenMetas.getMetas();
-    });
+      controller.getBalanceRevenues();
+      controller.controllerData(0, diaBalance, mesBalance, anoBalance);
+      controller.getListWallet();    
+    });    
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -339,15 +337,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ValueListenableBuilder(
                   valueListenable: controllerScreenMetas.notifier,
                   builder: (context, state, _) {
-                    if (state is MetasInitialState) {
+                    if (state is ScreenMetaInitialState) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
-                    if (state is MetasErrorState) {
+                    if (state is ScreenMetaErrorState) {
                       return const Text('Não há dados a serem exibidos');
                     }
-                    if (state is MetasSuccessState) {
+                    if (state is  ScreenMetaSuccessState) {
                       return Row(
                         children: [
                           Expanded(
@@ -374,13 +372,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }),
                             ),
                           ),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
-            ),
               const SizedBox(
                 height: 32,
               ),

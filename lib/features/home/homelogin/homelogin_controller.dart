@@ -17,15 +17,4 @@ class HomeLoginController {
       notifier.value = HomeLoginStateError();
     }
   }
-
-  // Future<void> register(String email, String password) async {
-  //   notifier.value = HomeLoginStateLoading();
-  //   try {
-  //     await Future.delayed(const Duration(seconds: 2));
-  //     await _repository.register(email, password);
-  //     notifier.value = HomeLoginStateSuccess();
-  //   } catch (e, stackTrace) {
-  //     notifier.value = HomeLoginStateError();
-  //   }
-  // }
 }
