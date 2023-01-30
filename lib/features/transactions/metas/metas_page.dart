@@ -31,8 +31,8 @@ class _MetasPageState extends State<MetasPage> {
   final TextEditingController _objectiveController = TextEditingController();
   final _valueController = MoneyMaskedTextController(
       decimalSeparator: ',', thousandSeparator: '.', leftSymbol: 'R\$');
-  final _perfomanceController = MoneyMaskedTextController(
-      decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
+  // final _perfomanceController = MoneyMaskedTextController(
+  //     decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
   late DateTime _dateGoal;
 
@@ -42,7 +42,7 @@ class _MetasPageState extends State<MetasPage> {
   void dispose() {
     _objectiveController.dispose();
     _valueController.dispose();
-    _perfomanceController.dispose();
+    // _perfomanceController.dispose();
     _iconController.dispose();
     super.dispose();
   }
@@ -114,37 +114,37 @@ class _MetasPageState extends State<MetasPage> {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Text(
-                        'Qual o tipo do investimento:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _perfomanceController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          CurrencyFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: 'R\$ 00,00',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Campo obrigatório.';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      // const Text(
+                      //   'Qual o tipo do investimento:',
+                      //   style: TextStyle(fontWeight: FontWeight.bold),
+                      // ),
+                      // const SizedBox(
+                      //   height: 8,
+                      // ),
+                      // TextFormField(
+                      //   controller: _perfomanceController,
+                      //   keyboardType: const TextInputType.numberWithOptions(
+                      //       decimal: true),
+                      //   inputFormatters: [
+                      //     FilteringTextInputFormatter.digitsOnly,
+                      //     CurrencyFormatter(),
+                      //   ],
+                      //   decoration: InputDecoration(
+                      //     hintText: 'R\$ 00,00',
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(16),
+                      //     ),
+                      //   ),
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return 'Campo obrigatório.';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
+                      // const SizedBox(
+                      //   height: 30,
+                      // ),
                       const Text(
                         'Escolha a data para alcançar a meta:',
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -197,13 +197,13 @@ class _MetasPageState extends State<MetasPage> {
                     title: ('Adicionar meta'),
                     navigateTo: () {
                       var valueGols = _valueController.numberValue;
-                      var valuePerfomance = _perfomanceController.numberValue;
+                      //var valuePerfomance = _perfomanceController.numberValue;
                       controller.addMetas(
                         '',
                         'meta',
                         _objectiveController.text,
                         valueGols,
-                        valuePerfomance,
+                        0.0,
                         dataPrevista,
                         _iconController.text,
                       );

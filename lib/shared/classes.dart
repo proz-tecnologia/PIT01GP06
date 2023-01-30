@@ -15,6 +15,11 @@ class ListaDespesa {
   ListaDespesa(this.listDespesa);
 }
 
+// class MetaSaving {
+//   late final double sumSaving;
+//   MetaSaving(this.sumSaving);
+// }
+
 class Wallet {
   String id;
   String type;

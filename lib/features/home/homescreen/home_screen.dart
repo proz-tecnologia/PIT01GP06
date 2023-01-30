@@ -17,7 +17,6 @@ import '../../../shared/funcoes.dart';
 import '../../transactions/transactions_repository.dart';
 import 'widgets/action_button.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -39,14 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {  
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       controllerScreenMetas.getMetas();
       controller.getBalanceRevenues();
       controller.controllerData(0, diaBalance, mesBalance, anoBalance);
-      controller.getListWallet();    
-    });    
+      controller.getListWallet();
+    });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -260,42 +259,41 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       );
                     }
-                    const SizedBox(
-                      height: 32,
-                    );
-                    PrimaryButton(
-                      title: 'Adicionar carteira',
-                      navigateTo: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext bc) {
-                              return Wrap(
-                                children: [
-                                  ListTile(
-                                    leading: const Icon(
-                                        Icons.account_balance_rounded),
-                                    title: const Text('Conta'),
-                                    onTap: () => {
-                                      Navigator.of(context)
-                                          .pushNamed('/addBankAccount')
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: const Icon(Icons.credit_card),
-                                    title: const Text('Cartão'),
-                                    onTap: () => {
-                                      Navigator.of(context)
-                                          .pushNamed('/addCard')
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                    );
+
                     return const SizedBox.shrink();
                   },
-                ),
+                ), //////
+              ),
+              const SizedBox(
+                height: 32,
+              ),
+              PrimaryButton(
+                title: 'Adicionar carteira',
+                navigateTo: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext bc) {
+                        return Wrap(
+                          children: [
+                            ListTile(
+                              leading:
+                                  const Icon(Icons.account_balance_rounded),
+                              title: const Text('Conta'),
+                              onTap: () => {
+                                Navigator.of(context)
+                                    .pushNamed('/addBankAccount')
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.credit_card),
+                              title: const Text('Cartão'),
+                              onTap: () =>
+                                  {Navigator.of(context).pushNamed('/addCard')},
+                            ),
+                          ],
+                        );
+                      });
+                },
               ),
               const SizedBox(
                 height: 32,
@@ -345,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (state is ScreenMetaErrorState) {
                       return const Text('Não há dados a serem exibidos');
                     }
-                    if (state is  ScreenMetaSuccessState) {
+                    if (state is ScreenMetaSuccessState) {
                       return Row(
                         children: [
                           Expanded(

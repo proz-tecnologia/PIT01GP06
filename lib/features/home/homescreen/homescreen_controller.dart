@@ -99,7 +99,7 @@ class BalanceController {
     } catch (e) {
       notifierRevenues.value = ScreenGlobalErrorState();
     }
-  }
+  }  
 
   Future<void> getListWallet() async {
     List<Wallet> listCarteira = [];

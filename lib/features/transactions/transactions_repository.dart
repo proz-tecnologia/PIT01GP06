@@ -89,6 +89,20 @@ class TransactionsRepository {
         .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
     return todoBalance;
   }
+  Future<List<BankAccountModel>> getBalanceSavings() async {
+    final balanceRevenues = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .where("type", isEqualTo: 'receita')
+        .where('typeconta', isEqualTo: 'Conta')
+        .where('tipoConta', isEqualTo: 'Poupança')
+        .get();
+
+    final todoBalance = List<BankAccountModel>.from(balanceRevenues.docs
+        .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
+    return todoBalance;
+  }
 
   Future<BalanceUser> getBalanceUser(int mes, int ano) async {
     final balanceUser = await _db
