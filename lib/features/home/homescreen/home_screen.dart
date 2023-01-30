@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controllerScreenMetas.getMetas();
       controller.getBalanceRevenues();
+      controllerScreenMetas.getMetas();
       controller.controllerData(0, diaBalance, mesBalance, anoBalance);
       controller.getListWallet();
     });
