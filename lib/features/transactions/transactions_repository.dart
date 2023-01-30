@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions/transactions_model.dart';
-
 import '../../shared/classes.dart';
 import '../../shared/constant.dart';
 import '../wallets/bank_account/bank_account_model.dart';
@@ -85,6 +83,20 @@ class TransactionsRepository {
         .collection(accounts)
         .where("type", isEqualTo: 'receita')
         .where('typeconta', isEqualTo: 'Conta')
+        .get();
+
+    final todoBalance = List<BankAccountModel>.from(balanceRevenues.docs
+        .map((doc) => BankAccountModel.fromMap(doc.id, doc.data())));
+    return todoBalance;
+  }
+  Future<List<BankAccountModel>> getBalanceSavings() async {
+    final balanceRevenues = await _db
+        .collection(db)
+        .doc(_uid)
+        .collection(accounts)
+        .where("type", isEqualTo: 'receita')
+        .where('typeconta', isEqualTo: 'Conta')
+        .where('tipoConta', isEqualTo: 'Poupança')
         .get();
 
     final todoBalance = List<BankAccountModel>.from(balanceRevenues.docs

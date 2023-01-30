@@ -5,6 +5,7 @@ import '../features/home/homelogin/homelogin_repository.dart';
 import '../features/home/homescreen/homescreen_controller.dart';
 import '../features/transactions/metas/metas_controller.dart';
 import '../features/transactions/metas/metas_repository.dart';
+import '../features/transactions/transactions_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -14,4 +15,5 @@ void setup() {
       () => MetasController(FirebaseRepository(FirebaseAuth.instance), FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance)));
   getIt.registerLazySingleton<MetaScreenController>(() =>
       MetaScreenController(FirebaseRepository(FirebaseAuth.instance), FirebaseMetasRepository(FirebaseFirestore.instance, FirebaseAuth.instance)));
+  getIt.registerLazySingleton<TransactionsRepository>(() =>TransactionsRepository());
 }

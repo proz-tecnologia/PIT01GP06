@@ -58,9 +58,6 @@ class _DespesasPageState extends State<DespesasPage> {
   }
 
 
-
-
-
   @override
   void dispose() {
     _descricaoController.dispose();
@@ -72,8 +69,7 @@ class _DespesasPageState extends State<DespesasPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(('/screen'), (route) => false);
+        Navigator.of(context).pushNamed('/screen');
         return false;
       },
       child: Scaffold(
@@ -359,6 +355,7 @@ class _DespesasPageState extends State<DespesasPage> {
 
                           despesasRepository.addDespesa(despesaModel);
                         
+                          // ignore: use_build_context_synchronously
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               ('/screen'), (route) => false);
                         } else {

@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../../shared/classes.dart';
+import '../../../shared/injection.dart';
 import '../../home/homelogin/homelogin_repository.dart';
+import '../transactions_repository.dart';
 import 'metas_model.dart';
 import 'metas_repository.dart';
 import 'metas_state.dart';
@@ -11,6 +14,9 @@ class MetasController {
   final HomeLoginRepository _loginRepository;
   final MetasRepository _metasRepository;
   MetasController(this._loginRepository, this._metasRepository);
+
+  final _transactionsRepository = getIt.get<TransactionsRepository>();
+
   final notifier = ValueNotifier<MetaState>(MetasInitialState());
 
   CollectionReference metas = FirebaseFirestore.instance.collection('IdUser');
@@ -63,6 +69,20 @@ class MetasController {
     }
   }
 
+  Future<double> getBalanceSavings() async {
+    try {
+      final savings = await _transactionsRepository.getBalanceSavings();
+      double soma = 0.0;
+      for (var saving in savings) {
+        soma = soma + saving.balance;
+      }
+      print('O valor da soma é: $soma');
+      return soma;
+    } catch (e) {
+      return 0.0;
+    }
+  }
+
   Future<void> updateMetas(String id, String goal, String objective,
       double value, DateTime date, String icon, double perfomance) async {
     final userId = _loginRepository.currentUser?.uid ?? '';
@@ -97,5 +117,4 @@ class MetasController {
       log("Registro não removido");
     }
   }
-  
 }
