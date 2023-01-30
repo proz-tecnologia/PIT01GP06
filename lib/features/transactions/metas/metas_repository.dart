@@ -10,7 +10,7 @@ import 'metas_model.dart';
 abstract class MetasRepository {
   Future<bool> addMetas(MetasModel metasModel);
   Future<List<MetasModel>> getMetas(String userId);
-  Future<List<MetasModel>> getIdMetas(String idMetas);
+  Future<List<MetasModel>> getIdMetas(String userId, String idMetas);
   Future<void> updateMetas(MetasModel todoMetas);
 
   Future<bool> deleteMeta(String userId);
@@ -28,7 +28,7 @@ class FirebaseMetasRepository implements MetasRepository {
   Future<List<MetasModel>> getMetas(String userId) async {
     final result = await _firestore
         .collection(db)
-        .doc(_firebase.currentUser!.uid)
+        .doc(userId)
         .collection(accounts)
         .where("goal", isEqualTo: 'meta')
         .get();
@@ -38,11 +38,11 @@ class FirebaseMetasRepository implements MetasRepository {
   }
 
   @override
-  Future<List<MetasModel>> getIdMetas(String idMetas) async {
+  Future<List<MetasModel>> getIdMetas(String userId, String idMetas) async {
 
     final result = await _firestore
-        .collection('IdUser')
-        .doc(_firebase.currentUser!.uid)
+        .collection(db)
+        .doc(userId)
         .collection('contas')
         .where("id", isEqualTo: idMetas)
         .get();

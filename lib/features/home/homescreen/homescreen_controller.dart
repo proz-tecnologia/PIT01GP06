@@ -29,7 +29,8 @@ class MetaScreenController {
 
   Future<void> getIdMetas(String id) async {
     try {
-      final result = await _metasRepository.getIdMetas(id);
+      final userId = _loginRepository.currentUser?.uid ?? '';
+      final result = await _metasRepository.getIdMetas(userId, id);
       notifier.value = MetasSuccessState(result);
     } catch (e) {
       notifier.value = MetasErrorState();
