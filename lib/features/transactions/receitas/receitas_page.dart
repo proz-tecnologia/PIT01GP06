@@ -57,7 +57,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
+       onWillPop: () async {
         Navigator.of(context).pushNamed('/screen');
         return false;
       },
@@ -212,9 +212,10 @@ class _ReceitasPageState extends State<ReceitasPage> {
                 Center(
                   child: PrimaryButton(
                     title: ('Adicionar receita'),
-                    navigateTo: () {
+                    navigateTo: () async {
                       if (_formKey.currentState?.validate() ?? false) {
                         if(_contaVinculada != ''){
+                          final navigator = Navigator.of(context);
                           ReceitasModel receitaModel = ReceitasModel(
                               type: 'receita',
                               typeconta: 'avulsa',
@@ -230,11 +231,13 @@ class _ReceitasPageState extends State<ReceitasPage> {
                             dateReg: Timestamp.fromDate(DateTime.now()),
                             );
                           
-                          _receitasRepository.addReceita(receitaModel);
+                         await _receitasRepository.addReceita(receitaModel);
+                        
       
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              ('/screen'), (route) => false);
-
+                          // Navigator.pop(context);
+                          navigator.pushNamedAndRemoveUntil(
+                               ('/screen'), (route) => false);
+    
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
                       }
