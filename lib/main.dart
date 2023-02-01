@@ -7,6 +7,7 @@ import 'package:projeto_final_flutter/features/transactions/despesas/despesas_pa
 import 'package:projeto_final_flutter/features/transactions/metas/metas_page_edit.dart';
 import 'package:projeto_final_flutter/features/transactions/receitas/receitas_page.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
+import 'features/grafics/grafic_expenses.dart';
 import 'features/transactions/metas/metas_page.dart';
 import 'features/wallets/bank_account/add_bank_account_page.dart';
 import 'features/home/homesignup/signup.dart';
@@ -40,9 +41,9 @@ class MyApp extends StatelessWidget {
         '/addBankAccount': (context) => const AddBankAccount(),
         '/addCard': (context) => const AddCard(),
         '/addDespesa': (context) => const DespesasPage(),
+        '/grafic': (context) =>  const GraphPage(title: 'Gráfico',),
         '/addReceita': (context) => const ReceitasPage(),
         '/metas': (context) => const MetasPage(),
-        '/graficos': (context) => const GraficosPage(),
         '/metaedit': (context) {
           final args = (ModalRoute.of(context)?.settings.arguments ?? {}) as Map;
           return MetasPageEdit(

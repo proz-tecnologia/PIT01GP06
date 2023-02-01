@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/features/home/homescreen/graficos_controller.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/homescreen_controller.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/screenmetas_state.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/widgets/animated_fab.dart';
@@ -14,6 +16,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.da
 import 'package:projeto_final_flutter/shared/injection.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 import '../../../shared/funcoes.dart';
+import '../../transactions/metas/metas_controller.dart';
 import '../../transactions/transactions_repository.dart';
 import 'widgets/action_button.dart';
 
@@ -26,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = BalanceController(TransactionsRepository());
+  final _metaSavings = getIt.get<MetasController>();
 
   final controllerScreenMetas = getIt.get<MetaScreenController>();
   final ScrollController _scrollControllerWallet = ScrollController();
@@ -34,15 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
   int anoBalance = DateTime.now().year;
   int mesBalance = DateTime.now().month;
   int diaBalance = DateTime.now().day;
+  GraficosController graficosController = GraficosController();
+  int _touchedIndex = -1;
+  double totalDespesas = 0.0;
+  double totalReceitas = 0.0;
+  double porcentagemDespesas = 50.0;
+  double porcentagemReceitas = 50.0;
+  double? savingValue;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       controller.getBalanceRevenues();
       controllerScreenMetas.getMetas();
       controller.controllerData(0, diaBalance, mesBalance, anoBalance);
       controller.getListWallet();
+      savingValue = await _metaSavings.getBalanceSavings();
     });
   }
 
@@ -112,6 +124,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       return const Text('Não há dados a serem exibidos');
                     }
                     if (stateBalance is ScreenBalanceSuccessState) {
+                      totalDespesas = double.parse(
+                          (stateBalance.widgetBalance.despesas)
+                              .toStringAsFixed(2));
+                      totalReceitas = double.parse(
+                          (stateBalance.widgetBalance.receitas)
+                              .toStringAsFixed(2));
+
                       return Column(
                         children: [
                           Padding(
@@ -130,6 +149,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     mesBalance,
                                     anoBalance,
                                   );
+                                  totalDespesas = double.parse(
+                                      (stateBalance.widgetBalance.despesas)
+                                          .toStringAsFixed(2));
+
+                                  totalReceitas = double.parse(
+                                      (stateBalance.widgetBalance.receitas)
+                                          .toStringAsFixed(2));
                                 },
                                 onForwardButtonPressed: () {
                                   DateTime novaData = clickProximoMes(
@@ -143,6 +169,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     mesBalance,
                                     anoBalance,
                                   );
+                                  totalDespesas = double.parse(
+                                      (stateBalance.widgetBalance.despesas)
+                                          .toStringAsFixed(2));
+                                  totalReceitas = double.parse(
+                                      (stateBalance.widgetBalance.receitas)
+                                          .toStringAsFixed(2));
                                 }),
                           ),
                           Center(
@@ -156,6 +188,63 @@ class _HomeScreenState extends State<HomeScreen> {
                                   .toStringAsFixed(2)),
                             ),
                           ),
+                          totalDespesas != 0.0 || totalReceitas != 0.0
+                    ? AspectRatio(
+                        aspectRatio: 1.3,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: PieChart(
+                                    PieChartData(
+                                        pieTouchData: PieTouchData(
+                                          touchCallback: (FlTouchEvent event,
+                                              pieTouchResponse) {
+                                            setState(() {
+                                              if (!event
+                                                      .isInterestedForInteractions ||
+                                                  pieTouchResponse == null ||
+                                                  pieTouchResponse
+                                                          .touchedSection ==
+                                                      null) {
+                                                _touchedIndex = -1;
+                                                return;
+                                              }
+                                              _touchedIndex = pieTouchResponse
+                                                  .touchedSection!
+                                                  .touchedSectionIndex;
+                                            });
+                                          },
+                                        ),
+                                        borderData: FlBorderData(
+                                          show: false,
+                                        ),
+                                        sectionsSpace: 0,
+                                        centerSpaceRadius: 40,
+                                        sections:
+                                            graficosController.showingSections(
+                                                _touchedIndex,
+                                                double.parse((totalDespesas /
+                                                        (totalDespesas +
+                                                            totalReceitas) *
+                                                        100)
+                                                    .toStringAsFixed(2)),
+                                                double.parse((totalReceitas /
+                                                        (totalDespesas +
+                                                            totalReceitas) *
+                                                        100)
+                                                    .toStringAsFixed(2)))),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Text('Nenhuma receita/despesa foi adicionada.'),
+                        )),
                         ],
                       );
                     }
@@ -243,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       return SizedBox(
                                         width: 350.0,
                                         child: Wallet(
-                                          UniqueKey(),
+                                            UniqueKey(),
                                             todo.id,
                                             todo.type,
                                             todo.name,
@@ -365,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           todo.value,
                                           todo.date,
                                           todo.icon,
-                                          todo.perfomance),
+                                          savingValue ?? 0.0),
                                     );
                                   }),
                             ),
@@ -409,7 +498,8 @@ class _HomeScreenState extends State<HomeScreen> {
               color: MyColor.lightThemeAccentColor,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/addReceita').then((_) => setState(() {}));
+              Navigator.pushNamed(context, '/addReceita')
+                  .then((_) => setState(() {}));
             },
             text: 'Receitas',
           ),

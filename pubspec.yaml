@@ -49,9 +49,11 @@ dependencies:
   mask_text_input_formatter: ^2.4.0
   get_it: ^7.2.0
   fl_chart: ^0.60.0
+  charts_flutter: ^0.11.0
 
   flutter_localizations:
     sdk: flutter
+  syncfusion_flutter_charts: ^20.4.44
 
 dev_dependencies:
   flutter_test:

@@ -33,7 +33,7 @@ class _BottomBarState extends State<BottomBar> {
 
       case 3:
         {
-          Navigator.of(context).pushNamed('/graficos');
+          Navigator.of(context).pushNamed('/grafic');
         }
         break;
     }
