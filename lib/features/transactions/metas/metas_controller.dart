@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../../shared/classes.dart';
 import '../../../shared/injection.dart';
 import '../../home/homelogin/homelogin_repository.dart';
 import '../transactions_repository.dart';
@@ -42,14 +41,14 @@ class MetasController {
     try {
       final userId = _loginRepository.currentUser?.uid ?? '';
       final metasModel = MetasModel(
-          id: id,
-          goal: goal,
-          objective: objective,
-          value: value,
-          date: date,
-          idUser: userId,
-          icon: icon,
-          perfomance: perfomance);
+        id: id,
+        goal: goal,
+        objective: objective,
+        value: value,
+        date: date,
+        idUser: userId,
+        icon: icon,
+      );
 
       if (await _metasRepository.addMetas(metasModel)) {
         notifier.value = MetasSuccessState(resultAddMeta);
@@ -70,13 +69,15 @@ class MetasController {
   }
 
   Future<double> getBalanceSavings() async {
+    
+    double soma = 0.0;
+
     try {
       final savings = await _transactionsRepository.getBalanceSavings();
-      double soma = 0.0;
+    
       for (var saving in savings) {
         soma = soma + saving.balance;
       }
-      print('O valor da soma é: $soma');
       return soma;
     } catch (e) {
       return 0.0;
@@ -95,7 +96,6 @@ class MetasController {
         date: date,
         idUser: userId,
         icon: icon,
-        perfomance: perfomance,
       );
       await _metasRepository.updateMetas(todoMetasRequest);
       final result = await _metasRepository.getMetas(id);
