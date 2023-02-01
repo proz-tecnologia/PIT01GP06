@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/screenmetas_state.dart';
+import 'package:projeto_final_flutter/features/transactions/metas/metas_state.dart';
 import '../../../shared/classes.dart';
 import '../../transactions/metas/metas_model.dart';
 import '../../transactions/metas/metas_repository.dart';
@@ -28,7 +29,8 @@ class MetaScreenController {
 
   Future<void> getIdMetas(String id) async {
     try {
-      final result = await _metasRepository.getIdMetas(id);
+      final userId = _loginRepository.currentUser?.uid ?? '';
+      final result = await _metasRepository.getIdMetas(userId, id);
       notifier.value = ScreenMetaSuccessState(result);
     } catch (e) {
       notifier.value = ScreenMetaErrorState();

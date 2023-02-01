@@ -68,7 +68,7 @@ class _DespesasPageState extends State<DespesasPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
+       onWillPop: () async {
         Navigator.of(context).pushNamed('/screen');
         return false;
       },
@@ -327,17 +327,16 @@ class _DespesasPageState extends State<DespesasPage> {
                   navigateTo: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       if(_selectedValue != null){
+                          final navigator = Navigator.of(context);
                           var result = await despesasRepository.getDespesaCategoria(_categoria);
                           if (result.isEmpty) {
                             totalBalance = 0.0;
                           } else {
                             totalBalance = result[0].balance;
-                          }                  
-              
-                                  
-
+                          }                    
+    
                           dataevent = DateTime.now().millisecondsSinceEpoch;
-
+    
                           DespesasModel despesaModel = DespesasModel(
                               type: 'despesa',
                               descricao: _descricaoController.text,
@@ -352,16 +351,15 @@ class _DespesasPageState extends State<DespesasPage> {
                               year:dataDespesa.year,
                               typeconta: _contaOuCartao,
                               conta: _selectedValue!);
-
-                          despesasRepository.addDespesa(despesaModel);
-                        
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              ('/screen'), (route) => false);
+    
+                          await despesasRepository.addDespesa(despesaModel);
+                          
+                          navigator.pushNamedAndRemoveUntil(
+                          ('/screen'), (route) => false);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
                         }
-
+    
                       }
                       
                   },
@@ -374,7 +372,8 @@ class _DespesasPageState extends State<DespesasPage> {
           ),
         ),
       ),
-    ));
+      ),
+    );
   }
 }
 

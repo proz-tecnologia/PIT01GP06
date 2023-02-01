@@ -19,12 +19,12 @@ void main() async {
     repository = FirebaseMetasRepository(firestoreMock, firebaseAuth);
   });
 
-  test('deve retornar lista vazia se for primeiro acesso', (() async {
+  test('deve retornar lista vazia se for primeiro acesso', () async {
     final result = await repository.getMetas('');
     expect(result, isEmpty);
-  }));
+  });
 
-    test('O getTodo deve retornar algum valor', (() async {
+    test('O getTodo deve retornar algum valor', () async {
     await firestoreMock.collection('IdUser').doc('userId').collection('contas').add({
       'goal' : 'meta',
       'objective' : 'Teste',
@@ -37,5 +37,5 @@ void main() async {
     final result = await repository.getMetas('userId');
     expect(result.length, 1);
     expect(result[0].date, DateTime.fromMillisecondsSinceEpoch(1234));
-  }));
+  });
 }

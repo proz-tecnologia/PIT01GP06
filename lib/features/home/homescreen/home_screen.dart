@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.getBalanceRevenues();
       controllerScreenMetas.getMetas();
       controller.controllerData(0, diaBalance, mesBalance, anoBalance);
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       return SizedBox(
                                         width: 350.0,
                                         child: Wallet(
-                                            UniqueKey(),
+                                          UniqueKey(),
                                             todo.id,
                                             todo.type,
                                             todo.name,
@@ -403,6 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ActionButton(
             icon: const Icon(Icons.trending_down, color: MyColor.red),
             onPressed: () {
+              //Navigator.pushNamed(context, '/addDespesa').then((_) => setState((){}));
               Navigator.of(context).pushNamed('/addDespesa');
             },
             text: 'Despesas',
@@ -413,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: MyColor.lightThemeAccentColor,
             ),
             onPressed: () {
-              Navigator.of(context).pushNamed('/addReceita');
+              Navigator.pushNamed(context, '/addReceita').then((_) => setState(() {}));
             },
             text: 'Receitas',
           ),
