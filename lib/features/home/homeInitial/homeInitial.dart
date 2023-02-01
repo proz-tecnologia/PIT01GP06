@@ -1,4 +1,3 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 

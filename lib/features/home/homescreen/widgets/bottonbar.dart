@@ -34,7 +34,7 @@ class _BottomBarState extends State<BottomBar> {
 
       case 3:
         {
-          //statements;
+          Navigator.of(context).pushNamed('/grafic');
         }
         break;
 

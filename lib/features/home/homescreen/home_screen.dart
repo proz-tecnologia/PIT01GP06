@@ -14,6 +14,7 @@ import 'package:projeto_final_flutter/features/home/homescreen/widgets/wallet.da
 import 'package:projeto_final_flutter/shared/injection.dart';
 import 'package:projeto_final_flutter/theme/global/colors.dart';
 import '../../../shared/funcoes.dart';
+import '../../transactions/metas/metas_controller.dart';
 import '../../transactions/transactions_repository.dart';
 import 'widgets/action_button.dart';
 
@@ -26,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = BalanceController(TransactionsRepository());
+  final _metaSavings = getIt.get<MetasController>();
 
   final controllerScreenMetas = getIt.get<MetaScreenController>();
   final ScrollController _scrollControllerWallet = ScrollController();
@@ -35,14 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
   int mesBalance = DateTime.now().month;
   int diaBalance = DateTime.now().day;
 
+  double? savingValue;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controllerScreenMetas.getMetas();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       controller.getBalanceRevenues();
+      controllerScreenMetas.getMetas();
       controller.controllerData(0, diaBalance, mesBalance, anoBalance);
       controller.getListWallet();
+      savingValue = await _metaSavings.getBalanceSavings();
     });
   }
 
@@ -365,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           todo.value,
                                           todo.date,
                                           todo.icon,
-                                          todo.perfomance),
+                                          savingValue ?? 0.0),
                                     );
                                   }),
                             ),
