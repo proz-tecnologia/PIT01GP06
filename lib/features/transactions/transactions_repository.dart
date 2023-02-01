@@ -105,8 +105,8 @@ class TransactionsRepository {
     return todoBalance;
   }
 
-  Future<List<SampleData>?> getExpensesSnapshot(int month, int year) async {
-    List<SampleData> listExpenses = [];
+  Future<List<ChartSampleData>?> getExpensesSnapshot(int month, int year) async {
+    List<ChartSampleData> listExpenses = [];
     
     final querySnapshot = await _db
         .collection(db)
@@ -126,7 +126,7 @@ class TransactionsRepository {
         if (day == doc['day']) {
           soma = soma + doc['balance'];
         } else {
-          listExpenses.add(SampleData(doc['day'], soma));
+          listExpenses.add(ChartSampleData(doc['day'], soma));
           // print(MyData(doc['day'], soma));
           day = doc['day'];
           soma = 0.0;
