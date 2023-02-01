@@ -1,7 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'package:projeto_final_flutter/features/transactions/transactions_repository.dart';
 
 List<ChartSampleData> chartData = <ChartSampleData>[];
 
@@ -9,11 +12,14 @@ class ChartSampleData {
   final int x;
   final double y;
   ChartSampleData(this.x, this.y);
+
+  @override
+  String toString() => 'ChartSampleData(x: $x, y: $y)';
 }
 
 class GraphPage extends StatefulWidget {
   const GraphPage({Key? key, required this.title}) : super(key: key);
-  
+
   final String title;
 
   @override
@@ -48,14 +54,15 @@ class _GraphPageState extends State<GraphPage> {
       ),
       body: Center(
         child: SfCartesianChart(
-          primaryXAxis: NumericAxis(),
-          primaryYAxis: NumericAxis(),
+          primaryXAxis: NumericAxis(title: AxisTitle(text: "Dias do mês")),
+          primaryYAxis:
+              NumericAxis(title: AxisTitle(text: "Total de Gastos por dia")),
           series: <ColumnSeries<ChartSampleData, num>>[
-        ColumnSeries<ChartSampleData, num>(
-            dataSource: chartData,
-            xValueMapper: (ChartSampleData data, _) => data.x,
-            yValueMapper: (ChartSampleData data, _) => data.y,
-            dataLabelSettings: const DataLabelSettings(isVisible: true)),
+            ColumnSeries<ChartSampleData, num>(
+                dataSource: chartData,
+                xValueMapper: (ChartSampleData data, _) => data.x,
+                yValueMapper: (ChartSampleData data, _) => data.y,
+                dataLabelSettings: const DataLabelSettings(isVisible: true)),
           ],
         ),
       ),
@@ -63,18 +70,16 @@ class _GraphPageState extends State<GraphPage> {
         child: const Icon(Icons.refresh, color: Colors.white),
         onPressed: () {
           setState(
-            () {              
-            },
+            () {},
           );
         },
       ),
     );
   }
-  
+
   Future<List<ChartSampleData>> _getChartData() async {
     await Future.delayed(const Duration(seconds: 1));
     var lists = await controller.getExpensesSnapshot(data.day, data.year);
-
     if (lists!.isNotEmpty) {
       for (var list in lists) {
         chartData.add(ChartSampleData(list.x, list.y));
