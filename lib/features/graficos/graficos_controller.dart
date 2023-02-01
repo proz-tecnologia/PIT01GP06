@@ -14,7 +14,7 @@ class GraficosController{
           return PieChartSectionData(
             color: Colors.red,
             value: porcentagemDespesas,
-            title: 'Despesa - $porcentagemDespesas%',
+            title: 'Despesa: $porcentagemDespesas%',
             radius: radius,
             titlePositionPercentageOffset: 1.0,
             titleStyle: TextStyle(
@@ -27,7 +27,7 @@ class GraficosController{
           return PieChartSectionData(
             color: const Color.fromARGB(255, 35, 209, 125),
             value: porcentagemReceitas,
-            title: 'Receita - $porcentagemReceitas%',
+            title: 'Receita: $porcentagemReceitas%',
             radius: radius,
             titlePositionPercentageOffset: 1.00,
             titleStyle: TextStyle(
