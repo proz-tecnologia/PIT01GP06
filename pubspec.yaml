@@ -48,6 +48,7 @@ dependencies:
   flutter_masked_text2: ^0.9.1
   mask_text_input_formatter: ^2.4.0
   get_it: ^7.2.0
+  fl_chart: ^0.60.0
 
   flutter_localizations:
     sdk: flutter

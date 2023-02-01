@@ -82,7 +82,7 @@ class BalanceController {
 
   final notifierBalance =
       ValueNotifier<ScreenBalanceState>(ScreenBalanceInitialState());
-
+  
   final notifierWallet =
       ValueNotifier<ScreenWalletState>(ScreenWalletInitialState());
 
@@ -147,6 +147,7 @@ class BalanceController {
         //Controle para trás
         final controleWidget =
             await _transactionsRepository.getBalanceUser(mes, ano);
+      
         notifierBalance.value = ScreenBalanceSuccessState(controleWidget);
       }
     } catch (e) {

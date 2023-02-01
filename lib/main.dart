@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_final_flutter/features/graficos/graficos_page.dart';
 import 'package:projeto_final_flutter/features/home/homescreen/home_screen.dart';
 import 'package:projeto_final_flutter/features/home/homelogin/homelogin.dart';
 import 'package:projeto_final_flutter/features/home/splashpage/splashpage.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/addDespesa': (context) => const DespesasPage(),
         '/addReceita': (context) => const ReceitasPage(),
         '/metas': (context) => const MetasPage(),
+        '/graficos': (context) => const GraficosPage(),
         '/metaedit': (context) {
           final args = (ModalRoute.of(context)?.settings.arguments ?? {}) as Map;
           return MetasPageEdit(

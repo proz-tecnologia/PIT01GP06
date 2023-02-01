@@ -1,16 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
+//ignore: must_be_immutable
 class BottomBar extends StatefulWidget {
-  const BottomBar({Key? key}) : super(key: key);
+  int index;
+  BottomBar({Key? key, required this.index}) : super(key: key);
 
   @override
   State<BottomBar> createState() => _BottomBarState();
 }
 
 class _BottomBarState extends State<BottomBar> {
-  var index = 0;
 
   void navigation(int index) {
     switch (index) {
@@ -34,13 +33,7 @@ class _BottomBarState extends State<BottomBar> {
 
       case 3:
         {
-          //statements;
-        }
-        break;
-
-      default:
-        {
-          Navigator.of(context).pushNamed('/screen');
+          Navigator.of(context).pushNamed('/graficos');
         }
         break;
     }
@@ -55,14 +48,13 @@ class _BottomBarState extends State<BottomBar> {
         type: BottomNavigationBarType.fixed,
         onTap: (value) {
           setState(() {
-            index = value;
-            navigation(index);
-            log("O valor de index é: $index");
+            widget.index = value;
+            navigation(widget.index);
           });
         },
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        currentIndex: index,
+        currentIndex: widget.index,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: 'Inicio',

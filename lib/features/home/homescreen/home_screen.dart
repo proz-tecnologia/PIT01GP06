@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 (value) => Navigator.of(context)
                     .pushNamedAndRemoveUntil('/signup', (route) => false))),
       ),
-      bottomNavigationBar: const BottomBar(),
+      bottomNavigationBar: BottomBar(index: 0),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(

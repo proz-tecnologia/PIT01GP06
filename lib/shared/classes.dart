@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
 import '../features/transactions/despesas/despesas_model.dart';
 import '../features/wallets/bank_account/bank_account_model.dart';
 
@@ -95,6 +94,11 @@ class BalanceUser {
 
   void resultado() {
     saldo = receitas - despesas;
+  }
+
+  @override
+  String toString() {
+    return 'BalanceUser(mes: $mes, ano: $ano, monthname: $monthname, receitas: $receitas, despesas: $despesas, saldo: $saldo)';
   }
 }
 
