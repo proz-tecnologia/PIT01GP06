@@ -10,7 +10,7 @@ class TransactionsRepository {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<List<String>?> getListBankAccountsSnapshot() async {
+  Future<List<String>> getListBankAccountsSnapshot() async {
     List<String> bankAccounts = [];
 
     final querySnapshot = await _db
@@ -20,17 +20,14 @@ class TransactionsRepository {
         .where("typeconta", isEqualTo: 'Conta')
         .get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      for (var doc in querySnapshot.docs) {
-        bankAccounts.add(doc['nomeConta']);
-      }
-      return bankAccounts;
-    } else {
-      return null;
-    }
+    querySnapshot.docs.forEach((doc) {
+      bankAccounts.add(doc['nomeConta']);
+    });
+
+    return bankAccounts;
   }
 
-  Future<List<String>?> getListCardsSnapshot() async {
+  Future<List<String>> getListCardsSnapshot() async {
     List<String> cardsAccounts = [];
 
     final querySnapshot = await _db
@@ -40,14 +37,11 @@ class TransactionsRepository {
         .where("typeconta", isEqualTo: 'Cartão')
         .get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      for (var doc in querySnapshot.docs) {
+   querySnapshot.docs.forEach((doc) {
         cardsAccounts.add(doc['nomeCartao']);
-      }
+      });
+
       return cardsAccounts;
-    } else {
-      return null;
-    }
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getDespesaSaldo(
@@ -105,9 +99,10 @@ class TransactionsRepository {
     return todoBalance;
   }
 
-  Future<List<ChartSampleData>?> getExpensesSnapshot(int month, int year) async {
+  Future<List<ChartSampleData>?> getExpensesSnapshot(
+      int month, int year) async {
     List<ChartSampleData> listExpenses = [];
-    
+
     final querySnapshot = await _db
         .collection(db)
         .doc(_uid)
@@ -205,8 +200,9 @@ class TransactionsRepository {
     return listWallet;
   }
 }
+
 class SampleData {
-      final int x;
-      final double y;
-      SampleData(this.x, this.y);
-    }
+  final int x;
+  final double y;
+  SampleData(this.x, this.y);
+}

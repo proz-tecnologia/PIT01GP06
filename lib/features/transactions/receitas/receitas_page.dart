@@ -31,7 +31,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
   DateTime? _dataReceita;
   //String _dataReceita = DateFormat("dd-MM-yyyy").format(DateTime.now());
   TransactionsRepository transactionsRepository = TransactionsRepository();
-  List<String>? bankAccounts;
+  List<String> bankAccounts = [];
 
   DateTime get dataReceita =>
       _dataReceita ??
@@ -162,12 +162,12 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       const SizedBox(
                         height: 8,
                       ),
-                    bankAccounts != null
+                    bankAccounts.isNotEmpty
                         ? DropdownButtonFormField(
                             validator: (value) =>
                                 value == null ? 'Campo obrigatório' : null,
                             hint: const Text('Escolha a conta'),
-                            items: bankAccounts!.map((e) {
+                            items: bankAccounts.map((e) {
                                     return DropdownMenuItem(
                                         value: e, child: Text(e));
                                   }).toList(),
@@ -234,7 +234,6 @@ class _ReceitasPageState extends State<ReceitasPage> {
                          await _receitasRepository.addReceita(receitaModel);
                         
       
-                          // Navigator.pop(context);
                           navigator.pushNamedAndRemoveUntil(
                                ('/screen'), (route) => false);
     
