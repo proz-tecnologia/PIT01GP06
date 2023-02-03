@@ -5,7 +5,6 @@ class MetasModel {
   final double value;
   final DateTime date;
   final String idUser;
-  final String icon;
   
   MetasModel({
     this.id,
@@ -13,8 +12,7 @@ class MetasModel {
     required this.objective,
     required this.value,
     required this.date,
-    required this.idUser,
-    required this.icon,   
+    required this.idUser,  
   });
 
   MetasModel copyWith({
@@ -32,8 +30,7 @@ class MetasModel {
       objective: objective ?? this.objective,
       value: value ?? this.value,
       date: date ?? this.date,
-      idUser: idUser ?? this.idUser,
-      icon: icon ?? this.icon,      
+      idUser: idUser ?? this.idUser,     
     );
   }
 
@@ -43,8 +40,7 @@ class MetasModel {
       'objective': objective,
       'value': value,
       'date': date.millisecondsSinceEpoch,
-      'idUser': idUser,
-      'icon': icon,      
+      'idUser': idUser,   
     };
   }
 
@@ -55,13 +51,12 @@ class MetasModel {
       objective: map['objective'] as String,
       value: map['value'] as double,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
-      idUser: map['idUser'] as String,
-      icon: map['icon'] as String,      
+      idUser: map['idUser'] as String,  
     );
   }
 
   @override
   String toString() {
-    return 'MetasModel(id: $id, goal: $goal, objective: $objective, value: $value, date: $date, idUser: $idUser, icon: $icon)';
+    return 'MetasModel(id: $id, goal: $goal, objective: $objective, value: $value, date: $date, idUser: $idUser)';
   }
 }

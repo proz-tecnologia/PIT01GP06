@@ -265,9 +265,10 @@ class _DespesasPageState extends State<DespesasPage> {
                                 value: _contaOuCartao == 'Conta'
                                     ? bankAccounts[0]
                                     : cardAccounts[0],
-                                validator: (value) =>
-                                    value == null ? 'Campo obrigatório' : null,
-                                hint: (_contaOuCartao == 'Conta') ? const Text('Escolha a conta') : const Text('Escolha o cartão'),
+                                validator: (value) {
+                                    _contaVinculada = value!;
+                                    return value == '' ? 'Campo obrigatório' : null;
+                                },
                                 items: (_contaOuCartao == 'Conta')
                                     ? bankAccounts.map((e) {
                                         return DropdownMenuItem(
@@ -323,7 +324,11 @@ class _DespesasPageState extends State<DespesasPage> {
                     title: ('Adicionar despesa'),
                     navigateTo: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        if (_contaVinculada != '') {
+                        if(_valorController.numberValue == 0.0){
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text(
+                                  'O valor da despesa não pode ser zero.')));
+                        } else if(_contaVinculada != ''){
                           final navigator = Navigator.of(context);
                           var result = await despesasRepository
                               .getDespesaCategoria(_categoria);
@@ -350,18 +355,19 @@ class _DespesasPageState extends State<DespesasPage> {
                               year: dataDespesa.year,
                               typeconta: _contaOuCartao,
                               conta: _contaVinculada);
-
+                          
                           await despesasRepository.addDespesa(despesaModel);
 
                           navigator.pushNamedAndRemoveUntil(
                               ('/screen'), (route) => false);
-                        } else {
+                        } 
+                        else {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                               content: Text(
                                   'Adicione alguma conta para ser vinculada.')));
                         }
                       }
-                    },
+                    } 
                   ),
                 ),
                 const SizedBox(

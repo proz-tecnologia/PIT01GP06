@@ -104,4 +104,9 @@ class ReceitasModel {
   String toJson() => json.encode(toMap());
 
   
+
+  @override
+  String toString() {
+    return 'ReceitasModel(id: $id, type: $type, typeconta: $typeconta, descricao: $descricao, valor: $valor, balance: $balance, categoria: $categoria, data: $data, day: $day, month: $month, year: $year, conta: $conta, dateReg: $dateReg)';
+  }
 }

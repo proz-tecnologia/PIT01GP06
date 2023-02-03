@@ -57,7 +57,7 @@ class _ReceitasPageState extends State<ReceitasPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-       onWillPop: () async {
+      onWillPop: () async {
         Navigator.of(context).pushNamed('/screen');
         return false;
       },
@@ -104,8 +104,8 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       ),
                       TextFormField(
                         controller: _valorController,
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           CurrencyFormatter(),
@@ -162,22 +162,24 @@ class _ReceitasPageState extends State<ReceitasPage> {
                       const SizedBox(
                         height: 8,
                       ),
-                    bankAccounts.isNotEmpty
-                        ? DropdownButtonFormField(
-                            validator: (value) =>
-                                value == null ? 'Campo obrigatório' : null,
-                            hint: const Text('Escolha a conta'),
-                            items: bankAccounts.map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                            onChanged: (String? value) {
-                              setState(() {
+                      bankAccounts.isNotEmpty
+                          ? DropdownButtonFormField(
+                              value: bankAccounts[0],
+                              validator: (value) {
                                 _contaVinculada = value!;
-                              });
-                            },
-                          )
-                        : const Text('Nenhuma conta adicionada'),
+                                return value == '' ? 'Campo obrigatório' : null;
+                              },
+                              items: bankAccounts.map((e) {
+                                return DropdownMenuItem(
+                                    value: e, child: Text(e));
+                              }).toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _contaVinculada = value!;
+                                });
+                              },
+                            )
+                          : const Text('Nenhuma conta adicionada'),
                       const SizedBox(
                         height: 30,
                       ),
@@ -214,32 +216,37 @@ class _ReceitasPageState extends State<ReceitasPage> {
                     title: ('Adicionar receita'),
                     navigateTo: () async {
                       if (_formKey.currentState?.validate() ?? false) {
-                        if(_contaVinculada != ''){
+                        if (_valorController.numberValue == 0.0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'O valor da receita não pode ser zero.')));
+                        } else if (_contaVinculada != '') {
                           final navigator = Navigator.of(context);
                           ReceitasModel receitaModel = ReceitasModel(
-                              type: 'receita',
-                              typeconta: 'avulsa',
-                              descricao: _descricaoController.text,
-                              valor: _valorController.numberValue,
-                              balance: _valorController.numberValue,
-                              categoria: _categoria,
-                              data: dataReceita,
+                            type: 'receita',
+                            typeconta: 'avulsa',
+                            descricao: _descricaoController.text,
+                            valor: _valorController.numberValue,
+                            balance: _valorController.numberValue,
+                            categoria: _categoria,
+                            data: dataReceita,
                             day: dataReceita.day,
-                            month:dataReceita.month,
-                            year:dataReceita.year,
+                            month: dataReceita.month,
+                            year: dataReceita.year,
                             conta: _contaVinculada,
                             dateReg: Timestamp.fromDate(DateTime.now()),
-                            );
+                          );
                           
-                         await _receitasRepository.addReceita(receitaModel);
-                        
-      
+                          await _receitasRepository.addReceita(receitaModel);
+
                           navigator.pushNamedAndRemoveUntil(
-                               ('/screen'), (route) => false);
-    
+                              ('/screen'), (route) => false);
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Adicione alguma conta para ser vinculada.')));
-                      }
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text(
+                                  'Adicione alguma conta para ser vinculada.')));
+                        }
                       }
                     },
                   ),

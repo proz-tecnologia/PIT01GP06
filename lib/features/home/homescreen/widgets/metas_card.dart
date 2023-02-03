@@ -10,7 +10,6 @@ class MetasCard extends StatefulWidget {
   final String objective;
   final double value;
   final DateTime date;
-  final String icon;
   final double perfomance;
 
   const MetasCard(
@@ -19,7 +18,6 @@ class MetasCard extends StatefulWidget {
     this.objective,
     this.value,
     this.date,
-    this.icon,
     this.perfomance,
   ) : super(key: key);
 
@@ -189,7 +187,6 @@ class _MetasCardState extends State<MetasCard> {
                               'objective': widget.objective,
                               'value': widget.value,
                               'date': widget.date,
-                              'icon': widget.icon,
                               'perfomance': widget.perfomance,
                             });
                           }

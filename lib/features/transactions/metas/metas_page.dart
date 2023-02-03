@@ -34,9 +34,8 @@ class _MetasPageState extends State<MetasPage> {
   // final _perfomanceController = MoneyMaskedTextController(
   //     decimalSeparator: '.', thousandSeparator: ',', leftSymbol: 'R\$');
   final TextEditingController _iconController = TextEditingController();
-  late DateTime _dateGoal;
+  DateTime? _dateGoal;
 
-  get dataPrevista => _dateGoal;
 
   @override
   void dispose() {
@@ -171,22 +170,22 @@ class _MetasPageState extends State<MetasPage> {
                       const SizedBox(
                         height: 30,
                       ),
-                      const Text(
-                        'Icone',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: _iconController,
-                        decoration: InputDecoration(
-                          hintText: 'Icone',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                      ),
+                      // const Text(
+                      //   'Icone',
+                      //   style: TextStyle(fontWeight: FontWeight.bold),
+                      // ),
+                      // const SizedBox(
+                      //   height: 8,
+                      // ),
+                      // TextFormField(
+                      //   controller: _iconController,
+                      //   decoration: InputDecoration(
+                      //     hintText: 'Icone',
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(16),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   )),
               const SizedBox(
@@ -196,15 +195,16 @@ class _MetasPageState extends State<MetasPage> {
                 child: PrimaryButton(
                     title: ('Adicionar meta'),
                     navigateTo: () {
-                      var valueGols = _valueController.numberValue;
+                      
                       //var valuePerfomance = _perfomanceController.numberValue;
+                      
                       controller.addMetas(
                         '',
                         'meta',
                         _objectiveController.text,
-                        valueGols,
+                        _valueController.numberValue,
                         0.0,
-                        dataPrevista,
+                        _dateGoal ?? DateTime.now(),
                         _iconController.text,
                       );
                       Navigator.of(context).pushNamedAndRemoveUntil(

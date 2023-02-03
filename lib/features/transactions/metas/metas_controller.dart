@@ -47,7 +47,6 @@ class MetasController {
         value: value,
         date: date,
         idUser: userId,
-        icon: icon,
       );
 
       if (await _metasRepository.addMetas(metasModel)) {
@@ -95,7 +94,6 @@ class MetasController {
         value: value,
         date: date,
         idUser: userId,
-        icon: icon,
       );
       await _metasRepository.updateMetas(todoMetasRequest);
       final result = await _metasRepository.getMetas(id);

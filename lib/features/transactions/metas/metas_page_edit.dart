@@ -195,22 +195,22 @@ class _MetasPageEditState extends State<MetasPageEdit> {
                         const SizedBox(
                           height: 30,
                         ),
-                        const Text(
-                          'Icone',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        TextFormField(
-                          controller: _iconController,
-                          decoration: InputDecoration(
-                            hintText: 'Icone',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                        ),
+                        // const Text(
+                        //   'Icone',
+                        //   style: TextStyle(fontWeight: FontWeight.bold),
+                        // ),
+                        // const SizedBox(
+                        //   height: 8,
+                        // ),
+                        // TextFormField(
+                        //   controller: _iconController,
+                        //   decoration: InputDecoration(
+                        //     hintText: 'Icone',
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(16),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     )),
                 const SizedBox(

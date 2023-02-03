@@ -314,6 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(
                             height: 20.0,
                           ),
+                          stateWallet.listCarteira.isNotEmpty ? 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -344,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ],
-                          ),
+                          ) : const Text('Sua carteira está vazia.'),
                         ],
                       );
                     }
@@ -453,7 +454,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           todo.objective,
                                           todo.value,
                                           todo.date,
-                                          todo.icon,
                                           savingValue ?? 0.0),
                                     );
                                   }),

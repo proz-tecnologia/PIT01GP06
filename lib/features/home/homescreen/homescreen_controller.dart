@@ -47,8 +47,7 @@ class MetaScreenController {
         objective: objective,
         value: value,
         date: date,
-        idUser: userId,
-        icon: icon,        
+        idUser: userId,       
       );
       await _metasRepository.updateMetas(todoMetasRequest);
       final result = await _metasRepository.getMetas(id);
